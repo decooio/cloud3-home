@@ -6,8 +6,9 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: WorkSans,Roboto,-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: WorkSans, Roboto, -apple-system, BlinkMacSystemFont, Segoe UI,
+    Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+    sans-serif;
   line-height: 1.6;
   font-size: 16px;
   background-color: #fff;
@@ -71,4 +72,19 @@ img {
   font-family: "Roboto";
   src: url("/fonts/Roboto-Medium.ttf") format("truetype");
   font-style: normal;
+}
+@font-face {
+  font-family: "SquadaOne";
+  src: url("/fonts/SquadaOne-Regular.ttf") format("truetype");
+  font-style: normal;
+}
+
+.font-SquadaOne {
+  font-family: SquadaOne;
+}
+.font-WorkSans {
+  font-family: WorkSans;
+}
+.font-Roboto {
+  font-family: Roboto;
 }

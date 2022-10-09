@@ -176,7 +176,7 @@ function LinePointGroup() {
   }, [data_fly]);
 
   return (
-    <group position={[20, 0, 0]}>
+    <group position={[40, 0, 0]}>
       {/* {data.map(([start, end, mid], index) => (
         <LinePoint start={start} end={end} mid={mid} key={`line_p_${index}`} />
       ))} */}
@@ -185,6 +185,7 @@ function LinePointGroup() {
           <bufferGeometry attributes={{ position: position_earth }} />
           <pointsMaterial
             color={color}
+            opacity={0.7}
             map={disc}
             size={POINT_SIZE}
             blending={THREE.AdditiveBlending}
@@ -202,6 +203,7 @@ function LinePointGroup() {
           <bufferGeometry attributes={{ position: position_fly }} />
           <pointsMaterial
             color={color}
+            opacity={0.7}
             map={disc}
             size={POINT_SIZE}
             // blending={THREE.AdditiveBlending}
@@ -228,7 +230,7 @@ function HomeBg_() {
         zoom={9}
         args={[-150, 50, 30, -30, 50, -100]}
       />
-      <ambientLight intensity={1} />
+      <ambientLight color="#eaeaea" intensity={1} />
       <mesh position={[0, 0, -100]}>
         <planeGeometry args={[1000, 1000]} />
         <meshStandardMaterial color="black" />

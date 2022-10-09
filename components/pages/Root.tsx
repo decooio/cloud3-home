@@ -1,7 +1,7 @@
 import React from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { StoreProvider, useInitStore } from "@lib/store";
-import Home from "./Home";
+import Home from "./home/Home";
 function Root_() {
   const store = useInitStore();
   return (

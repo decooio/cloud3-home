@@ -15,7 +15,7 @@ export const SectionTop = React.memo(() => {
           <div>Cloud3</div>
           <Button text="Documentations" className=" border-white text-white" />
         </div>
-        <div className="my-10 w-2/3 flex flex-col justify-center mt-[23%]">
+        <div className="my-10 w-2/3 flex flex-col justify-center mt-[23vh]">
           <div className="text-5xl leading-tight">
             <p>Store in IPFS W3Bucket,</p>
             <p>Decentralized, Guaranteed & Alive.</p>

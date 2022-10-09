@@ -1,12 +1,8 @@
-import Layout, { siteTitle } from '@components/layout'
-import Head from 'next/head'
+import dynamic from "next/dynamic";
+// import Root from "../components/pages/Root";
+const Root = dynamic(() => import("../components/pages/Root"), { ssr: false });
+const IndexPage = () => {
+    return <Root />;
+};
 
-export default function Home() {
-  return (
-    <Layout home>
-      <Head>
-        <title>{siteTitle}</title>
-      </Head>
-    </Layout>
-  )
-}
+export default IndexPage;

@@ -1,0 +1,52 @@
+.container{
+  background: #fff;
+  color: #000;
+  min-height: 100vh;
+  .header{
+    height: 102px;
+    line-height: 102px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    .inner{
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 30px;
+      .title{
+        font-style: normal;
+        font-weight: 600;
+        font-size: 36px;
+      }
+      .documentLink{
+        font-weight: 300;
+        font-size: 24px;
+      }
+    }
+  }
+  .main{
+    max-width: 1440px;
+    margin: 0 auto;
+    .banner{
+      margin-top: 97px;
+      .text{
+        font-weight: 300;
+        font-size: 64px;
+        line-height: 75px;
+      }
+      .btnBox{
+        margin-top: 70px;
+        display: flex;
+        .startBtn{
+          margin-right: 20px;
+        }
+      }
+    }
+    .monitor{
+      margin-top: 73px;
+      .monitorImg{
+        width: 1054px;
+        height: 611px;
+      }
+    }
+  }
+}

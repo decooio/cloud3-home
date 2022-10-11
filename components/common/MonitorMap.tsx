@@ -93,12 +93,12 @@ function MonitorMap_(p:IProps){
         return !!item?'red':'#666'
     }
     return(
-        <svg width={854} height={420} className={classnames(className)}>
+        <svg width={954} height={450} className={classnames(className)}>
             { basePos.map((pos,posIndex) => {
                 return pos.map(yItems=>{
                     return pos2arr(yItems).map((item,index)=>{
                         return(
-                            <circle fill={matchNode(item,posIndex)} cx={(item+1)*6.5} cy={(posIndex+1)*6.5} r="2.3"/>
+                            <circle key={`circle${index}`} fill={matchNode(item,posIndex)} cx={(item+1)*7} cy={(posIndex+1)*7} r="2.6"/>
                         )
                     })
                 })

@@ -6,7 +6,7 @@ export const SectionMid = React.memo(() => {
       <div className="w-full py-6 px-12 flex flex-col items-center">
           <div className="my-10 flex justify-center mt-20">
               <MonitorMap className="mt-10" />
-              <div className="flex flex-col items-center w-96 ml-20">
+              <div className="flex flex-col items-center w-96 ml-10">
                   <UniswapSvg />
                   <span className="text-black text-lg mt-8 font-medium">
                       Check this real-time monitor to see how we help Uniswap decentralized host their Dapp frontend:

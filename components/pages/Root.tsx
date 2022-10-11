@@ -2,6 +2,7 @@ import React from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { StoreProvider, useInitStore } from "@lib/store";
 import Home from "./home/Home";
+import Connect from "./connect/Connect";
 function Root_() {
   const store = useInitStore();
   return (
@@ -10,6 +11,7 @@ function Root_() {
           <HashRouter>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/connect" element={<Connect />} />
             </Routes>
           </HashRouter>
         </div>

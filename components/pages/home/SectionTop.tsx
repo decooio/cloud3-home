@@ -12,7 +12,7 @@ export const SectionTop = React.memo(() => {
       {/* Content */}
       <div className="z-1 relative w-full h-full py-6 px-12 flex flex-col items-center">
         <div className=" h-14 w-full flex justify-between items-center font-WorkSans">
-          <div>Cloud3</div>
+          <div className="font-SquadaOne text-4xl">Cloud3.cc</div>
           <Button text="Documentations" className=" border-white text-white" />
         </div>
         <div className="my-10 w-2/3 flex flex-col justify-center mt-[23vh]">

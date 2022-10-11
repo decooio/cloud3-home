@@ -9,12 +9,12 @@ const Connect: NextPage = () => {
                 <div className="font-SquadaOne text-4xl px-12">IPFS Cloud</div>
             </div>
             <div className="w-full flex flex-col flex-1 justify-center items-center text-black text-xl">
-                <span className="w-[47rem] text-center">
+                <span className="w-[47rem] text-center font-normal">
                     Claim your test version W3Bucket NFT on Goerli testnet and start your decentralized storage experience.
                 </span>
-                <span className="w-[47rem] text-center">
-                        To continue, please connect your MetaMask and switch to Goerli testnet.
-                    </span>
+                <span className="w-[47rem] text-center font-normal">
+                    To continue, please connect your MetaMask and switch to Goerli testnet.
+                </span>
                 <Button
                     className="h-26 w-72 mt-12 border-black-1 border-solid border border-b-8 text-2xl"
                     text="MetaMask"

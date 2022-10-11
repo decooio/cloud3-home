@@ -3,10 +3,10 @@ import {BaseProps} from './type'
 import classnames from "classnames";
 import _ from "lodash";
 interface IProps extends BaseProps{
-
+    activePos?: any
 }
 function MonitorMap_(p:IProps){
-    const {className} = p
+    const {className,activePos} = p
     const basePos = [
         [[42,49]],
         [[41,50]],
@@ -72,11 +72,6 @@ function MonitorMap_(p:IProps){
         [[34,37]],
         [[35,36]],
     ]
-    const selectedNodePos = [
-        {x:20,y:20},
-        {x:20,y:21},
-        {x:20,y:22}
-    ]
     const pos2arr = (arr)=>{
         const start  = arr[0]
         const end  = arr[1]
@@ -87,7 +82,7 @@ function MonitorMap_(p:IProps){
         return fArr
     }
     const matchNode = (x,y)=>{
-        const item = _.find(selectedNodePos,(item)=>{
+        const item = _.find(activePos,(item)=>{
             return item.x === x && item.y === y
         })
         return !!item?'red':'#666'

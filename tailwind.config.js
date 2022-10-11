@@ -10,6 +10,7 @@ module.exports = {
         'black-1': "#131521",
       },
       borderWidth: {
+        1: "1px",
         3: "3px",
         6: "6px",
       },

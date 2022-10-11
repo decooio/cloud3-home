@@ -1074,6 +1074,11 @@
     stream-browserify "^3.0.0"
     util "^0.12.4"
 
+"@decooio/crust-fonts@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@decooio/crust-fonts/-/crust-fonts-1.1.0.tgz#fa57b8d2030f99d0b2dc04feef78caf98e914330"
+  integrity sha512-V7dQZDtU1JMOoRQDaOZx3nFAvFiSG3sWyePIN1/XtEh2P+8AST0ZDSA8AV3tVtUpoJiiJituwVUe4c2sx3Q91w==
+
 "@emotion/babel-plugin@^11.10.0":
   version "11.10.2"
   resolved "https://registry.npmmirror.com/@emotion/babel-plugin/-/babel-plugin-11.10.2.tgz#879db80ba622b3f6076917a1e6f648b1c7d008c7"
@@ -6449,6 +6454,11 @@ react-dom@18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
+
+react-icons@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.4.0.tgz#a13a8a20c254854e1ec9aecef28a95cdf24ef703"
+  integrity sha512-fSbvHeVYo/B5/L4VhB7sBA1i2tS8MkT0Hb9t2H1AVPkwGfVHLJCqyr2Py9dKMxsyM63Eng1GkdZfbWj+Fmv8Rg==
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"

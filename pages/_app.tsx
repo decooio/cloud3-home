@@ -1,5 +1,6 @@
 import "../styles/global.css";
 import "leaflet/dist/leaflet.css";
+import "@decooio/crust-fonts/style.css";
 import type { AppProps } from "next/app";
 import { useGaPageView } from "@lib/ga";
 import Head from "next/head";

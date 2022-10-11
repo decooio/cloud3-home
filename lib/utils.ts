@@ -66,6 +66,16 @@ export function openExtUrl(url: string, target: "_blank" | "_self" = "_blank") {
   window.open(url, target);
 }
 
+export function getClientHeight() {
+  let clientHeight=0;
+  if(document.body.clientHeight&&document.documentElement.clientHeight) {
+    clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+  } else {
+    clientHeight = (document.body.clientHeight>document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+  }
+  return clientHeight;
+}
+
 
 export function isSame(a: string, b: string, cases: boolean = true) {
   if (cases) return a === b;

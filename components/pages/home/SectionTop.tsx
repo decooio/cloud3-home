@@ -2,9 +2,16 @@ import { Button } from "@components/common/Button";
 import HomeBg from "@components/homebg";
 import React, {useState} from "react";
 import CloseBtnSvg from '../../../public/images/close_btn.svg'
+import {getClientHeight} from '@lib/utils'
 
 export const SectionTop = React.memo(() => {
     const [dropUpload,showDropUpload] = useState(false)
+    const openDropUpload = ()=>{
+        showDropUpload(true)
+        setTimeout(()=>{
+            window.scroll(0,getClientHeight())
+        },0)
+    }
     return (
         <div className="w-full min-h-min">
             {/* Anim BG */}
@@ -12,8 +19,8 @@ export const SectionTop = React.memo(() => {
                 <HomeBg />
             </div>
             {/* Content */}
-            <div className="z-1 h-[100vh] relative w-full h-full py-6 px-12 flex flex-col items-center">
-                <div className=" h-14 w-full flex justify-between items-center font-WorkSans">
+            <div className="z-1 h-[100vh] relative w-full py-6 px-12 flex flex-col items-center">
+                <div className="h-14 w-full flex justify-between items-center font-WorkSans">
                     <div className="font-SquadaOne text-4xl">Cloud3.cc</div>
                     <Button text="Documentations" className="border-white text-white" />
                 </div>
@@ -23,7 +30,7 @@ export const SectionTop = React.memo(() => {
                         <p>Decentralized, Guaranteed & Alive.</p>
                     </div>
                     <div className="flex mt-12">
-                        <Button text="Quick Start" onClick={()=>showDropUpload(true)} className="border-white text-white" />
+                        <Button text="Quick Start" onClick={openDropUpload} className="border-white text-white" />
                         <Button
                             text="Launch App"
                             className=" ml-3 border-white text-white"

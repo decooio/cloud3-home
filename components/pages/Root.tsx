@@ -2,8 +2,10 @@ import React from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { StoreProvider, useInitStore } from "@lib/store";
 import Home from "./home/Home";
-import { Main } from "./main/Main";
+import { Buckets } from "./main/Buckets";
 import Connect from "./connect/Connect";
+import { Bucket } from "./main/Bucket";
+import { Setting } from "./main/Setting";
 function Root_() {
   const store = useInitStore();
   return (
@@ -13,7 +15,9 @@ function Root_() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/connect" element={<Connect />} />
-            <Route path="/main" element={<Main />} />
+            <Route path="/buckets" element={<Buckets />} />
+            <Route path="/bucket/:bucketId" element={<Bucket />} />
+            <Route path="/settings" element={<Setting />} />
           </Routes>
         </HashRouter>
       </div>

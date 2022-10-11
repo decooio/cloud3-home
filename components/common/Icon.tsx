@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { FunctionComponent, HTMLAttributes } from "react";
+import React, { HTMLAttributes } from "react";
 import { IconType } from "react-icons";
 
 export const Icon = React.memo(
@@ -7,7 +7,7 @@ export const Icon = React.memo(
     const { icon, ...props } = p;
     if (typeof icon === "string")
       return <span {...props} className={classNames(props.className, icon)} />;
-    const Ricon = icon as unknown as FunctionComponent;
+    const Ricon: any = icon;
     return <Ricon {...props} />;
   }
 );

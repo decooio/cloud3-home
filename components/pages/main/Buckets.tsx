@@ -1,11 +1,16 @@
 import { Button } from "@components/common/Button";
 import React, { useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { MainLayout } from "./MainLayout";
 
 export interface BucketDTO {}
 
 const BucketCard = React.memo((p: { data: BucketDTO }) => {
   const { data } = p;
+  const push = useNavigate();
+  const onClickBucket = () => {
+    push(`/bucket/${"a3985d-085670"}`);
+  };
   return (
     <div className=" h-min p-5 border border-solid border-black-1">
       <img className="w-full aspect-[3/2] " src={"/images/profile.jpg"} />
@@ -36,7 +41,11 @@ const BucketCard = React.memo((p: { data: BucketDTO }) => {
           View Metadata
         </a>
       </div>
-      <Button className="!w-full mt-[2px] text-lg" text="Enter W3Bucket" />
+      <Button
+        onClick={onClickBucket}
+        className="!w-full mt-[2px] text-lg"
+        text="Enter W3Bucket"
+      />
     </div>
   );
 });

@@ -8,6 +8,9 @@ module.exports = {
     extend: {
       colors: {
         'black-1': "#131521",
+        gray: {
+          6: '#666666'
+        }
       },
       borderWidth: {
         1: "1px",

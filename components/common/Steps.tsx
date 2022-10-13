@@ -49,6 +49,7 @@ export const Steps = React.memo((p: { data: string[]; current: number }) => {
     <div className=" flex">
       {data.map((text, index) => (
         <Step
+          key={`steps_${index}`}
           text={text}
           edge={index === 0 ? -1 : index === data.length - 1 ? 1 : 0}
           active={index <= current}

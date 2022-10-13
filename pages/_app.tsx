@@ -33,7 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
           content={`OneLand provides in-depth market & metaverse project data, a land-NFT marketplace and decentralised land financing.`}
           property="og:description"
         /> */}
-            <title>{"ONELAND"}</title>
+            <title>{"Cloud3.cc"}</title>
           </Head>
           {typeof window === "undefined" ? null : <Component {...pageProps} />}
         </ThirdwebProvider>

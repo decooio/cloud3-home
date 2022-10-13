@@ -3,6 +3,7 @@ import HomeBg from "@components/homebg";
 import React, {useState} from "react";
 import CloseBtnSvg from '../../../public/images/close_btn.svg'
 import {getClientHeight} from '@lib/utils'
+import { useNavigate } from "react-router-dom";
 
 export const SectionTop = React.memo(() => {
     const [dropUpload,showDropUpload] = useState(false)
@@ -12,10 +13,11 @@ export const SectionTop = React.memo(() => {
             window.scroll(0,getClientHeight())
         },0)
     }
+    const push = useNavigate()
     return (
         <div className="w-full min-h-min">
             {/* Anim BG */}
-            <div className="w-full bg-black h-screen h-full absolute left-0 top-0 z-0">
+            <div className="w-full bg-black h-screen absolute left-0 top-0 z-0">
                 <HomeBg />
             </div>
             {/* Content */}
@@ -34,6 +36,7 @@ export const SectionTop = React.memo(() => {
                         <Button
                             text="Launch App"
                             className=" ml-3 border-white text-white"
+                            onClick={() => push('/buckets')}
                         />
                     </div>
                 </div>
@@ -41,7 +44,7 @@ export const SectionTop = React.memo(() => {
             {
                 dropUpload &&
                 <div className="w-full flex justify-center">
-                    <div className="relative flex justify-center items-center border border-black-1 border-4 border-dashed h-[28.937rem] w-[69.5rem] mt-12">
+                    <div className="relative flex justify-center items-center border-black-1 border-4 border-dashed h-[28.937rem] w-[69.5rem] mt-12">
                         <CloseBtnSvg className="absolute right-2 top-2 cursor-pointer" onClick={()=>showDropUpload(false)} />
                         <span className="text-black text-4xl">Drag and Drop Your File here</span>
                     </div>

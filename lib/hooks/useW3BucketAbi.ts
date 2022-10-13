@@ -17,5 +17,5 @@ export function useW3BucketAbi(): W3bucketAbi | undefined {
       );
     }
     return undefined;
-  }, [connector]);
+  }, [connector, ]);
 }

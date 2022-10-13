@@ -2,7 +2,7 @@ import { Result } from "./../../node_modules/ahooks/es/useRequest/src/types.d";
 import { useMemo } from "react";
 import { ethers } from "ethers";
 import { useAsync } from "react-use";
-import { useSDK } from "@thirdweb-dev/react";
+import { useChainId, useNetwork, useSDK } from "@thirdweb-dev/react";
 import { useW3BucketAbi } from "./useW3BucketAbi";
 
 export interface BucketEdition {
@@ -20,8 +20,9 @@ export interface BucketEdition {
 export function useBucketEditions() {
   const w3b = useW3BucketAbi();
   const sdk = useSDK();
+  const chainId = useChainId();
   const result = useAsync(async () => {
-    if (w3b) {
+    if (w3b && chainId) {
       const data = await w3b.getBucketEditions(true);
       console.info("data:", data);
       const res: BucketEdition[] = [];
@@ -48,7 +49,7 @@ export function useBucketEditions() {
       return res;
     }
     return null;
-  }, [w3b]);
+  }, [w3b, chainId]);
 
   return useMemo(
     () => ({ ...result, loading: result.loading || !result.value }),

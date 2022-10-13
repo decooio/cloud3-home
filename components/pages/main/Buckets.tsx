@@ -18,7 +18,7 @@ const BucketCard = React.memo((p: { data: BucketDTO }) => {
       <div className="flex text-sm my-[2px] justify-between">
         <div>Current Usage</div>
         <div>
-          <span className="text-orange-400">{"54GB"}</span>
+          <span className="text-orange-15">{"54GB"}</span>
           {"/100GB"}
         </div>
       </div>
@@ -80,7 +80,8 @@ export const Buckets = React.memo(() => {
     ],
     []
   );
-  const onNewBucket = useCallback(() => {}, []);
+  const push = useNavigate();
+  const onNewBucket = useCallback(() => push("/mint"), [push]);
   return (
     <MainLayout menuId={1}>
       <div className="flex-1 h-full overflow-y-auto">

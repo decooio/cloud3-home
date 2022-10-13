@@ -6,6 +6,7 @@ import { Buckets } from "./main/Buckets";
 import Connect from "./connect/Connect";
 import { Bucket } from "./main/Bucket";
 import { Setting } from "./main/Setting";
+import { Mint } from "./main/Mint";
 function Root_() {
   const store = useInitStore();
   return (
@@ -18,6 +19,7 @@ function Root_() {
             <Route path="/buckets" element={<Buckets />} />
             <Route path="/bucket/:bucketId" element={<Bucket />} />
             <Route path="/settings" element={<Setting />} />
+            <Route path="/mint" element={<Mint />} />
           </Routes>
         </HashRouter>
       </div>

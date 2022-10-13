@@ -51,25 +51,58 @@ const BucketCard = React.memo((p: { data: BucketDTO }) => {
 });
 
 export const Buckets = React.memo(() => {
-  const buckets = useMemo(() => [{}, {}, {}, {}, {}, {}], []);
+  const buckets = useMemo(
+    () => [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+    ],
+    []
+  );
   const onNewBucket = useCallback(() => {}, []);
   return (
     <MainLayout menuId={1}>
-      <div className="flex-1 h-full px-8 pt-10 flex flex-col">
-        <div className="w-full flex justify-between mb-5 pb-5  whitespace-nowrap border-b-1 border-solid border-black-1">
-          <div className=" inline-block text-2xl self-center font-medium h-min">
-            Your W3Buckets({buckets.length})
+      <div className="flex-1 h-full overflow-y-auto">
+        <div className="px-8 relative">
+          <div className="sticky top-0 pt-10 bg-white ">
+            <div className=" w-full flex justify-between pb-5  whitespace-nowrap ">
+              <div className=" inline-block text-2xl self-center font-medium h-min">
+                Your W3Buckets({buckets.length})
+              </div>
+              <Button
+                className="whitespace-nowrap w-max"
+                text="Mint a New W3Bucket"
+                onClick={onNewBucket}
+              />
+            </div>
+            <div className="h-5 border-t-1 border-solid border-black-1" />
           </div>
-          <Button
-            className="whitespace-nowrap w-max"
-            text="Mint a New W3Bucket"
-            onClick={onNewBucket}
-          />
-        </div>
-        <div className="w-full overflow-y-auto gap-5 grid grid-cols-[repeat(auto-fill,_minmax(350px,_1fr))]">
-          {buckets.map((b, index) => (
-            <BucketCard data={b} key={`bucket_${index}`} />
-          ))}
+          <div className="w-full overflow-y-auto gap-5 grid grid-cols-[repeat(auto-fill,_minmax(350px,_1fr))]">
+            {buckets.map((b, index) => (
+              <BucketCard data={b} key={`bucket_${index}`} />
+            ))}
+          </div>
         </div>
       </div>
     </MainLayout>

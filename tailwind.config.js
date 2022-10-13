@@ -9,7 +9,8 @@ module.exports = {
       colors: {
         'black-1': "#131521",
         gray: {
-          6: '#666666'
+          6: '#666666',
+          7: '#76777C'
         }
       },
       borderWidth: {

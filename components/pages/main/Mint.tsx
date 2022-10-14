@@ -1,4 +1,3 @@
-import { Button } from "@components/common/Button";
 import { Icon } from "@components/common/Icon";
 import { Steps } from "@components/common/Steps";
 import { MintStep1 } from "@components/mint/MintStep1";
@@ -6,12 +5,14 @@ import { MintStep2 } from "@components/mint/MintStep2";
 import { MintStep3 } from "@components/mint/MintStep3";
 import { useSafeState } from "@lib/hooks/tools";
 import { useBucketEditions } from "@lib/hooks/useBucketEditions";
+import { useAppLoading } from "@lib/store/useAppLoading";
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { MainLayout } from "./MainLayout";
 
 export const Mint = React.memo(() => {
   const { value: editions, loading } = useBucketEditions();
+  useAppLoading(loading)
   const push = useNavigate();
   const steps = useMemo(
     () => [

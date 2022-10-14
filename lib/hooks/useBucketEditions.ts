@@ -1,8 +1,7 @@
-import { Result } from "./../../node_modules/ahooks/es/useRequest/src/types.d";
-import { useMemo } from "react";
+import { useChainId, useSDK } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
+import { useMemo } from "react";
 import { useAsync } from "react-use";
-import { useChainId, useNetwork, useSDK } from "@thirdweb-dev/react";
 import { useW3BucketAbi } from "./useW3BucketAbi";
 
 export interface BucketEdition {
@@ -52,7 +51,7 @@ export function useBucketEditions() {
   }, [w3b, chainId]);
 
   return useMemo(
-    () => ({ ...result, loading: result.loading || !result.value }),
+    () => ({ ...result, loading: result.loading }),
     [result]
   );
 }

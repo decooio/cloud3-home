@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 
 export const useSafe = () => {
   const ref = useRef({ safe: true });
@@ -13,11 +13,15 @@ export const useSafe = () => {
 
 export function useSafeSet<T>(...set: Dispatch<SetStateAction<T>>[]) {
   const safeObj = useSafe();
-  return set.map<Dispatch<SetStateAction<T>>>((item) => {
-    return (action) => {
-      safeObj.safe && item(action);
-    };
-  });
+  return useMemo(
+    () =>
+      set.map<Dispatch<SetStateAction<T>>>((item) => {
+        return (action) => {
+          safeObj.safe && item(action);
+        };
+      }),
+    [set]
+  );
 }
 
 export function useSafeState<S>(

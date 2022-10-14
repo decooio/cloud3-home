@@ -14,7 +14,7 @@ export const AppLoading = React.memo(() => {
       onMouseDown={intercepEvent}
       onClick={intercepEvent}
     >
-      <Logo className=" animate-bounce" />
+      <Logo className=" animate-bounce_1 py-10" />
     </div>
   );
 });

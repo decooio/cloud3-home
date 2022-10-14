@@ -7,21 +7,36 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'black-1': "#131521",
+        "black-1": "#131521",
         gray: {
-          6: '#666666',
-          7: '#76777C',
-          8: '#898F8F',
-          16: '#e0e0e7'
+          6: "#666666",
+          7: "#76777C",
+          8: "#898F8F",
+          16: "#e0e0e7",
         },
         orange: {
-          15: '#FC7823',
-        }
+          15: "#FC7823",
+        },
       },
       borderWidth: {
         1: "1px",
         3: "3px",
         6: "6px",
+      },
+      keyframes: {
+        bounce_1: {
+          "0%, 100%": {
+            transform: "translateY(-50%) scaleY(1.2)",
+            "animation-timing-function": "cubic-bezier(0.8,0,1,1)",
+          },
+          "50%": {
+            transform: "translateY(50%) scaleY(0.6)",
+            "animation-timing-function": "cubic-bezier(0,0,0.2,1)",
+          },
+        },
+      },
+      animation: {
+        bounce_1: "bounce_1 1.5s infinite",
       },
     },
   },

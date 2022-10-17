@@ -81,3 +81,8 @@ export function isSame(a: string, b: string, cases: boolean = true) {
   if (cases) return a === b;
   return _.toLower(a) === _.toLower(b);
 }
+
+
+export function parseBucketId(bucketId: string){
+  return bucketId
+}

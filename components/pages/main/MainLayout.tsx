@@ -3,10 +3,11 @@ import { Icon } from "@components/common/Icon";
 import { IconSetting } from "@components/common/icons";
 import { Logo } from "@components/common/Logo";
 import { ConnectWallet } from "@components/ConnectWallet";
+import { useStore } from "@lib/store/store";
 import { openExtUrl, shortStr } from "@lib/utils";
-import { useAddress } from "@thirdweb-dev/react";
+import { useAddress, useConnect } from "@thirdweb-dev/react";
 import classNames from "classnames";
-import React, { HTMLAttributes, useMemo } from "react";
+import React, { HTMLAttributes, useEffect, useMemo } from "react";
 import { BsBucket } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 interface Menu {
@@ -28,6 +29,9 @@ export const MainLayout = React.memo(
       ];
     }, []);
     const push = useNavigate();
+    const connect = useConnect();
+    const { oUpdate } = useStore();
+    useEffect(() => {},[oUpdate, connect])
     return (
       <div
         {...props}

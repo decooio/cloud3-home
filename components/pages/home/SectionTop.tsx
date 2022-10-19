@@ -1,17 +1,139 @@
 import { Button } from "@components/common/Button";
 import HomeBg from "@components/homebg";
-import React, {useState} from "react";
+import {ProgressBar} from "@components/common/ProgressBar";
+import React, {useEffect, useRef, useState} from "react";
 import CloseBtnSvg from '../../../public/images/close_btn.svg'
 import {getClientHeight} from '@lib/utils'
 import { useNavigate } from "react-router-dom";
+import {useAddress,useConnect, useSigner} from "@thirdweb-dev/react";
+import axios from 'axios'
+import classNames from "classnames";
 
+export interface UploadRes {
+    Hash: string,
+    Size: string,
+    Name: string,
+    items?: UploadRes[],
+}
 export const SectionTop = React.memo(() => {
-    const [dropUpload,showDropUpload] = useState(false)
+    const [visibleDropUpload,setVisibleDropUpload] = useState(false)
+    const [uploadFileInfo,setUploadFileInfo] = useState(null)
+    const [upState,setUpState] = useState({progress: 0, up: false})
+    const uploadRef = useRef(null)
+    const inputFileRef = useRef(null)
+    // const account = useAddress();
+    const signer = useSigner()
     const openDropUpload = ()=>{
-        showDropUpload(true)
+        setVisibleDropUpload(true)
         setTimeout(()=>{
             window.scroll(0,getClientHeight())
         },0)
+    }
+    useEffect(()=>{
+        if(uploadRef.current){
+            const drag = uploadRef.current
+            drag.addEventListener('dragover', (e) => {
+                e.stopPropagation()
+                e.preventDefault()
+            })
+            drag.addEventListener('drop',async (e)=>{
+                e.stopPropagation()
+                e.preventDefault()
+                if(!uploadFileInfo){
+                    const [file] = e.dataTransfer.files
+                    const fileSize = file.size / (1024 * 1024);
+                    if (fileSize > 100) {
+                        console.log('', 'e', '用户资料zip文件请不要超过100MB', '消息提醒');
+                        return;
+                    }
+                    await upload(file)
+                }
+            })
+        }
+    },[])
+    const upload = async (cFile?: any) => {
+        try {
+            // setError('')
+            // 1: sign
+            // setBusy(true);
+
+            // const prefix = getPerfix(user);
+            // const msg = account;
+
+            // const signature = await signer.signMessage(account);
+            // const perSignData = `eth-${account}:${signature}`;
+            // const base64Signature = window.btoa(perSignData);
+            const base64Signature = 'ZXRoLTB4MEVDNzJGNEQ5MWVhN2ZiRjAyZTY2NUQzZDU5QzQ3MmVjY2M0ZWZFZDoweDc3NDdmNDkxMWNhOWY2YWJjODE0MTgxZTkzZmM1YjdlNzQ4MGIwYzM0ZGRmOWFmNGQ4NjQ3OTRiZmYzY2EzMTg2MzQyNWEwZDRjZjAyOTA1Mjc5MTIwNDliYjJlYTRkMTM1OGZlZjQ3ZDU4YzBmMTQxNjI3ZmMzMTIwNzMwODdjMWI='
+            const AuthBasic = `Basic ${base64Signature}`;
+            // const AuthBearer = `Bearer ${base64Signature}`;
+            // const AuthBasic = `Basic ${user.authBasic}`;
+            // const AuthBearer = `Bearer ${user.authBearer}`;
+            // 2: up file
+            const cancel = axios.CancelToken.source();
+
+            // setCancelUp(cancel);
+            setUpState({ progress: 0, up: true });
+            // 2.**** : encrypt
+            const form = new FormData();
+            const upFile = cFile;
+            if (upFile && upFile.name) {
+                form.append('file', upFile, upFile.name);
+            } else {
+                console.log('限制文件数量')
+                return false
+            }
+            const upResult = await axios.request({
+                cancelToken: cancel.token,
+                data: form,
+                headers: { Authorization: AuthBasic },
+                maxContentLength: 1024,
+                method: 'POST',
+                onUploadProgress: (p: { loaded: number, total: number }) => {
+                    const percent = p.loaded / p.total;
+                    console.log(percent)
+                    setUpState({ progress: Math.round(percent * 99), up: true });
+                },
+                params: { pin: true },
+                url: `https://crustwebsites.net/api/v0/add`
+            });
+
+            let upRes: UploadRes;
+
+            if (typeof upResult.data === 'string') {
+                const jsonStr = upResult.data.replaceAll('}\n{', '},{');
+                const items = JSON.parse(`[${jsonStr}]`) as UploadRes[];
+                const folder = items.length - 1;
+
+                upRes = items[folder];
+                delete items[folder];
+                upRes.items = items;
+            } else {
+                upRes = upResult.data;
+            }
+            setUpState({ progress: 100, up: false });
+            setUploadFileInfo(upRes)
+        } catch (e) {
+            setUpState({ progress: 0, up: false });
+            // setBusy(false);
+            console.error(e);
+            // setError('Network Error,Please try to switch a Gateway.');
+            throw e
+        }
+    }
+    const onUploadChange = async (file)=>{
+        await upload(file.target.files[0])
+    }
+    const onOpenUpload = async ()=>{
+        if(!uploadFileInfo){
+            inputFileRef.current.click()
+        }
+    }
+    const onCloseDragUpload = (e)=>{
+        e.stopPropagation()
+        e.nativeEvent.stopImmediatePropagation()
+        setVisibleDropUpload(false)
+        setUploadFileInfo(null)
+        return false
     }
     const push = useNavigate()
     return (
@@ -41,16 +163,37 @@ export const SectionTop = React.memo(() => {
                     </div>
                 </div>
             </div>
-            {
-                dropUpload &&
-                <div className="w-full flex justify-center">
-                    <div className="relative flex justify-center items-center border-black-1 border-4 border-dashed h-[28.937rem] w-[69.5rem] mt-12">
-                        <CloseBtnSvg className="absolute right-2 top-2 cursor-pointer" onClick={()=>showDropUpload(false)} />
-                        <span className="text-black text-4xl">Drag and Drop Your File here</span>
-                    </div>
-                    <input hidden={true} type="file"/>
+            <div className={classNames('w-full flex justify-center',visibleDropUpload?'block':'hidden')}>
+                <div ref={uploadRef} onClick={onOpenUpload} className="cursor-pointer relative flex justify-center items-center border-black-1 border-4 border-dashed h-[28.937rem] w-[69.5rem] mt-12">
+                    <CloseBtnSvg className="absolute z-10 right-2 top-2 cursor-pointer" onClick={onCloseDragUpload} />
+                    {
+                        upState.up || uploadFileInfo?
+                            (
+                                upState.up?
+                                    <div className="w-full px-20">
+                                        <ProgressBar value={upState.progress} />
+                                    </div>
+                                    :
+                                    <div className="text-slate-700 text-lg flex flex-col px-20">
+                                        <label className="text-xl font-medium text-black">IPFS CID:</label>
+                                        <span className="mt-5">{uploadFileInfo.Hash}</span>
+                                        <div className="mt-20">
+                                            <label className="text-xl font-medium text-black">You may want to:</label>
+                                            <div className="flex flex-wrap mt-5">
+                                                <div className="mr-5 w-1/2 mb-2 underline">Get download link for this file</div>
+                                                <div className="underline">Verify on IPFS</div>
+                                                <div className="mr-5 w-1/2 underline">View NFT Metadata</div>
+                                                <div className="underline">Claim your W3Bucket NFT on testnet</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                            ) :
+                            <span className="text-black text-4xl">Drag and Drop Your File here</span>
+                    }
                 </div>
-            }
+                <input ref={inputFileRef} hidden={true} onChange={onUploadChange} type="file"/>
+            </div>
         </div>
     );
 });

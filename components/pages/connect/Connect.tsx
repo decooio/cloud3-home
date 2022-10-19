@@ -4,7 +4,7 @@ import {Button} from "@components/common/Button";
 
 const Connect: NextPage = () => {
     return(
-        <div className="w-full h-[100vh] flex flex-col">
+        <div className="w-full h-screen flex flex-col">
             <div className="bg-black h-14 w-full flex items-center font-WorkSans">
                 <div className="font-SquadaOne text-4xl px-12">IPFS Cloud</div>
             </div>

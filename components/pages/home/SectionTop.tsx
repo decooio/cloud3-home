@@ -3,9 +3,9 @@ import HomeBg from "@components/homebg";
 import {ProgressBar} from "@components/common/ProgressBar";
 import React, {useEffect, useRef, useState} from "react";
 import CloseBtnSvg from '../../../public/images/close_btn.svg'
-import {getClientHeight} from '@lib/utils'
+import {getClientHeight, openExtUrl} from '@lib/utils'
 import { useNavigate } from "react-router-dom";
-import {useAddress,useConnect, useSigner} from "@thirdweb-dev/react";
+import {useAddress, useSigner} from "@thirdweb-dev/react";
 import axios from 'axios'
 import classNames from "classnames";
 
@@ -21,7 +21,7 @@ export const SectionTop = React.memo(() => {
     const [upState,setUpState] = useState({progress: 0, up: false})
     const uploadRef = useRef(null)
     const inputFileRef = useRef(null)
-    // const account = useAddress();
+    const account = useAddress();
     const signer = useSigner()
     const openDropUpload = ()=>{
         setVisibleDropUpload(true)
@@ -183,7 +183,9 @@ export const SectionTop = React.memo(() => {
                                                 <div className="mr-5 w-1/2 mb-2 underline">Get download link for this file</div>
                                                 <div className="underline">Verify on IPFS</div>
                                                 <div className="mr-5 w-1/2 underline">View NFT Metadata</div>
-                                                <div className="underline">Claim your W3Bucket NFT on testnet</div>
+                                                {
+                                                    !account && <div onClick={()=>openExtUrl('/#/connect')} className="underline">Claim your W3Bucket NFT on testnet</div>
+                                                }
                                             </div>
                                         </div>
                                     </div>

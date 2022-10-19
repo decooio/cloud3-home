@@ -1,8 +1,10 @@
 import React from "react";
 import {NextPage} from "next";
 import {Button} from "@components/common/Button";
+import {useConnect, useMetamask} from "@thirdweb-dev/react";
 
 const Connect: NextPage = () => {
+    const connect = useMetamask()
     return(
         <div className="w-full h-screen flex flex-col">
             <div className="bg-black h-14 w-full flex items-center font-WorkSans">
@@ -16,6 +18,7 @@ const Connect: NextPage = () => {
                     To continue, please connect your MetaMask and switch to Goerli testnet.
                 </span>
                 <Button
+                    onClick={connect}
                     className="h-26 w-72 mt-12 border-black-1 border-solid border border-b-8 text-2xl"
                     text="MetaMask"
                     iconClassName="mr-5"

@@ -12,7 +12,7 @@ function Button_(props: IProps & ButtonHTMLAttributes<HTMLButtonElement>) {
     <button
       className={classnames(
         className,
-        "p-2 w-40 border-black-1 border-solid border border-b-4 flex items-center justify-center"
+        "p-2 w-40 border-black-1 border-solid border border-b-4 flex items-center justify-center disabled:cursor-not-allowed",
       )}
       {...other}
     >

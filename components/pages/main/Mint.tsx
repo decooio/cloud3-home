@@ -6,7 +6,7 @@ import { MintStep3 } from "@components/mint/MintStep3";
 import { useSafeState } from "@lib/hooks/tools";
 import { useBucketEditions } from "@lib/hooks/useBucketEditions";
 import { useAppLoading } from "@lib/store/useAppLoading";
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { MainLayout } from "./MainLayout";
 
@@ -23,12 +23,12 @@ export const Mint = React.memo(() => {
     []
   );
   const [currentStep, setStep] = useSafeState(0);
-
+  const onNext = useCallback(() => setStep(o => o + 1), [setStep])
   return (
     <MainLayout menuId={1}>
       <div className=" flex-1 h-full overflow-y-auto">
         <div className=" relative px-8 pb-10">
-          <div className=" sticky top-0 bg-white pt-16 pb-3">
+          <div className=" sticky top-0 z-10 bg-white pt-16 pb-3">
             <div
               className=" flex items-center cursor-pointer"
               onClick={() => push("/buckets")}
@@ -41,8 +41,8 @@ export const Mint = React.memo(() => {
           </div>
           {editions && (
             <>
-              {currentStep === 0 && <MintStep1 editions={editions} />}
-              {currentStep === 1 && <MintStep2 editions={editions} />}
+              {currentStep === 0 && <MintStep1 editions={editions} onNext={onNext}/>}
+              {currentStep === 1 && <MintStep2 editions={editions} onNext={onNext}/>}
               {currentStep === 2 && <MintStep3 editions={editions} />}
             </>
           )}

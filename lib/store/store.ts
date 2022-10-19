@@ -1,3 +1,5 @@
+import { MintData } from './../type.d';
+
 import React, {
   Dispatch,
   SetStateAction,
@@ -10,10 +12,12 @@ import { useSafeSet } from "../hooks/tools";
 
 export interface Store {
   loading: boolean
+  mintData?: MintData
 }
 
 const defStore: Store = {
-  loading: false
+  loading: false,
+
 }
 
 export interface WrapStore {

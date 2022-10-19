@@ -86,3 +86,7 @@ export function isSame(a: string, b: string, cases: boolean = true) {
 export function parseBucketId(bucketId: string){
   return bucketId
 }
+
+export function sleep(t: number){
+  return new Promise(resolve => setTimeout(resolve, t))
+}

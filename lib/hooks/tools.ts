@@ -1,4 +1,13 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 export const useSafe = () => {
   const ref = useRef({ safe: true });
@@ -63,4 +72,22 @@ export function useOneState<S>(
     }
   };
   return [state, mergeSet];
+}
+
+export function useOn<T extends (...args: any[]) => any>(handler: T) {
+  const handlerRef = useRef<T | null>(null);
+
+  // In a real implementation, this would run before layout effects
+  useLayoutEffect(() => {
+    handlerRef.current = handler;
+  });
+
+  return useCallback<T>(
+    ((...args: any[]) => {
+      // In a real implementation, this would throw if called during render
+      const fn = handlerRef.current;
+      return fn && fn(...args);
+    }) as T,
+    []
+  );
 }

@@ -9,7 +9,7 @@ export const AppLoading = React.memo(() => {
   if(!loading) return null
   return (
     <div
-      className=" fixed left-0 top-0 w-screen h-screen flex justify-center items-center bg-opacity-60 bg-black-1"
+      className=" fixed left-0 top-0 z-50 w-screen h-screen flex justify-center items-center bg-opacity-60 bg-black-1"
       onMouseMove={intercepEvent}
       onMouseDown={intercepEvent}
       onClick={intercepEvent}

@@ -10,8 +10,6 @@ export interface BasePropsWithChildren extends BaseProps {
   children: any;
 }
 
-
-
 export interface Trait<T> {
   trait_type: string;
   value: T;
@@ -30,8 +28,8 @@ export interface W3BucketMetadata {
   name: string; // "<Encoded Bucket ID>"
   description: string; // "<To Be Provided>"
   image: string; // "ipfs://QmVvigK7jfLyHcDjnNYr2mAReFW9FCFWf41UNB9tbK8rWw"
-  external_url: "string"; // "https://ipfs-scan.io?cid=QmVvigK7jfLyHcDjnNYr2mAReFW9FCFWf41UNB9tbK8rWw"
-  file_history: "string"; // "ipns://k51qzi5uqu5dktricedv5isy1c69oc6i7q15p7lzhkgyyarkdgz350emmvwnwa"
+  external_url: string; // "https://ipfs-scan.io?cid=QmVvigK7jfLyHcDjnNYr2mAReFW9FCFWf41UNB9tbK8rWw"
+  file_history: string; // "ipns://k51qzi5uqu5dktricedv5isy1c69oc6i7q15p7lzhkgyyarkdgz350emmvwnwa"
   attributes: TraitType[] /*
   [
     {
@@ -49,4 +47,48 @@ export interface W3BucketMetadata {
   ]
   */;
   dStorage: DStorage;
+}
+
+export type MintColor = [string, string, string];
+export type MintColorType =
+  | "gray"
+  | "dark"
+  | "yellow"
+  | "red"
+  | "purple"
+  | "green"
+  | "blue";
+
+export type QRCODE_STYLE =
+  | "A1"
+  | "A-a1"
+  | "A-a2"
+  | "A-b1"
+  | "A-b2"
+  | "A2"
+  | "A3"
+  | "C1"
+  | "C2"
+  | "C3"
+  | "SP-1"
+  | "SP-2"
+  | "SP-3";
+
+
+export interface CrustOrder {
+  tx: string,
+  cid: string,
+}  
+export interface MintData {
+  color: MintColorType;
+  qrcode: QRCODE_STYLE;
+  editionId?: number;
+  ipns?: string;
+  uuid?: string;
+  metadata?: W3BucketMetadata;
+  metadataCID?: string;
+
+  mintTx?: string;
+  tokenId?: string;
+  bucketId?: string;
 }

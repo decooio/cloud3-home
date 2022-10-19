@@ -1,5 +1,5 @@
 import {memo} from 'react'
-import {BaseProps} from './type'
+import {BaseProps} from '../../lib/type'
 import classnames from "classnames";
 import _ from "lodash";
 interface IProps extends BaseProps{

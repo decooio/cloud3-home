@@ -2,8 +2,8 @@ import classNames from "classnames";
 import React from "react";
 
 export const Step = React.memo(
-  (p: { text: string; edge: -1 | 0 | 1; active: boolean }) => {
-    const { edge, active, text } = p;
+  (p: { text: string; edge: -1 | 0 | 1; active: boolean, isCurrent: boolean }) => {
+    const { edge, active, text, isCurrent } = p;
     return (
       <div className=" flex-1">
         <div className="flex items-center">
@@ -26,8 +26,8 @@ export const Step = React.memo(
           </div>
           <div
             className={classNames(" flex-1 h-[2px] ", {
-              "bg-orange-15": active && edge <= 0,
-              "bg-gray-16": !active && edge <= 0,
+              "bg-orange-15": active && !isCurrent && edge <= 0,
+              "bg-gray-16": (!active || isCurrent) && edge <= 0,
             })}
           />
         </div>
@@ -52,6 +52,7 @@ export const Steps = React.memo((p: { data: string[]; current: number }) => {
           key={`steps_${index}`}
           text={text}
           edge={index === 0 ? -1 : index === data.length - 1 ? 1 : 0}
+          isCurrent={index === current}
           active={index <= current}
         />
       ))}

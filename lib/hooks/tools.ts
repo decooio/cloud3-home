@@ -80,6 +80,7 @@ export function useOn<T extends (...args: any[]) => any>(handler: T) {
   // In a real implementation, this would run before layout effects
   useLayoutEffect(() => {
     handlerRef.current = handler;
+    return () => {}
   });
 
   return useCallback<T>(

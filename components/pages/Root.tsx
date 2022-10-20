@@ -12,7 +12,7 @@ function Root_() {
   const store = useInitStore();
   return (
     <StoreProvider value={store}>
-      <div className="App" id="app-root">
+      <div className="App relative" id="app-root">
         <HashRouter>
           <Routes>
             <Route path="/" element={<Home />} />

@@ -7,11 +7,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "black-1": "#131521",
+        black: {
+          DEFAULT: '#000000',
+          1: '#131521',
+          3: '#333333'
+        },
         gray: {
           6: "#666666",
           7: "#76777C",
           8: "#898F8F",
+          12: "#cccccc",
           16: "#e0e0e7",
         },
         orange: {

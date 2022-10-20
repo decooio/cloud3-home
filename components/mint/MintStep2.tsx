@@ -2,16 +2,21 @@ import { BucketImage, MintColors } from "@components/common/BucketImage";
 import { Button } from "@components/common/Button";
 import { Loading } from "@components/common/Loading";
 import { QRCodeStyles } from "@components/common/QRCode";
+import { upload } from "@lib/files";
 import { useOn, useSafeState } from "@lib/hooks/tools";
 import { BucketEdition } from "@lib/hooks/useBucketEditions";
 import { useMintData } from "@lib/hooks/useMintData";
 import { shortStr } from "@lib/utils";
 import classNames from "classnames";
+import { toBlob } from "html-to-image";
 import _ from "lodash";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { toBlob, toPng } from "html-to-image";
-import { upload } from "@lib/files";
-import { W3BucketMetadata } from "@lib/type";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from "react";
 export interface MintStep2Props {
   editions: BucketEdition[];
   onNext: () => void;
@@ -30,6 +35,7 @@ function CreateIpns() {
 
 function TipIpns(p: { ipns: string; onContinue: () => void }) {
   const { ipns, onContinue } = p;
+  const [showNext, setShowNext] = useState(false);
   return (
     <div className="pl-12 flex-1 break-all">
       <div className="p-8 border-solid border-black-1 border flex flex-col">
@@ -47,20 +53,22 @@ function TipIpns(p: { ipns: string; onContinue: () => void }) {
           You can always fetch the storage history via any IPFS gateway or IPFS
           node.
         </div>
-        <Button text="Got it" className=" mt-8 self-center" />
+        <Button text="Got it" className=" mt-8 self-center" onClick={() => setShowNext(true)}/>
       </div>
-      <div className=" mt-10 text-xl flex flex-col">
-        <div>{ipns}</div>
-        <div className=" font-medium">
-          The IPNS name for this W3Bucket has successfully generated and
-          published to IPFS.
+      {showNext && (
+        <div className=" mt-10 text-xl flex flex-col">
+          <div>{ipns}</div>
+          <div className=" font-medium">
+            The IPNS name for this W3Bucket has successfully generated and
+            published to IPFS.
+          </div>
+          <Button
+            text="Continue"
+            className=" mt-6 self-center"
+            onClick={onContinue}
+          />
         </div>
-        <Button
-          text="Continue"
-          className=" mt-6 self-center"
-          onClick={onContinue}
-        />
-      </div>
+      )}
     </div>
   );
 }

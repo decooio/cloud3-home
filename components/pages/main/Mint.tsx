@@ -43,7 +43,7 @@ export const Mint = React.memo(() => {
             <>
               {currentStep === 0 && <MintStep1 editions={editions} onNext={onNext}/>}
               {currentStep === 1 && <MintStep2 editions={editions} onNext={onNext}/>}
-              {currentStep === 2 && <MintStep3 editions={editions} />}
+              {currentStep >= 2 && <MintStep3 editions={editions} onNext={onNext}/>}
             </>
           )}
         </div>

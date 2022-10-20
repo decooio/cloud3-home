@@ -21,10 +21,10 @@ function TulpeText(p: { data: [string, string] | [string, string, string] }) {
   } = p;
   return (
     <div className=" flex items-center text-2xl">
-      <div>{tit}: </div>
+      <div className=" mr-2">{tit}:</div>
       {link ? (
         <a
-          className=" underline underline-offset-2"
+          className=" underline underline-offset-2 !text-black-1"
           target="_blank"
           href={link}
         >
@@ -38,10 +38,11 @@ function TulpeText(p: { data: [string, string] | [string, string, string] }) {
 }
 export interface MintStep3Props {
   editions: BucketEdition[];
+  onNext: () => void;
 }
 
 export const MintStep3 = React.memo((p: MintStep3Props) => {
-  const { editions } = p;
+  const { editions, onNext } = p;
   const [mintData, updateMint] = useMintData();
   const currentEditionId = mintData.editionId;
   const currentEdition = useMemo(
@@ -91,7 +92,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
           mintData.price.currency,
           `ipfs://${mintData.metadataCID}`
         )
-        .catch(() => 80000)
+        .catch(() => 396277)
         .then((gas) =>
           erc20
             .approve(W3Bucket_Adress, value)
@@ -108,14 +109,17 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
     }
     task
       .then((res) => {
+        console.info('mint:', res)
         updateMint({ mintTx: res.hash });
+        onNext()
       })
       .catch(console.error)
       .then(() => setMinting(false));
   });
   const push = useNavigate();
   const onComplete = useOn(() => {
-    push("buckets");
+    updateMint({}, true)
+    push("/buckets");
   });
   return (
     <div className=" px-10 pt-9 flex">
@@ -162,7 +166,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
         </div>
       )}
       {!minting && mintData.mintTx && (
-        <div className="flex flex-1 px-12 flex-col items-center ">
+        <div className="flex flex-1 px-12 flex-col ">
           <div className=" text-2xl font-medium mb-8">
             Congrats, You have completed all the minting processes for this
             W3Bucket NFT!
@@ -186,7 +190,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
             Return to the W3Bucket Home Page and start your Cloud3 journey. Bon
             Voyage!
           </div>
-          <Button text="Complete" className=" mt-20" onClick={onComplete} />
+          <Button text="Complete" className=" self-center mt-20" onClick={onComplete} />
         </div>
       )}
     </div>

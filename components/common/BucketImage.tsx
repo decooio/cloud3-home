@@ -1,5 +1,6 @@
 import { useMintData } from "@lib/hooks/useMintData";
 import { MintColor, MintColorType } from "@lib/type";
+import { formatW3BucketCapacity } from "@lib/utils";
 import React from "react";
 import { BsBucket, BsBucketFill } from "react-icons/bs";
 import { IconCloud3 } from "./IconCloud3";
@@ -43,7 +44,7 @@ export const BucketImage = React.memo(
           <BsBucket className=" text-[18.75rem]" style={{ color: iconColor }} />
         )}
         <div className="text-end" style={{ color: textColor }}>
-          {size} GB
+          { formatW3BucketCapacity(size) }
         </div>
         <QRCode
           value={ipns}

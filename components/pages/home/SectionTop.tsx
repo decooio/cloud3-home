@@ -88,7 +88,7 @@ export const SectionTop = React.memo(() => {
                 headers: { Authorization: AuthBasic },
                 maxContentLength: 1024,
                 method: 'POST',
-                onUploadProgress: (p: { loaded: number, total: number }) => {
+                onUploadProgress: (p) => {
                     const percent = p.loaded / p.total;
                     console.log(percent)
                     setUpState({ progress: Math.round(percent * 99), up: true });

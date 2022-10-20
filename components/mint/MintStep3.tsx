@@ -8,11 +8,34 @@ import { useMintData } from "@lib/hooks/useMintData";
 import { useW3BucketAbi } from "@lib/hooks/useW3BucketAbi";
 import { useWeb3Provider } from "@lib/hooks/useWeb3Provider";
 import { ERC20Abi__factory } from "@lib/typechain";
+import { bucketEtherscanUrl, etherscanTx, shortStr } from "@lib/utils";
 import { useAddress } from "@thirdweb-dev/react";
 import classNames from "classnames";
 import { ContractTransaction, ethers } from "ethers";
 import React, { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
+function TulpeText(p: { data: [string, string] | [string, string, string] }) {
+  const {
+    data: [tit, value, link],
+  } = p;
+  return (
+    <div className=" flex items-center text-2xl">
+      <div>{tit}: </div>
+      {link ? (
+        <a
+          className=" underline underline-offset-2"
+          target="_blank"
+          href={link}
+        >
+          {value}
+        </a>
+      ) : (
+        <div className=" underline underline-offset-2">{value}</div>
+      )}
+    </div>
+  );
+}
 export interface MintStep3Props {
   editions: BucketEdition[];
 }
@@ -85,10 +108,14 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
     }
     task
       .then((res) => {
-        updateMint({ mintTx: res.hash })
+        updateMint({ mintTx: res.hash });
       })
       .catch(console.error)
       .then(() => setMinting(false));
+  });
+  const push = useNavigate();
+  const onComplete = useOn(() => {
+    push("buckets");
   });
   return (
     <div className=" px-10 pt-9 flex">
@@ -134,7 +161,34 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
           </div>
         </div>
       )}
-      {!minting && mintData.mintTx && <div></div>}
+      {!minting && mintData.mintTx && (
+        <div className="flex flex-1 px-12 flex-col items-center ">
+          <div className=" text-2xl font-medium mb-8">
+            Congrats, You have completed all the minting processes for this
+            W3Bucket NFT!
+          </div>
+          <TulpeText
+            data={[
+              "W3Bucket NFT Token ID",
+              "1000004",
+              bucketEtherscanUrl(1000004),
+            ]}
+          />
+          <TulpeText
+            data={[
+              "Mint TX ID",
+              shortStr(mintData.mintTx, 9, 5),
+              etherscanTx(mintData.mintTx),
+            ]}
+          />
+          <TulpeText data={["W3Bucket Identifier", "aabbcc1112233"]} />
+          <div className=" text-2xl font-medium mt-8">
+            Return to the W3Bucket Home Page and start your Cloud3 journey. Bon
+            Voyage!
+          </div>
+          <Button text="Complete" className=" mt-20" onClick={onComplete} />
+        </div>
+      )}
     </div>
   );
 });

@@ -1,3 +1,5 @@
+import { W3Bucket_Adress } from '@lib/config';
+import { IS_DEV, IS_TEST } from './env';
 import moment, { utc } from "moment";
 import _ from "lodash";
 import numbro from "numbro";
@@ -89,4 +91,16 @@ export function parseBucketId(bucketId: string){
 
 export function sleep(t: number){
   return new Promise(resolve => setTimeout(resolve, t))
+}
+
+export function etherscanBase(){
+  const base =  (IS_DEV || IS_TEST) ? 'https://goerli.etherscan.io':'https://etherscan.io'
+  return base
+}
+export function bucketEtherscanUrl(tokenId: string | number){
+  return `${etherscanBase()}/token/${W3Bucket_Adress}?a=${tokenId}`
+}
+
+export function etherscanTx(tx: string){
+  return `${etherscanBase()}/tx/${tx}`
 }

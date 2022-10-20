@@ -10,7 +10,7 @@ export default class MyDocument extends Document {
             name="description"
             content="One-Stop Land Platform For The Metaverse"
           />
-          <script
+          {/* <script
             async
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
           />
@@ -23,7 +23,7 @@ export default class MyDocument extends Document {
                       gtag('config', '${GA_ID}', {  page_path: window.location.pathname });
                     `,
             }}
-          />
+          /> */}
           <script src="https://platform.twitter.com/widgets.js"/>
         </Head>
         <body>

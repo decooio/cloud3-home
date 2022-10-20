@@ -513,6 +513,7 @@ export interface W3bucketAbiInterface extends utils.Interface {
     "EditionUpdated(uint256,uint256,uint256)": EventFragment;
     "Initialized(uint8)": EventFragment;
     "Paused(address)": EventFragment;
+    "PermanentURI(string,uint256)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
@@ -531,6 +532,7 @@ export interface W3bucketAbiInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "EditionUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PermanentURI"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
@@ -638,6 +640,17 @@ export interface PausedEventObject {
 export type PausedEvent = TypedEvent<[string], PausedEventObject>;
 
 export type PausedEventFilter = TypedEventFilter<PausedEvent>;
+
+export interface PermanentURIEventObject {
+  _value: string;
+  _id: BigNumber;
+}
+export type PermanentURIEvent = TypedEvent<
+  [string, BigNumber],
+  PermanentURIEventObject
+>;
+
+export type PermanentURIEventFilter = TypedEventFilter<PermanentURIEvent>;
 
 export interface RoleAdminChangedEventObject {
   role: string;
@@ -1452,6 +1465,15 @@ export interface W3bucketAbi extends BaseContract {
 
     "Paused(address)"(account?: null): PausedEventFilter;
     Paused(account?: null): PausedEventFilter;
+
+    "PermanentURI(string,uint256)"(
+      _value?: null,
+      _id?: PromiseOrValue<BigNumberish> | null
+    ): PermanentURIEventFilter;
+    PermanentURI(
+      _value?: null,
+      _id?: PromiseOrValue<BigNumberish> | null
+    ): PermanentURIEventFilter;
 
     "RoleAdminChanged(bytes32,bytes32,bytes32)"(
       role?: PromiseOrValue<BytesLike> | null,

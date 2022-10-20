@@ -139,23 +139,46 @@ function PreMetadata(p: { onContinue: () => void }) {
     if (!bucketEle) return;
     setUping(true);
     toBlob(bucketEle)
-      .then((content) =>
-        upload(content, "bucket_image.png")
-      )
+      .then((content) => upload(content, "bucket_image.png"))
       .then((image) => {
         // to Generate metadata
         // uuid , image cid
         console.info("image:", image);
+        updateMint({
+          metadataCID: "Qmlaksjdlkjflkjasjdkljlfjkljaklsjlkdjflkja",
+          metadataTX:
+            "0xalksjdkljfkljalksjkdjfkljklajslkjkldjlkjfljasjkldjklfjasjkljdfkla",
+          metadata: {
+            name: "W3Bucket",
+            description: "description for W3Bucket",
+            image: image.Hash,
+            external_url: `https://ipfs-scan.io?cid=${image.Hash}`,
+            file_history: `ipns://${mintData.ipns}`,
+            attributes: [
+              { trait_type: "dStorage Platform", value: "Crust" },
+              { trait_type: "Edition", value: mintData.editionId + "" },
+              { trait_type: "Capacity (GB)", value: "1024" },
+            ],
+            dStorage: {
+              platform: "Crust",
+              description: "Crust Network, the Incentive Layer of IPFS",
+              persistence_mechanism: "contract-based",
+              challenge_mechanism: "mpow",
+              consensus: "gpos",
+              dstorage_note:
+                "0x466ab180124de1718d30cd2e018e7fe013a07c4860674110ccd13e97eb31ae16",
+            },
+          },
+        });
       })
-      .catch((e) => {
-        console.error(e);
-        setUping(false);
-      });
+      .catch(console.error)
+      .then(() => setUping(false));
   });
+  const [showNext, setShowNext] = useSafeState(false);
   return (
-    <div className="px-12 flex-1 flex flex-col items-center justify-center">
+    <>
       {!mintData.metadata && !uping && (
-        <>
+        <div className="px-12 flex-1 flex flex-col items-center justify-center">
           <div className=" text-2xl">
             The metadata file (including this profile image) for your W3Bucket
             NFT has been fully generated. Click the Continue button to process
@@ -166,68 +189,81 @@ function PreMetadata(p: { onContinue: () => void }) {
             className=" mt-8 self-center"
             onClick={upMeta}
           />
-        </>
+        </div>
       )}
       {uping && (
-        <>
+        <div className="px-12 flex-1 flex flex-col items-center justify-center">
           <Loading />
           <div className=" text-2xl">
             The NFT metadata is being decentralized stored and it will be the
             very first file stored in this W3Bukcet! Please wait...
           </div>
-        </>
+        </div>
       )}
       {mintData.metadata && !uping && (
-        <>
-          <div className="p-8 border-solid border-black-1 border flex flex-col">
+        <div className="px-12 flex-1 flex flex-col items-center">
+          <div className="p-8 w-full border-solid border-black-1 border flex flex-col">
             <div className=" font-medium text-xl mb-4">Tips:</div>
             <div className="flex">
               <div className="flex-1 mr-8">
                 <div className="font-semibold text-lg">
                   NFT Metadata.json file
                 </div>
-                <TupleInfo data={["IPFS CID", "Qmlakjskdjf....alskjdlkjfja"]} />
+                <TupleInfo
+                  data={["IPFS CID", shortStr(mintData.metadataCID, 10, 10)]}
+                />
                 <TupleInfo
                   data={[
                     "Crust Network Storage Order TXID",
-                    "0x2908348958...29834958",
+                    shortStr(mintData.metadataTX),
                   ]}
                 />
-                <TupleInfo data={["IPNS", "Qmlakjskdjf....alskjdlkjfja"]} />
+                <TupleInfo data={["IPNS", shortStr(mintData.ipns)]} />
                 <TupleInfo data={["Storage Protocol", "Crust"]} />
               </div>
               <div className="flex-1">
                 <div className="font-semibold text-lg">NFT profile image</div>
-                <TupleInfo data={["IPFS CID", "Qmlakjskdjf....alskjdlkjfja"]} />
+                <TupleInfo
+                  data={[
+                    "IPFS CID",
+                    shortStr(mintData.metadata.image.replace("ipfs://", "")),
+                  ]}
+                />
                 <TupleInfo
                   data={[
                     "Crust Network Storage Order TXID",
-                    "0x2908348958...29834958",
+                    shortStr(mintData.metadata.dStorage.dstorage_note),
                   ]}
                 />
-                <div className=" font-medium">
+                <div className=" font-medium mt-6">
                   You can check them later in the W3Bucket description
                   information.
                 </div>
-                <Button text="Got it" className=" mt-8 self-center" />
+                <Button
+                  text="Got it"
+                  className=" mt-3 self-center"
+                  onClick={() => setShowNext(true)}
+                />
               </div>
             </div>
           </div>
-          <div className=" mt-10 text-xl flex flex-col">
-            <div className=" font-medium">
-              Congrats! The metadata of this W3Bucket is fully processed. You
-              will soon get this truly Web3 storage bucket NFT! Click the
-              Continue button to the last step.
+          {showNext && (
+            <div className=" mt-10 text-xl flex flex-col">
+              <div className=" font-medium">
+                Congrats! The metadata of this W3Bucket is fully processed. You
+                will soon get this truly Web3 storage bucket NFT! Click the
+                Continue button to the last step.
+              </div>
+              <Button
+                text="Continue"
+                className=" mt-6 self-center"
+                onClick={onContinue}
+              />
             </div>
-            <Button
-              text="Continue"
-              className=" mt-6 self-center"
-              onClick={onContinue}
-            />
-          </div>
-        </>
+          )}
+        </div>
       )}
-    </div>
+    </>
   );
 }
 

@@ -1,4 +1,5 @@
 import { CSSProperties } from "react";
+import { Price } from "./hooks/useBucketEditions";
 
 export interface BaseProps {
   className?: string;
@@ -83,10 +84,12 @@ export interface MintData {
   color: MintColorType;
   qrcode: QRCODE_STYLE;
   editionId?: number;
+  price?: Price;
   ipns?: string;
   uuid?: string;
   metadata?: W3BucketMetadata;
   metadataCID?: string;
+  metadataTX?: string;
 
   mintTx?: string;
   tokenId?: string;

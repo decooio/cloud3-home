@@ -10,7 +10,7 @@ export function useW3BucketAbi(): W3bucketAbi | undefined {
     if (provider) {
       return W3bucketAbi__factory.connect(
         W3Bucket_Adress,
-        provider
+        provider.getSigner()
       );
     }
     return undefined;

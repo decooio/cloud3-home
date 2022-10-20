@@ -9,7 +9,7 @@ import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
 const hostOne = IS_TEST ? "test." : IS_DEV ? "beta." : "";
 
 export default function App({ Component, pageProps }: AppProps) {
-  useGaPageView();
+  // useGaPageView();
 
   return (
       <div suppressHydrationWarning className="App">

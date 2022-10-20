@@ -217,6 +217,25 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: "string",
+        name: "_value",
+        type: "string",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "_id",
+        type: "uint256",
+      },
+    ],
+    name: "PermanentURI",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: "bytes32",
         name: "role",

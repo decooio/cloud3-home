@@ -1,6 +1,6 @@
 import { BucketImage } from "@components/common/BucketImage";
 import { Button } from "@components/common/Button";
-import { Loading } from "@components/common/Loading";
+import { LoadingText } from "@components/common/Loading";
 import { W3Bucket_Adress } from "@lib/config";
 import { useOn, useSafeState } from "@lib/hooks/tools";
 import { BucketEdition } from "@lib/hooks/useBucketEditions";
@@ -109,16 +109,16 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
     }
     task
       .then((res) => {
-        console.info('mint:', res)
+        console.info("mint:", res);
         updateMint({ mintTx: res.hash });
-        onNext()
+        onNext();
       })
       .catch(console.error)
       .then(() => setMinting(false));
   });
   const push = useNavigate();
   const onComplete = useOn(() => {
-    updateMint({}, true)
+    updateMint({}, true);
     push("/buckets");
   });
   return (
@@ -157,13 +157,10 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
         </div>
       )}
       {minting && (
-        <div className="flex flex-1 px-12 flex-col items-center justify-center">
-          <Loading />
-          <div className=" text-2xl">
-            Payment Tx sent, please wait for a while to get on-chain
-            confirmation...
-          </div>
-        </div>
+        <LoadingText
+          className="flex-1 px-12 justify-center"
+          text="Payment Tx sent, please wait for a while to get on-chain confirmation..."
+        />
       )}
       {!minting && mintData.mintTx && (
         <div className="flex flex-1 px-12 flex-col ">
@@ -190,7 +187,11 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
             Return to the W3Bucket Home Page and start your Cloud3 journey. Bon
             Voyage!
           </div>
-          <Button text="Complete" className=" self-center mt-20" onClick={onComplete} />
+          <Button
+            text="Complete"
+            className=" self-center mt-20"
+            onClick={onComplete}
+          />
         </div>
       )}
     </div>

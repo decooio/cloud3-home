@@ -1,6 +1,6 @@
 import { BucketImage, MintColors } from "@components/common/BucketImage";
 import { Button } from "@components/common/Button";
-import { Loading } from "@components/common/Loading";
+import { LoadingText } from "@components/common/Loading";
 import { QRCodeStyles } from "@components/common/QRCode";
 import { upload } from "@lib/files";
 import { useOn, useSafeState } from "@lib/hooks/tools";
@@ -15,22 +15,11 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from "react";
 export interface MintStep2Props {
   editions: BucketEdition[];
   onNext: () => void;
-}
-
-function CreateIpns() {
-  return (
-    <div className=" self-center text-center p-9 flex flex-col items-center">
-      <Loading />
-      <div className=" text-2xl">
-        Generating a unique IPNS name for this W3Bucket... Please wait.
-      </div>
-    </div>
-  );
 }
 
 function TipIpns(p: { ipns: string; onContinue: () => void }) {
@@ -53,7 +42,11 @@ function TipIpns(p: { ipns: string; onContinue: () => void }) {
           You can always fetch the storage history via any IPFS gateway or IPFS
           node.
         </div>
-        <Button text="Got it" className=" mt-8 self-center" onClick={() => setShowNext(true)}/>
+        <Button
+          text="Got it"
+          className=" mt-8 self-center"
+          onClick={() => setShowNext(true)}
+        />
       </div>
       {showNext && (
         <div className=" mt-10 text-xl flex flex-col">
@@ -200,13 +193,10 @@ function PreMetadata(p: { onContinue: () => void }) {
         </div>
       )}
       {uping && (
-        <div className="px-12 flex-1 flex flex-col items-center justify-center">
-          <Loading />
-          <div className=" text-2xl">
-            The NFT metadata is being decentralized stored and it will be the
-            very first file stored in this W3Bukcet! Please wait...
-          </div>
-        </div>
+        <LoadingText
+          className="px-12 flex-1 justify-center"
+          text="The NFT metadata is being decentralized stored and it will be the very first file stored in this W3Bukcet! Please wait..."
+        />
       )}
       {mintData.metadata && !uping && (
         <div className="px-12 flex-1 flex flex-col items-center">
@@ -306,7 +296,12 @@ export const MintStep2 = React.memo((p: MintStep2Props) => {
   return (
     <div className=" px-10 pt-9 flex">
       <BucketImage size={currentEdition.capacityInGb} />
-      {step === 0 && <CreateIpns />}
+      {step === 0 && (
+        <LoadingText
+          className=" self-center text-center p-9"
+          text="Generating a unique IPNS name for this W3Bucket... Please wait."
+        />
+      )}
       {step === 1 && <TipIpns ipns={ipns} onContinue={mOnNext} />}
       {step === 2 && <SetStyle onContinue={mOnNext} />}
       {step === 3 && <PreMetadata onContinue={onNext} />}

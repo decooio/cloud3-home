@@ -18,6 +18,12 @@ interface Menu {
   path?: string;
   url?: string;
 }
+
+const net_text =
+  IS_DEV || IS_TEST
+    ? "Claim your test version W3Bucket NFT and start your decentralized cloud storage experience on Cloud3 testnet. To continue, please connect your Ethereum wallet and switch to Goerli testnet."
+    : "W3Bucket runs on Ethereum mainnet. To start your decentralized cloud storage experience, please connect your Ethereum wallet.";
+
 export const MainLayout = React.memo(
   (p: { menuId: number } & HTMLAttributes<HTMLDivElement>) => {
     const { menuId, children, ...props } = p;
@@ -87,10 +93,7 @@ export const MainLayout = React.memo(
             children
           ) : (
             <div className="flex-1 flex px-[15%] pt-[30vh] h-full flex-col items-center">
-              <div className=" text-xl text-black">
-                W3Bucket runs on Ethereum mainnet. To start your decentralized
-                cloud storage experience, please connect your Ethereum wallet.
-              </div>
+              <div className=" text-xl text-black">{net_text}</div>
               <Button
                 text="Connect Wallet"
                 className=" mt-8"

@@ -95,3 +95,10 @@ export interface MintData {
   tokenId?: string;
   bucketId?: string;
 }
+
+export interface FileItem {
+  Hash: string,
+  Size: string,  // bytes
+  Name: string,  
+  Dir?: boolean, // 是否是文件夹
+}

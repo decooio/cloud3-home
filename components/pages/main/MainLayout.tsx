@@ -55,7 +55,14 @@ export const MainLayout = React.memo(
       >
         <div className=" w-full flex h-full">
           <div className="h-full w-64 flex flex-col border-r-8 border-solid border-[#EEEEEE]">
-            <Logo className="text-black-1 my-10 mx-auto" />
+            <div className="my-10 flex items-center mx-auto">
+              <Logo className="text-black-1" />
+              {isConnected && (
+                <div className={classNames(" ml-4 text-xs p-1 text-white bg-blue-400")}>
+                  {chainId === 1 ? "Mainnet" : "Goerli"}
+                </div>
+              )}
+            </div>
             <div className="flex-1">
               {menus.map((m, index) => (
                 <div

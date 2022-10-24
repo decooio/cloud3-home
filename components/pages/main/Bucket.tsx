@@ -1,14 +1,13 @@
 import { Button } from "@components/common/Button";
 import { Icon } from "@components/common/Icon";
 import { W3Bucket_Adress } from "@lib/config";
-import { useWeb3Provider } from "@lib/hooks/useWeb3Provider";
 import { ethers } from "ethers";
 import moment from "moment";
 import React, { useCallback, useMemo } from "react";
 import { BsBucket } from "react-icons/bs";
 import { FiChevronRight, FiSearch } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount, useNetwork, useSignTypedData } from "wagmi";
 import { MainLayout } from "./MainLayout";
 
 const TopInfo = () => {
@@ -93,49 +92,21 @@ export const Bucket = React.memo(() => {
       {},
       {},
       {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
     ],
     []
   );
-  const provider = useWeb3Provider();
+  const {signTypedDataAsync} = useSignTypedData()
   const { address, } = useAccount();
   const { chain } = useNetwork();
   const chainId = chain && chain.id;
   const doSign = useCallback(async () => {
-    if (!provider || !address || !chainId) return;
+    if (!signTypedDataAsync || !address || !chainId) return;
     try {
-      const signer = provider.getSigner();
       const typedData = {
         domain: {
           chainId: `${chainId}`,
-          name: "cloud3.cc",
-          verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+          name: "Cloud3.cc",
+          verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC" as `0x${string}`,
           version: "1",
         },
         message: {
@@ -158,11 +129,11 @@ export const Bucket = React.memo(() => {
           ],
         },
       };
-      const signature = await signer._signTypedData(
-        typedData.domain,
-        typedData.types,
-        typedData.message
-      );
+      const signature = await signTypedDataAsync({
+        domain: typedData.domain,
+        types: typedData.types,
+        value: typedData.message,
+      });
       console.info("signature:", signature);
       const hash = ethers.utils._TypedDataEncoder.hash(
         typedData.domain,
@@ -175,7 +146,7 @@ export const Bucket = React.memo(() => {
       console.info("address:", recoverAddress, "\n", address);
       console.info("valid:", recoverAddress === address);
     } catch (error) {}
-  }, [provider, address, chainId, bucketId]);
+  }, [signTypedDataAsync, address, chainId, bucketId]);
   return (
     <MainLayout menuId={1}>
       <div className="flex-1 h-full overflow-y-auto">

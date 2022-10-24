@@ -1,10 +1,9 @@
 import { ethers } from "ethers";
 import { useMemo } from "react";
 import { useAsync } from "react-use";
-import { useNetwork } from "wagmi";
-import { ERC20Abi__factory } from "./../typechain/factories/ERC20Abi__factory";
+import { erc20ABI, useNetwork, useSigner } from "wagmi";
+import { getContract } from "wagmi/actions";
 import { useW3BucketAbi } from "./useW3BucketAbi";
-import { useWeb3Provider } from "./useWeb3Provider";
 
 export interface Price {
   price: string;
@@ -24,11 +23,11 @@ export interface BucketEdition {
 
 export function useBucketEditions() {
   const w3b = useW3BucketAbi();
-  const {chain} = useNetwork();
-  const chainId = chain && chain.id
-  const provider = useWeb3Provider();
+  const { chain } = useNetwork();
+  const chainId = chain && chain.id;
+  const {data: signer} = useSigner();
   const result = useAsync(async () => {
-    if (w3b && chainId && provider) {
+    if (w3b && chainId && signer) {
       const data = await w3b.getBucketEditions(true);
       console.info("data:", data);
       const res: BucketEdition[] = [];
@@ -40,9 +39,14 @@ export function useBucketEditions() {
           let decimals = 18;
           let symbol = "ETH";
           if (price.currency !== "0x0000000000000000000000000000000000000000") {
-            const erc20 = ERC20Abi__factory.connect(price.currency, provider);
-            decimals = (await erc20.decimals()).toNumber();
-            symbol = (await erc20.symbol()).toString();
+            const erc20 = getContract({
+              address: price.currency,
+              abi: erc20ABI,
+              signerOrProvider: signer,
+            });
+            decimals = (await erc20.decimals());
+            symbol = (await erc20.symbol());
+            
           }
           prices.push({
             currency: price.currency,
@@ -65,7 +69,7 @@ export function useBucketEditions() {
       return res;
     }
     return null;
-  }, [w3b, chainId, provider]);
+  }, [w3b, chainId, signer]);
 
   return useMemo(() => ({ ...result, loading: result.loading }), [result]);
 }

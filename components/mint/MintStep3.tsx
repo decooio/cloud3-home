@@ -6,14 +6,13 @@ import { useOn, useSafeState } from "@lib/hooks/tools";
 import { BucketEdition } from "@lib/hooks/useBucketEditions";
 import { useMintData } from "@lib/hooks/useMintData";
 import { useW3BucketAbi } from "@lib/hooks/useW3BucketAbi";
-import { useWeb3Provider } from "@lib/hooks/useWeb3Provider";
-import { ERC20Abi__factory } from "@lib/typechain";
 import { bucketEtherscanUrl, etherscanTx, shortStr } from "@lib/utils";
 import classNames from "classnames";
 import { ContractTransaction, ethers } from "ethers";
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAccount } from "wagmi";
+import { erc20ABI, useAccount, useSigner } from "wagmi";
+import { getContract } from "wagmi/actions";
 
 function TulpeText(p: { data: [string, string] | [string, string, string] }) {
   const {
@@ -52,8 +51,9 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
   // const [currentPriceIndex, setCurrentPriceIndex] = useSafeState(0)
   const [minting, setMinting] = useSafeState(false);
   const w3b = useW3BucketAbi();
-  const provider = useWeb3Provider();
-  const {address} = useAccount();
+  // const provider = useWeb3Provider();
+  const { data: signer } = useSigner();
+  const { address } = useAccount();
   const doMint = useOn(() => {
     if (
       minting ||
@@ -61,7 +61,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
       !address ||
       !mintData.price ||
       !mintData.editionId ||
-      !provider
+      !signer
     )
       return;
     setMinting(true);
@@ -75,31 +75,32 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
     ) {
       task = w3b.mint(
         address,
-        ethers.utils.parseUnits(mintData.editionId + '', 0) ,
+        ethers.utils.parseUnits(mintData.editionId + "", 0),
         mintData.price.currency,
         `ipfs://${mintData.metadataCID}`,
         { value }
       );
     } else {
-      const erc20 = ERC20Abi__factory.connect(
-        mintData.price.currency,
-        provider.getSigner()
-      );
+      const erc20 =  getContract({
+        address: mintData.price.currency,
+        abi: erc20ABI,
+        signerOrProvider: signer,
+      });
       task = w3b.estimateGas
         .mint(
           address,
-          ethers.utils.parseUnits(mintData.editionId + '', 0) ,
+          ethers.utils.parseUnits(mintData.editionId + "", 0),
           mintData.price.currency,
           `ipfs://${mintData.metadataCID}`
         )
-        .catch(() => ethers.utils.parseUnits('396277', 0))
+        .catch(() => ethers.utils.parseUnits("396277", 0))
         .then((gas) =>
           erc20
             .approve(W3Bucket_Adress, value)
             .then(() =>
               w3b.mint(
                 address,
-                ethers.utils.parseUnits(mintData.editionId + '', 0) ,
+                ethers.utils.parseUnits(mintData.editionId + "", 0),
                 mintData.price.currency,
                 `ipfs://${mintData.metadataCID}`,
                 { gasLimit: gas }

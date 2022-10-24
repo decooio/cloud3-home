@@ -1,13 +1,12 @@
+import { AppLoading } from "@components/common/AppLoading";
+import { StoreProvider, useInitStore } from "@lib/store/store";
 import React from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
-import { StoreProvider, useInitStore } from "@lib/store/store";
 import Home from "./home/Home";
-import { Buckets } from "./main/Buckets";
-import Connect from "./connect/Connect";
 import { Bucket } from "./main/Bucket";
-import { Setting } from "./main/Setting";
+import { Buckets } from "./main/Buckets";
 import { Mint } from "./main/Mint";
-import { AppLoading } from "@components/common/AppLoading";
+import { Setting } from "./main/Setting";
 function Root_() {
   const store = useInitStore();
   return (
@@ -16,7 +15,6 @@ function Root_() {
         <HashRouter>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/connect" element={<Connect />} />
             <Route path="/buckets" element={<Buckets />} />
             <Route path="/bucket/:bucketId" element={<Bucket />} />
             <Route path="/settings" element={<Setting />} />

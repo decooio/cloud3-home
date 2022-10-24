@@ -5,12 +5,12 @@ import { Logo } from "@components/common/Logo";
 import { ConnectWallet } from "@components/modals/ConnectWallet";
 import { IS_DEV, IS_TEST } from "@lib/env";
 import { openExtUrl, shortStr } from "@lib/utils";
-import { useAddress, useChainId } from "@thirdweb-dev/react";
 import classNames from "classnames";
 import React, { HTMLAttributes, useEffect, useMemo, useState } from "react";
 import { BsBucket } from "react-icons/bs";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { useAccount, useNetwork } from "wagmi";
 interface Menu {
   id: number;
   icon: any;
@@ -27,8 +27,9 @@ const net_text =
 export const MainLayout = React.memo(
   (p: { menuId: number } & HTMLAttributes<HTMLDivElement>) => {
     const { menuId, children, ...props } = p;
-    const account = useAddress();
-    const chainId = useChainId();
+    const { address: account } = useAccount();
+    const {chain }= useNetwork();
+    const chainId = chain && chain.id
     const isConnected = useMemo(() => {
       if (IS_DEV || IS_TEST) return account && chainId === 5;
       return account && chainId === 1;
@@ -58,7 +59,12 @@ export const MainLayout = React.memo(
             <div className="my-10 flex items-center mx-auto">
               <Logo className="text-black-1" />
               {isConnected && (
-                <div className={classNames(" ml-4 text-xs p-1 text-white bg-blue-400")}>
+                <div
+                  className={classNames(
+                    " ml-4 text-xs p-1 text-white",
+                    chainId === 1 ? "bg-blue-2" : "bg-gray-11"
+                  )}
+                >
                   {chainId === 1 ? "Mainnet" : "Goerli"}
                 </div>
               )}

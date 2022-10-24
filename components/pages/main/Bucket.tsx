@@ -2,13 +2,13 @@ import { Button } from "@components/common/Button";
 import { Icon } from "@components/common/Icon";
 import { W3Bucket_Adress } from "@lib/config";
 import { useWeb3Provider } from "@lib/hooks/useWeb3Provider";
-import { useAddress, useChainId } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
 import moment from "moment";
 import React, { useCallback, useMemo } from "react";
 import { BsBucket } from "react-icons/bs";
 import { FiChevronRight, FiSearch } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAccount, useNetwork } from "wagmi";
 import { MainLayout } from "./MainLayout";
 
 const TopInfo = () => {
@@ -124,8 +124,9 @@ export const Bucket = React.memo(() => {
     []
   );
   const provider = useWeb3Provider();
-  const address = useAddress();
-  const chainId = useChainId();
+  const { address, } = useAccount();
+  const { chain } = useNetwork();
+  const chainId = chain && chain.id;
   const doSign = useCallback(async () => {
     if (!provider || !address || !chainId) return;
     try {
@@ -162,14 +163,17 @@ export const Bucket = React.memo(() => {
         typedData.types,
         typedData.message
       );
-      console.info('signature:',signature)
-      const hash = ethers.utils._TypedDataEncoder.hash(typedData.domain, typedData.types, typedData.message)
-      console.info('hash:', hash)
+      console.info("signature:", signature);
+      const hash = ethers.utils._TypedDataEncoder.hash(
+        typedData.domain,
+        typedData.types,
+        typedData.message
+      );
+      console.info("hash:", hash);
 
-      const recoverAddress = ethers.utils.recoverAddress(hash, signature)
-      console.info('address:', recoverAddress, '\n', address)
-      console.info('valid:', recoverAddress === address)
-
+      const recoverAddress = ethers.utils.recoverAddress(hash, signature);
+      console.info("address:", recoverAddress, "\n", address);
+      console.info("valid:", recoverAddress === address);
     } catch (error) {}
   }, [provider, address, chainId, bucketId]);
   return (

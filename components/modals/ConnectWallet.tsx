@@ -1,31 +1,26 @@
 import { IconMetaMask } from "@components/common/icons";
-import { IS_DEV, IS_TEST } from "@lib/env";
+import { SupportChain } from "@lib/config";
 import { useOn } from "@lib/hooks/tools";
-import { useMetamask, useNetwork } from "@thirdweb-dev/react";
 import React from "react";
-import { ConnectorData } from 'wagmi-core';
+import { useConnect } from "wagmi";
 import { Modal, ModalHead } from "./Modal";
 
 export const ConnectWallet = React.memo((p: { onClose: () => void }) => {
   const { onClose } = p;
-  const connect = useMetamask();
-  const [{ data }, switchChain] = useNetwork();
+  const { connectAsync, connectors, data } = useConnect();
   const onConnect = useOn(async () => {
-    console.info("data:", data);
     try {
-      if (data && data.chain && data.chain.unsupported) {
-        await switchChain(IS_DEV || IS_TEST ? 5 : 1);
-      } else {
-        const res: any = await connect();
-        const con = res.data as ConnectorData
-        if(con && con.chain && con.chain.unsupported){
-          setTimeout(onConnect, 200)
-        }
+      console.info("data:", data);
+      console.info("cts:", connectors);
+      if (!data || data.chain.unsupported) {
+        await connectAsync({
+          chainId: SupportChain[0].id,
+          connector: connectors[0],
+        });
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-   
   });
   return (
     <Modal outClick={onClose}>

@@ -1,8 +1,8 @@
-import { ERC20Abi__factory } from "./../typechain/factories/ERC20Abi__factory";
-import { useChainId, useSDK } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
 import { useMemo } from "react";
 import { useAsync } from "react-use";
+import { useNetwork } from "wagmi";
+import { ERC20Abi__factory } from "./../typechain/factories/ERC20Abi__factory";
 import { useW3BucketAbi } from "./useW3BucketAbi";
 import { useWeb3Provider } from "./useWeb3Provider";
 
@@ -10,7 +10,7 @@ export interface Price {
   price: string;
   symbol: string;
   decimals: number;
-  currency: string;
+  currency: `0x${string}`;
   fmtPrice: string;
 }
 export interface BucketEdition {
@@ -24,11 +24,11 @@ export interface BucketEdition {
 
 export function useBucketEditions() {
   const w3b = useW3BucketAbi();
-  const sdk = useSDK();
-  const chainId = useChainId();
+  const {chain} = useNetwork();
+  const chainId = chain && chain.id
   const provider = useWeb3Provider();
   const result = useAsync(async () => {
-    if (w3b && chainId && sdk && provider) {
+    if (w3b && chainId && provider) {
       const data = await w3b.getBucketEditions(true);
       console.info("data:", data);
       const res: BucketEdition[] = [];
@@ -65,7 +65,7 @@ export function useBucketEditions() {
       return res;
     }
     return null;
-  }, [w3b, chainId, sdk, provider]);
+  }, [w3b, chainId, provider]);
 
   return useMemo(() => ({ ...result, loading: result.loading }), [result]);
 }

@@ -1,14 +1,20 @@
 import { Web3Provider } from "@ethersproject/providers";
-import { useConnect } from "@thirdweb-dev/react";
-import { useMemo } from "react";
+
+import { useEffect, useState } from "react";
+import { useConnect } from "wagmi";
 export function useWeb3Provider(): Web3Provider | undefined {
-  const [{ data }] = useConnect();
-  const connector = data && data.connector;
-  return useMemo(() => {
+  const {
+    connectors: [connector],
+  } = useConnect();
+  const [provider, setProvider] = useState<Web3Provider | undefined>();
+  useEffect(() => {
     if (connector) {
-      const provider = connector.getProvider(true);
-      return new Web3Provider(provider);
+      // const provider = connector.getProvider();
+      connector
+        .getProvider()
+        .then((provider) => setProvider(new Web3Provider(provider)));
     }
-    return undefined;
   }, [connector]);
+
+  return provider;
 }

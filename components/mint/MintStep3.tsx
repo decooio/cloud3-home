@@ -9,11 +9,11 @@ import { useW3BucketAbi } from "@lib/hooks/useW3BucketAbi";
 import { useWeb3Provider } from "@lib/hooks/useWeb3Provider";
 import { ERC20Abi__factory } from "@lib/typechain";
 import { bucketEtherscanUrl, etherscanTx, shortStr } from "@lib/utils";
-import { useAddress } from "@thirdweb-dev/react";
 import classNames from "classnames";
 import { ContractTransaction, ethers } from "ethers";
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAccount } from "wagmi";
 
 function TulpeText(p: { data: [string, string] | [string, string, string] }) {
   const {
@@ -53,12 +53,12 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
   const [minting, setMinting] = useSafeState(false);
   const w3b = useW3BucketAbi();
   const provider = useWeb3Provider();
-  const account = useAddress();
+  const {address} = useAccount();
   const doMint = useOn(() => {
     if (
       minting ||
       !w3b ||
-      !account ||
+      !address ||
       !mintData.price ||
       !mintData.editionId ||
       !provider
@@ -74,8 +74,8 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
       mintData.price.currency === "0x0000000000000000000000000000000000000000"
     ) {
       task = w3b.mint(
-        account,
-        mintData.editionId,
+        address,
+        ethers.utils.parseUnits(mintData.editionId + '', 0) ,
         mintData.price.currency,
         `ipfs://${mintData.metadataCID}`,
         { value }
@@ -87,19 +87,19 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
       );
       task = w3b.estimateGas
         .mint(
-          account,
-          mintData.editionId,
+          address,
+          ethers.utils.parseUnits(mintData.editionId + '', 0) ,
           mintData.price.currency,
           `ipfs://${mintData.metadataCID}`
         )
-        .catch(() => 396277)
+        .catch(() => ethers.utils.parseUnits('396277', 0))
         .then((gas) =>
           erc20
             .approve(W3Bucket_Adress, value)
             .then(() =>
               w3b.mint(
-                account,
-                mintData.editionId,
+                address,
+                ethers.utils.parseUnits(mintData.editionId + '', 0) ,
                 mintData.price.currency,
                 `ipfs://${mintData.metadataCID}`,
                 { gasLimit: gas }

@@ -1,18 +1,13 @@
+import { abi } from "@lib/abi/w3bucket.abi";
 import { W3Bucket_Adress } from "@lib/config";
-import { useMemo } from "react";
-import { W3bucketAbi__factory } from "./../typechain/factories/W3bucketAbi__factory";
-import { W3bucketAbi } from "./../typechain/W3bucketAbi";
-import { useWeb3Provider } from "./useWeb3Provider";
+import { useContract, useProvider, useSigner } from "wagmi";
 
-export function useW3BucketAbi(): W3bucketAbi | undefined {
-  const provider = useWeb3Provider()
-  return useMemo(() => {
-    if (provider) {
-      return W3bucketAbi__factory.connect(
-        W3Bucket_Adress,
-        provider.getSigner()
-      );
-    }
-    return undefined;
-  }, [provider]);
+export function useW3BucketAbi() {
+  const provider = useProvider();
+  const { data: signer } = useSigner();
+  return useContract({
+    address: W3Bucket_Adress,
+    abi,
+    signerOrProvider: signer || provider,
+  });
 }

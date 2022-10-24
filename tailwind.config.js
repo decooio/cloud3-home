@@ -16,12 +16,17 @@ module.exports = {
           6: "#666666",
           7: "#76777C",
           8: "#898F8F",
+          11: '#BDBDBD',
           12: "#cccccc",
           16: "#e0e0e7",
+
         },
         orange: {
           15: "#FC7823",
         },
+        blue: {
+          2: '#2196F3',
+        }
       },
       borderWidth: {
         1: "1px",

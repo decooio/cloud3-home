@@ -1,13 +1,12 @@
 import { Button } from "@components/common/Button";
 import { Icon } from "@components/common/Icon";
-import { W3Bucket_Adress } from "@lib/config";
-import { ethers } from "ethers";
-import moment from "moment";
+import { useGetAuth } from "@lib/hooks/useGetAuth";
+import { parseBucketId } from "@lib/utils";
 import React, { useCallback, useMemo } from "react";
 import { BsBucket } from "react-icons/bs";
 import { FiChevronRight, FiSearch } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAccount, useNetwork, useSignTypedData } from "wagmi";
+import { useNetwork } from "wagmi";
 import { MainLayout } from "./MainLayout";
 
 const TopInfo = () => {
@@ -68,6 +67,7 @@ const TopInfo = () => {
 
 export const Bucket = React.memo(() => {
   const { bucketId } = useParams();
+  const [ , tokenId] = useMemo(() => parseBucketId(bucketId),[bucketId])
   const push = useNavigate();
   const files = useMemo(
     () => [
@@ -95,58 +95,14 @@ export const Bucket = React.memo(() => {
     ],
     []
   );
-  const {signTypedDataAsync} = useSignTypedData()
-  const { address, } = useAccount();
+  
   const { chain } = useNetwork();
-  const chainId = chain && chain.id;
+  const [getAuth] = useGetAuth('for_upload')
   const doSign = useCallback(async () => {
-    if (!signTypedDataAsync || !address || !chainId) return;
-    try {
-      const typedData = {
-        domain: {
-          chainId: `${chainId}`,
-          name: "Cloud3.cc",
-          verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC" as `0x${string}`,
-          version: "1",
-        },
-        message: {
-          description: "Sign for W3 Bucket Access Authentication",
-          signingAddress: address,
-          tokenAddress: W3Bucket_Adress,
-          tokenId: bucketId,
-          effectiveTimestamp: moment().unix(),
-          expirationTimestamp: moment().add(3, "hours").unix(),
-        },
-        primaryType: "W3Bucket",
-        types: {
-          W3Bucket: [
-            { name: "description", type: "string" },
-            { name: "signingAddress", type: "address" },
-            { name: "tokenAddress", type: "address" },
-            { name: "tokenId", type: "string" },
-            { name: "effectiveTimestamp", type: "uint256" },
-            { name: "expirationTimestamp", type: "uint256" },
-          ],
-        },
-      };
-      const signature = await signTypedDataAsync({
-        domain: typedData.domain,
-        types: typedData.types,
-        value: typedData.message,
-      });
-      console.info("signature:", signature);
-      const hash = ethers.utils._TypedDataEncoder.hash(
-        typedData.domain,
-        typedData.types,
-        typedData.message
-      );
-      console.info("hash:", hash);
-
-      const recoverAddress = ethers.utils.recoverAddress(hash, signature);
-      console.info("address:", recoverAddress, "\n", address);
-      console.info("valid:", recoverAddress === address);
-    } catch (error) {}
-  }, [signTypedDataAsync, address, chainId, bucketId]);
+    getAuth(tokenId)
+    .then((auth) => console.info('auth:', auth))
+    .catch(console.error)
+  }, [tokenId]);
   return (
     <MainLayout menuId={1}>
       <div className="flex-1 h-full overflow-y-auto">

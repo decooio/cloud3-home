@@ -4,10 +4,11 @@ import { useMintData } from "@lib/hooks/useMintData";
 import { formatW3BucketCapacity } from "@lib/utils";
 import classNames from "classnames";
 import React, { useEffect, useMemo } from "react";
+import { OnNext } from "./type";
 
 export interface MintStep1Props {
   editions: BucketEdition[];
-  onNext: () => void;
+  onNext: OnNext;
 }
 
 function fmtPrices(prices: BucketEdition["prices"]) {
@@ -78,7 +79,7 @@ export const MintStep1 = React.memo((p: MintStep1Props) => {
       <Button
         text="Next Step"
         className="mt-12"
-        onClick={onNext}
+        onClick={() => onNext()}
         disabled={!currentEdition}
       />
     </div>

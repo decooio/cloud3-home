@@ -6,7 +6,7 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
-  useState,
+  useState
 } from "react";
 
 export const useSafe = () => {
@@ -80,7 +80,7 @@ export function useOn<T extends (...args: any[]) => any>(handler: T) {
   // In a real implementation, this would run before layout effects
   useLayoutEffect(() => {
     handlerRef.current = handler;
-    return () => {}
+    return () => {};
   });
 
   return useCallback<T>(
@@ -91,4 +91,19 @@ export function useOn<T extends (...args: any[]) => any>(handler: T) {
     }) as T,
     []
   );
+}
+
+export function useLock(): [
+  { current: boolean },
+  (fn: () => Promise<any>) => void
+] {
+  const refLock = useRef(false);
+  const lockFn = useCallback((fn: () => Promise<any>) => {
+    if (refLock.current) return;
+    refLock.current = true;
+    fn().then(() => {
+      refLock.current = false;
+    });
+  }, []);
+  return [refLock, lockFn];
 }

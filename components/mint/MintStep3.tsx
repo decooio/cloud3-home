@@ -13,6 +13,7 @@ import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { erc20ABI, useAccount, useSigner } from "wagmi";
 import { getContract } from "wagmi/actions";
+import { OnNext } from "./type";
 
 function TulpeText(p: { data: [string, string] | [string, string, string] }) {
   const {
@@ -37,7 +38,7 @@ function TulpeText(p: { data: [string, string] | [string, string, string] }) {
 }
 export interface MintStep3Props {
   editions: BucketEdition[];
-  onNext: () => void;
+  onNext: OnNext;
 }
 
 export const MintStep3 = React.memo((p: MintStep3Props) => {

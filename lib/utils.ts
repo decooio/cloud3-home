@@ -1,10 +1,12 @@
 import { W3Bucket_Adress } from "@lib/config";
 import classNames, { Argument } from "classnames";
+import { BigNumber } from "ethers";
 import isMobile from "ismobilejs";
 import _ from "lodash";
 import { utc } from "moment";
 import numbro from "numbro";
-import { IS_DEV, IS_TEST } from "./env";
+import { IS_DEV, IS_LOCAL, IS_TEST } from "./env";
+import BN from "bn.js";
 
 export const IS_MOBILE = isMobile(window.navigator).phone;
 
@@ -87,8 +89,20 @@ export function isSame(a: string, b: string, cases: boolean = true) {
   return _.toLower(a) === _.toLower(b);
 }
 
+const baseBn = new BN("800000000"); // 添加基数
+const base = 36;
 export function parseBucketId(bucketId: string) {
-  return bucketId;
+  const [cp, tokenId] = bucketId.split("-");
+  const capcityGb = new BN(cp, base).sub(baseBn).toString(10);
+  return [capcityGb, tokenId];
+}
+export function genBucketId(capcityGb: number | string, tokenId: string) {
+  const capBn = new BN(capcityGb).add(baseBn);
+  return `${capBn.toString(base)}-${tokenId}`;
+}
+if(IS_LOCAL){
+  (window as any).parseBucketId = parseBucketId;
+  (window as any).genBucketId = genBucketId;
 }
 
 export function sleep(t: number) {

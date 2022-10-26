@@ -1,4 +1,5 @@
 import { Button } from "@components/common/Button";
+import { genBucketId } from "@lib/utils";
 import React, { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { MainLayout } from "./MainLayout";
@@ -9,7 +10,8 @@ const BucketCard = React.memo((p: { data: BucketDTO }) => {
   const { data } = p;
   const push = useNavigate();
   const onClickBucket = () => {
-    push(`/bucket/${"a3985d-085670"}`);
+    const bucketId = genBucketId(1024, '1000003')
+    push(`/bucket/${bucketId}`);
   };
   return (
     <div className=" h-min p-5 border border-solid border-black-1">

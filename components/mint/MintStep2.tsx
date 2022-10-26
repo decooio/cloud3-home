@@ -3,23 +3,25 @@ import { Button } from "@components/common/Button";
 import { LoadingText } from "@components/common/Loading";
 import { QRCodeStyles } from "@components/common/QRCode";
 import { upload } from "@lib/files";
-import { useOn, useSafeState } from "@lib/hooks/tools";
+import { useLock, useOn, useSafeState } from "@lib/hooks/tools";
 import { BucketEdition } from "@lib/hooks/useBucketEditions";
+import { useGetAuth } from "@lib/hooks/useGetAuth";
 import { useMintData } from "@lib/hooks/useMintData";
+import { GenIPNS, genUrl, getResData, Res } from "@lib/http";
 import { shortStr } from "@lib/utils";
+import axios from "axios";
 import classNames from "classnames";
 import { toBlob } from "html-to-image";
 import _ from "lodash";
 import React, {
   useCallback,
   useEffect,
-  useMemo,
-  useRef,
-  useState,
+  useMemo, useState
 } from "react";
+import { OnNext } from "./type";
 export interface MintStep2Props {
   editions: BucketEdition[];
-  onNext: () => void;
+  onNext: OnNext;
 }
 
 function TipIpns(p: { ipns: string; onContinue: () => void }) {
@@ -130,7 +132,7 @@ function TupleInfo(p: { data: [string, string] }) {
     </>
   );
 }
-function PreMetadata(p: { onContinue: () => void }) {
+function PreMetadata(p: { onContinue: OnNext }) {
   const { onContinue } = p;
   const [mintData, updateMint] = useMintData();
   const [uping, setUping] = useSafeState(false);
@@ -255,7 +257,7 @@ function PreMetadata(p: { onContinue: () => void }) {
               <Button
                 text="Continue"
                 className=" mt-6 self-center"
-                onClick={onContinue}
+                onClick={() => onContinue()}
               />
             </div>
           )}
@@ -276,19 +278,30 @@ export const MintStep2 = React.memo((p: MintStep2Props) => {
   const [step, setStep] = useSafeState(0);
   const mOnNext = useCallback(() => setStep((o) => o + 1), [setStep]);
   const ipns = mintData.ipns;
-
-  const refLock = useRef(false);
+  const [getAuth] = useGetAuth("for_mint");
+  const [, lockFn] = useLock();
   useEffect(() => {
-    if (!ipns && !refLock.current) {
-      refLock.current = true;
-      setTimeout(() => {
-        updateMint({
-          ipns: "k51qzi5uqu5dktricedv5isy1c69oc6i7q15p7lzhkgyyarkdgz350emmvwnwa",
-          uuid: "uuid",
-        });
-        setStep(1);
-        refLock.current = false;
-      }, 4000);
+    if (!ipns) {
+      lockFn(() =>
+        getAuth(undefined, true)
+          .then((auth) =>
+            axios
+              .post<Res<GenIPNS>>(genUrl("/auth/ipns/gen"), null, {
+                headers: { Authorization: `Bearer ${auth}` },
+              })
+              .then(getResData)
+          )
+          .then((data) => {
+            updateMint({
+              ipns: data.ipnsId,
+              uuid: data.uuid,
+            });
+            setStep(1);
+          })
+          .catch(() => {
+            onNext(-1);
+          })
+      );
     } else if (ipns) {
       setStep((o) => (o === 0 ? 1 : o));
     }

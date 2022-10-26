@@ -2,17 +2,20 @@ import { IconMetaMask } from "@components/common/icons";
 import { SupportChain } from "@lib/config";
 import { useOn } from "@lib/hooks/tools";
 import React from "react";
-import { useConnect } from "wagmi";
+import { useConnect, useSwitchNetwork } from "wagmi";
 import { Modal, ModalHead } from "./Modal";
 
 export const ConnectWallet = React.memo((p: { onClose: () => void }) => {
   const { onClose } = p;
   const { connectAsync, connectors, data } = useConnect();
+  const { switchNetworkAsync } = useSwitchNetwork();
   const onConnect = useOn(async () => {
     try {
       console.info("data:", data);
       console.info("cts:", connectors);
-      if (!data || data.chain.unsupported) {
+      if ((!data || data.chain.unsupported) && switchNetworkAsync) {
+        await switchNetworkAsync(SupportChain[0].id);
+      } else {
         await connectAsync({
           chainId: SupportChain[0].id,
           connector: connectors[0],

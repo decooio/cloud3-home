@@ -12,7 +12,7 @@ import { MainLayout } from "./MainLayout";
 
 export const Mint = React.memo(() => {
   const { value: editions, loading } = useBucketEditions();
-  useAppLoading(loading)
+  useAppLoading(loading);
   const push = useNavigate();
   const steps = useMemo(
     () => [
@@ -23,7 +23,10 @@ export const Mint = React.memo(() => {
     []
   );
   const [currentStep, setStep] = useSafeState(0);
-  const onNext = useCallback(() => setStep(o => o + 1), [setStep])
+  const onNext = useCallback(
+    (tep: number = 1) => setStep((o) => o + tep),
+    [setStep]
+  );
   return (
     <MainLayout menuId={1}>
       <div className=" flex-1 h-full overflow-y-auto">
@@ -41,9 +44,15 @@ export const Mint = React.memo(() => {
           </div>
           {editions && (
             <>
-              {currentStep === 0 && <MintStep1 editions={editions} onNext={onNext}/>}
-              {currentStep === 1 && <MintStep2 editions={editions} onNext={onNext}/>}
-              {currentStep >= 2 && <MintStep3 editions={editions} onNext={onNext}/>}
+              {currentStep === 0 && (
+                <MintStep1 editions={editions} onNext={onNext} />
+              )}
+              {currentStep === 1 && (
+                <MintStep2 editions={editions} onNext={onNext} />
+              )}
+              {currentStep >= 2 && (
+                <MintStep3 editions={editions} onNext={onNext} />
+              )}
             </>
           )}
         </div>

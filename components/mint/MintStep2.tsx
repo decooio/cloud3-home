@@ -7,17 +7,13 @@ import { useLock, useOn, useSafeState } from "@lib/hooks/tools";
 import { BucketEdition } from "@lib/hooks/useBucketEditions";
 import { useGetAuth } from "@lib/hooks/useGetAuth";
 import { useMintData } from "@lib/hooks/useMintData";
-import { GenIPNS, genUrl, getResData, Res } from "@lib/http";
-import { shortStr } from "@lib/utils";
+import { GenIPNS, genUrl, getResData, MintState, Res } from "@lib/http";
+import { shortStr, sleep } from "@lib/utils";
 import axios from "axios";
 import classNames from "classnames";
 import { toBlob } from "html-to-image";
 import _ from "lodash";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo, useState
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { OnNext } from "./type";
 export interface MintStep2Props {
   editions: BucketEdition[];
@@ -136,46 +132,47 @@ function PreMetadata(p: { onContinue: OnNext }) {
   const { onContinue } = p;
   const [mintData, updateMint] = useMintData();
   const [uping, setUping] = useSafeState(false);
-  const upMeta = useOn(() => {
+  const [getAuth] = useGetAuth("for_mint", true);
+  const [, lockFn] = useLock();
+  const upMeta = useOn(async () => {
     if (uping) return;
     const bucketEle = document.getElementById("generate_bucket_image");
     if (!bucketEle) return;
-    setUping(true);
-    toBlob(bucketEle)
-      .then((content) => upload(content, "bucket_image.png"))
-      .then((image) => {
-        // to Generate metadata
-        // uuid , image cid
-        console.info("image:", image);
+    lockFn(async () => {
+      setUping(true);
+      try {
+        const auth = await getAuth();
+        const imageblob = await toBlob(bucketEle);
+        const image = await upload(imageblob, "bucket_image.png");
+        const res = await axios.post<Res<void>>(
+          genUrl("/auth/bucket/metadata/generate"),
+          { uuid: mintData.uuid, cid: image.Hash },
+          {
+            headers: { Authorization: `Bearer ${auth}` },
+          }
+        );
+        const isSuccess = res.data.message === "success";
+        if (!isSuccess) throw res.data.message;
+        let taskRes: MintState = null;
+        while (true) {
+          await sleep(5000);
+          taskRes = await axios
+            .get<Res<MintState>>(genUrl(`/auth/bucket/uuid/${mintData.uuid}`))
+            .then(getResData);
+          if (taskRes.metadataTxHash) {
+            break;
+          }
+        }
         updateMint({
-          metadataCID: "Qmlaksjdlkjflkjasjdkljlfjkljaklsjlkdjflkja",
-          metadataTX:
-            "0xalksjdkljfkljalksjkdjfkljklajslkjkldjlkjfljasjkldjklfjasjkljdfkla",
-          metadata: {
-            name: "W3Bucket",
-            description: "description for W3Bucket",
-            image: image.Hash,
-            external_url: `https://ipfs-scan.io?cid=${image.Hash}`,
-            file_history: `ipns://${mintData.ipns}`,
-            attributes: [
-              { trait_type: "dStorage Platform", value: "Crust" },
-              { trait_type: "Edition", value: mintData.editionId + "" },
-              { trait_type: "Capacity (GB)", value: "1024" },
-            ],
-            dStorage: {
-              platform: "Crust",
-              description: "Crust Network, the Incentive Layer of IPFS",
-              persistence_mechanism: "contract-based",
-              challenge_mechanism: "mpow",
-              consensus: "gpos",
-              dstorage_note:
-                "0x466ab180124de1718d30cd2e018e7fe013a07c4860674110ccd13e97eb31ae16",
-            },
-          },
+          metadata: taskRes.metadata,
+          metadataCID: taskRes.metadataCid,
+          metadataTX: taskRes.metadataTxHash,
         });
-      })
-      .catch(console.error)
-      .then(() => setUping(false));
+      } catch (error) {
+        console.error(error);
+      }
+      setUping(false);
+    });
   });
   const [showNext, setShowNext] = useSafeState(false);
   return (
@@ -278,17 +275,21 @@ export const MintStep2 = React.memo((p: MintStep2Props) => {
   const [step, setStep] = useSafeState(0);
   const mOnNext = useCallback(() => setStep((o) => o + 1), [setStep]);
   const ipns = mintData.ipns;
-  const [getAuth] = useGetAuth("for_mint");
+  const [getAuth] = useGetAuth("for_mint", true);
   const [, lockFn] = useLock();
   useEffect(() => {
     if (!ipns) {
       lockFn(() =>
-        getAuth(undefined, true)
+        getAuth()
           .then((auth) =>
             axios
-              .post<Res<GenIPNS>>(genUrl("/auth/ipns/gen"), null, {
-                headers: { Authorization: `Bearer ${auth}` },
-              })
+              .post<Res<GenIPNS>>(
+                genUrl("/auth/ipns/gen"),
+                { editionId: mintData.editionId },
+                {
+                  headers: { Authorization: `Bearer ${auth}` },
+                }
+              )
               .then(getResData)
           )
           .then((data) => {

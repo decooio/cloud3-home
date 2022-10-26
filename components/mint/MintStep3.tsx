@@ -6,7 +6,9 @@ import { useOn, useSafeState } from "@lib/hooks/tools";
 import { BucketEdition } from "@lib/hooks/useBucketEditions";
 import { useMintData } from "@lib/hooks/useMintData";
 import { useW3BucketAbi } from "@lib/hooks/useW3BucketAbi";
-import { bucketEtherscanUrl, etherscanTx, shortStr } from "@lib/utils";
+import { genUrl, getResData, MintState, Res } from "@lib/http";
+import { bucketEtherscanUrl, etherscanTx, shortStr, sleep } from "@lib/utils";
+import axios from "axios";
 import classNames from "classnames";
 import { ContractTransaction, ethers } from "ethers";
 import React, { useMemo } from "react";
@@ -55,7 +57,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
   // const provider = useWeb3Provider();
   const { data: signer } = useSigner();
   const { address } = useAccount();
-  const doMint = useOn(() => {
+  const doMint = useOn(async () => {
     if (
       minting ||
       !w3b ||
@@ -70,53 +72,58 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
       mintData.price.fmtPrice,
       mintData.price.decimals
     );
-    let task: Promise<ContractTransaction> = null;
-    if (
-      mintData.price.currency === "0x0000000000000000000000000000000000000000"
-    ) {
-      task = w3b.mint(
-        address,
-        ethers.utils.parseUnits(mintData.editionId + "", 0),
-        mintData.price.currency,
-        `ipfs://${mintData.metadataCID}`,
-        { value }
-      );
-    } else {
-      const erc20 =  getContract({
-        address: mintData.price.currency,
-        abi: erc20ABI,
-        signerOrProvider: signer,
-      });
-      task = w3b.estimateGas
-        .mint(
+    try {
+      const isEth =
+        mintData.price.currency ===
+        "0x0000000000000000000000000000000000000000";
+      // let res: ContractTransaction = null;
+      if (isEth) {
+        await w3b.mint(
           address,
           ethers.utils.parseUnits(mintData.editionId + "", 0),
           mintData.price.currency,
-          `ipfs://${mintData.metadataCID}`
-        )
-        .catch(() => ethers.utils.parseUnits("396277", 0))
-        .then((gas) =>
-          erc20
-            .approve(W3Bucket_Adress, value)
-            .then(() =>
-              w3b.mint(
-                address,
-                ethers.utils.parseUnits(mintData.editionId + "", 0),
-                mintData.price.currency,
-                `ipfs://${mintData.metadataCID}`,
-                { gasLimit: gas }
-              )
-            )
+          `ipfs://${mintData.metadataCID}`,
+          { value }
         );
+      } else {
+        const erc20 = getContract({
+          address: mintData.price.currency,
+          abi: erc20ABI,
+          signerOrProvider: signer,
+        });
+        const gas = await w3b.estimateGas
+          .mint(
+            address,
+            ethers.utils.parseUnits(mintData.editionId + "", 0),
+            mintData.price.currency,
+            `ipfs://${mintData.metadataCID}`
+          )
+          .catch(() => ethers.utils.parseUnits("396277", 0));
+        await erc20.approve(W3Bucket_Adress, value);
+        await w3b.mint(
+          address,
+          ethers.utils.parseUnits(mintData.editionId + "", 0),
+          mintData.price.currency,
+          `ipfs://${mintData.metadataCID}`,
+          { gasLimit: gas }
+        );
+      }
+      let taskRes: MintState = null;
+      while (true) {
+        await sleep(5000);
+        taskRes = await axios
+          .get<Res<MintState>>(genUrl(`/auth/bucket/uuid/${mintData.uuid}`))
+          .then(getResData);
+        if (taskRes.tokenId && taskRes.mintTxHash) {
+          break;
+        }
+      }
+      updateMint({ mintTx: taskRes.mintTxHash });
+      onNext();
+    } catch (error) {
+      console.error(error);
     }
-    task
-      .then((res) => {
-        console.info("mint:", res);
-        updateMint({ mintTx: res.hash });
-        onNext();
-      })
-      .catch(console.error)
-      .then(() => setMinting(false));
+    setMinting(false);
   });
   const push = useNavigate();
   const onComplete = useOn(() => {

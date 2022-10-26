@@ -5,8 +5,9 @@ import { useSignTypedData, useAccount, useNetwork } from "wagmi";
 import { W3Bucket_Adress } from "../config";
 
 export function useGetAuth(
-  key: string = "auth"
-): [(tokenId?: string, cache?: boolean) => Promise<string>, string] {
+  key: string = "auth",
+  cache: boolean = false,
+): [(tokenId?: string) => Promise<string>, string] {
   const [auth, setAuth] = useState(sessionStorage.getItem(key) || "");
 
   const { signTypedDataAsync } = useSignTypedData();
@@ -14,7 +15,7 @@ export function useGetAuth(
   const chainId = chain && chain.id;
   const { address } = useAccount();
 
-  const getToken = useOn(async (tokenId?: string, cache: boolean = false) => {
+  const getToken = useOn(async (tokenId?: string) => {
     const old = sessionStorage.getItem(key) || "";
     if (!signTypedDataAsync || !address || !chainId) throw "not connect wallet";
     if (cache && old) {

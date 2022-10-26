@@ -16,9 +16,7 @@ export async function upload(
 ) {
   const form = new FormData();
   form.append("file", content, name);
-  const cancel = axios.CancelToken.source();
   const upResult = await axios.request<UploadRes>({
-    cancelToken: cancel.token,
     data: form,
     headers: { Authorization: AuthBasic },
     method: "POST",

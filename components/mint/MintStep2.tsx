@@ -157,7 +157,9 @@ function PreMetadata(p: { onContinue: OnNext }) {
         while (true) {
           await sleep(5000);
           taskRes = await axios
-            .get<Res<MintState>>(genUrl(`/auth/bucket/uuid/${mintData.uuid}`))
+            .get<Res<MintState>>(genUrl(`/auth/bucket/uuid/${mintData.uuid}`), {
+              headers: { Authorization: `Bearer ${auth}` },
+            })
             .then(getResData);
           if (taskRes.metadataTxHash) {
             break;

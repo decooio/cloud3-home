@@ -4,13 +4,14 @@ import { LoadingText } from "@components/common/Loading";
 import { W3Bucket_Adress } from "@lib/config";
 import { useOn, useSafeState } from "@lib/hooks/tools";
 import { BucketEdition } from "@lib/hooks/useBucketEditions";
+import { useGetAuth } from "@lib/hooks/useGetAuth";
 import { useMintData } from "@lib/hooks/useMintData";
 import { useW3BucketAbi } from "@lib/hooks/useW3BucketAbi";
 import { genUrl, getResData, MintState, Res } from "@lib/http";
 import { bucketEtherscanUrl, etherscanTx, shortStr, sleep } from "@lib/utils";
 import axios from "axios";
 import classNames from "classnames";
-import { ContractTransaction, ethers } from "ethers";
+import { ethers } from "ethers";
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { erc20ABI, useAccount, useSigner } from "wagmi";
@@ -51,12 +52,11 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
     () => editions.find((item) => item.id === currentEditionId),
     [editions, currentEditionId]
   );
-  // const [currentPriceIndex, setCurrentPriceIndex] = useSafeState(0)
   const [minting, setMinting] = useSafeState(false);
   const w3b = useW3BucketAbi();
-  // const provider = useWeb3Provider();
   const { data: signer } = useSigner();
   const { address } = useAccount();
+  const [getAuth] = useGetAuth("for_mint", true);
   const doMint = useOn(async () => {
     if (
       minting ||
@@ -67,12 +67,14 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
       !signer
     )
       return;
+
     setMinting(true);
     const value = ethers.utils.parseUnits(
       mintData.price.fmtPrice,
       mintData.price.decimals
     );
     try {
+      const auth = await getAuth();
       const isEth =
         mintData.price.currency ===
         "0x0000000000000000000000000000000000000000";
@@ -112,7 +114,9 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
       while (true) {
         await sleep(5000);
         taskRes = await axios
-          .get<Res<MintState>>(genUrl(`/auth/bucket/uuid/${mintData.uuid}`))
+          .get<Res<MintState>>(genUrl(`/auth/bucket/uuid/${mintData.uuid}`), {
+            headers: { Authorization: `Bearer ${auth}` },
+          })
           .then(getResData);
         if (taskRes.tokenId && taskRes.mintTxHash) {
           break;

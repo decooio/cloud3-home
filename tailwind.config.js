@@ -26,6 +26,7 @@ module.exports = {
         },
         blue: {
           2: '#2196F3',
+          3: '#31A4FF',
         }
       },
       borderWidth: {

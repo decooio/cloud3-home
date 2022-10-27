@@ -1,12 +1,11 @@
 import { W3Bucket_Adress } from "@lib/config";
+import BN from "bn.js";
 import classNames, { Argument } from "classnames";
-import { BigNumber } from "ethers";
 import isMobile from "ismobilejs";
 import _ from "lodash";
 import { utc } from "moment";
 import numbro from "numbro";
 import { IS_DEV, IS_LOCAL, IS_TEST } from "./env";
-import BN from "bn.js";
 
 export const IS_MOBILE = isMobile(window.navigator).phone;
 
@@ -122,8 +121,19 @@ export function etherscanTx(tx: string) {
   return `${etherscanBase()}/tx/${tx}`;
 }
 
+export function etherscanAddress(address: string){
+  return `${etherscanBase()}/address/${address}`
+}
+
 export function formatW3BucketCapacity(capacityInGb: number) {
   if (capacityInGb < 1024) return `${capacityInGb} GB`;
   if (capacityInGb < 1048576) return `${_.floor(capacityInGb / 1024)} TB`;
   return `${_.floor(capacityInGb / 1048576, 1)} PB`;
+}
+
+export function ipfsUrl(cid: string){
+  return `https://crustwebsites.net/ipfs/${cid}`
+}
+export function ipnsUrl(ipns: string){
+  return `https://crustwebsites.net/ipns/${ipns}`
 }

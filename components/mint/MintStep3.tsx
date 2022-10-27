@@ -4,11 +4,17 @@ import { LoadingText } from "@components/common/Loading";
 import { W3Bucket_Adress } from "@lib/config";
 import { useOn, useSafeState } from "@lib/hooks/tools";
 import { BucketEdition } from "@lib/hooks/useBucketEditions";
-import { useGetAuth } from "@lib/hooks/useGetAuth";
+import { useGetAuthForMint } from "@lib/hooks/useGetAuth";
 import { useMintData } from "@lib/hooks/useMintData";
 import { useW3BucketAbi } from "@lib/hooks/useW3BucketAbi";
 import { genUrl, getResData, MintState, Res } from "@lib/http";
-import { bucketEtherscanUrl, etherscanTx, shortStr, sleep } from "@lib/utils";
+import {
+  bucketEtherscanUrl,
+  etherscanTx,
+  genBucketId,
+  shortStr,
+  sleep
+} from "@lib/utils";
 import axios from "axios";
 import classNames from "classnames";
 import { ethers } from "ethers";
@@ -56,7 +62,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
   const w3b = useW3BucketAbi();
   const { data: signer } = useSigner();
   const { address } = useAccount();
-  const [getAuth] = useGetAuth("for_mint", true);
+  const [getAuth] = useGetAuthForMint();
   const doMint = useOn(async () => {
     if (
       minting ||
@@ -112,7 +118,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
       }
       let taskRes: MintState = null;
       while (true) {
-        await sleep(5000);
+        await sleep(10000);
         taskRes = await axios
           .get<Res<MintState>>(genUrl(`/auth/bucket/uuid/${mintData.uuid}`), {
             headers: { Authorization: `Bearer ${auth}` },
@@ -122,7 +128,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
           break;
         }
       }
-      updateMint({ mintTx: taskRes.mintTxHash });
+      updateMint({ mintTx: taskRes.mintTxHash, tokenId: taskRes.tokenId });
       onNext();
     } catch (error) {
       console.error(error);
@@ -134,6 +140,10 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
     updateMint({}, true);
     push("/buckets");
   });
+  const bucketId = useMemo(() => {
+    if (!mintData.mintTx || !currentEdition || !mintData.tokenId) return "";
+    return genBucketId(currentEdition.capacityInGb, mintData.tokenId);
+  }, [mintData, currentEdition]);
   return (
     <div className=" px-10 pt-9 flex">
       <BucketImage size={currentEdition.capacityInGb} />
@@ -184,8 +194,8 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
           <TulpeText
             data={[
               "W3Bucket NFT Token ID",
-              "1000004",
-              bucketEtherscanUrl(1000004),
+              mintData.tokenId,
+              bucketEtherscanUrl(mintData.tokenId),
             ]}
           />
           <TulpeText
@@ -195,7 +205,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
               etherscanTx(mintData.mintTx),
             ]}
           />
-          <TulpeText data={["W3Bucket Identifier", "aabbcc1112233"]} />
+          <TulpeText data={["W3Bucket Identifier", bucketId]} />
           <div className=" text-2xl font-medium mt-8">
             Return to the W3Bucket Home Page and start your Cloud3 journey. Bon
             Voyage!

@@ -13,14 +13,14 @@ export function useMintData(): [
 ] {
   const {
     store: { mintData = defMintData },
-    update,
+    oUpdate,
   } = useStore();
   const updateMintData = useCallback(
     (data: SetStateAction<Partial<MintData>>, clear?: boolean) => {
       if (clear) {
-        update({ mintData: defMintData });
+        oUpdate({ mintData: defMintData });
       } else {
-        update(({ mintData }) => ({
+        oUpdate(({ mintData }) => ({
           mintData: {
             ...(mintData || defMintData),
             ...(typeof data === "function" ? data(mintData) : data),
@@ -28,7 +28,7 @@ export function useMintData(): [
         }));
       }
     },
-    [update]
+    [oUpdate]
   );
   return useMemo(() => [mintData, updateMintData], [mintData, updateMintData]);
 }

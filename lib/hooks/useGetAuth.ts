@@ -7,8 +7,9 @@ import { W3Bucket_Adress } from "../config";
 export function useGetAuth(
   key: string = "auth",
   cache: boolean = false,
+  hours: number = 0
 ): [(tokenId?: string) => Promise<string>, string] {
-  const [auth, setAuth] = useState(sessionStorage.getItem(key) || "");
+  const [auth, setAuth] = useState(localStorage.getItem(key) || "");
 
   const { signTypedDataAsync } = useSignTypedData();
   const { chain } = useNetwork();
@@ -16,21 +17,25 @@ export function useGetAuth(
   const { address } = useAccount();
 
   const getToken = useOn(async (tokenId?: string) => {
-    const old = sessionStorage.getItem(key) || "";
+    const old = localStorage.getItem(key) || "";
     if (!signTypedDataAsync || !address || !chainId) throw "not connect wallet";
+    const current = moment().unix();
     if (cache && old) {
-      const lastAuth = JSON.parse(window.atob(old));
-      const current = moment().unix();
+      const lastAuth = JSON.parse(window.atob(old)).data;
       if (
         lastAuth.domain.chainId === `${chainId}` &&
         lastAuth.message.signingAddress === address &&
         lastAuth.message.tokenId === tokenId &&
-        lastAuth.message.expirationTimestamp - current > 300
+        (lastAuth.message.expirationTimestamp === 0 ||
+          lastAuth.message.expirationTimestamp - current > 300)
       ) {
         setAuth(old);
         return old;
       }
     }
+
+    const expirationTimestamp =
+      hours <= 0 ? 0 : moment().add(hours, "hours").unix();
     const typeData: any = {
       domain: {
         chainId: `${chainId}`,
@@ -43,8 +48,8 @@ export function useGetAuth(
         description: "Sign for W3 Bucket Access Authentication",
         signingAddress: address,
         tokenAddress: W3Bucket_Adress,
-        effectiveTimestamp: moment().unix(),
-        expirationTimestamp: moment().add(3, "hours").unix(),
+        effectiveTimestamp: current,
+        expirationTimestamp,
       },
       primaryType: "W3Bucket",
       types: {
@@ -67,9 +72,21 @@ export function useGetAuth(
       value: typeData.message,
     });
     const based = window.btoa(JSON.stringify({ data: typeData, signature }));
-    sessionStorage.setItem(key, based);
+    localStorage.setItem(key, based);
     setAuth(based);
     return based;
   });
   return [getToken, auth];
+}
+
+export function useGetAuthForMint() {
+  return useGetAuth("for_mint", true, 3);
+}
+
+export function useGetAuthForGet() {
+  return useGetAuth("auth", true, 24);
+}
+
+export function useGetAuthForUp() {
+  return useGetAuth("for_upload", false, 1);
 }

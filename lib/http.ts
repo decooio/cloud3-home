@@ -34,3 +34,16 @@ export interface MintState {
   mintTxHash: string;
   tokenId: string;
 }
+
+export interface BucketDTO {
+  ipnsId: string;
+  metadata: W3BucketMetadata;
+  metadataCid: string;
+  metadataTxHash: string;
+  mintTxHash: string;
+  tokenId: string;
+  fileCount: number;
+  maxStorageSize: number;
+  usedStorageSize: number;
+  mintTimestamp: number;
+}

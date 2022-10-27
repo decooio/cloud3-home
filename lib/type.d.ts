@@ -53,7 +53,7 @@ export interface W3BucketMetadata {
 export type MintColor = [string, string, string];
 export type MintColorType =
   | "gray"
-  | "dark"
+  // | "dark"
   | "yellow"
   | "red"
   | "purple"

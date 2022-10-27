@@ -5,8 +5,12 @@ import { MintStep2 } from "@components/mint/MintStep2";
 import { MintStep3 } from "@components/mint/MintStep3";
 import { useSafeState } from "@lib/hooks/tools";
 import { useBucketEditions } from "@lib/hooks/useBucketEditions";
+import { useGetAuthForMint } from "@lib/hooks/useGetAuth";
+import { useMintData } from "@lib/hooks/useMintData";
+import { genUrl, getResData, MintState, Res } from "@lib/http";
 import { useAppLoading } from "@lib/store/useAppLoading";
-import React, { useCallback, useMemo } from "react";
+import axios from "axios";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { MainLayout } from "./MainLayout";
 
@@ -22,7 +26,53 @@ export const Mint = React.memo(() => {
     ],
     []
   );
-  const [currentStep, setStep] = useSafeState(0);
+  const [currentStep, setStep] = useSafeState(-1);
+  const [mintData, updateMint] = useMintData();
+  const [getAuth] = useGetAuthForMint();
+  useEffect(() => {
+    const task = async () => {
+      try {
+        console.info('do taks:')
+        if(!mintData.uuid) return setStep(0);
+        const auth = await getAuth();
+        const mintstate = await axios
+          .get<Res<MintState>>(genUrl(`/auth/bucket/uuid/${mintData.uuid}`), {
+            headers: { Authorization: `Bearer ${auth}` },
+          })
+          .then(getResData);
+        let editionId = mintData.editionId;
+        if (mintstate.metadata) {
+          const trait = mintstate.metadata.attributes.find(
+            (item) => item.trait_type === "Edition"
+          );
+          if (trait) {
+            editionId = new Number(trait.value).valueOf();
+          }
+        }
+        updateMint({
+          metadata: mintstate.metadata,
+          ipns: mintstate.ipnsId,
+          metadataTX: mintstate.metadataTxHash,
+          metadataCID: mintstate.metadataCid,
+          mintTx: mintstate.mintTxHash,
+          tokenId: mintstate.tokenId,
+          editionId,
+        });
+        if (mintstate.mintTxHash) {
+          setStep(2);
+        } else if(mintstate.metadataTxHash){
+          setStep(1)
+        } else {
+          setStep(0)
+        }
+      } catch (error) {
+        setStep(0)
+      }
+    };
+    task()
+    return () => { updateMint({}, true) }
+  }, []);
+
   const onNext = useCallback(
     (tep: number = 1) => setStep((o) => o + tep),
     [setStep]
@@ -34,7 +84,10 @@ export const Mint = React.memo(() => {
           <div className=" sticky top-0 z-10 bg-white pt-16 pb-3">
             <div
               className=" flex items-center cursor-pointer"
-              onClick={() => push("/buckets")}
+              onClick={() => {
+                updateMint({}, true);
+                push("/buckets");
+              }}
             >
               <Icon icon="cru-fo-chevron-left" className=" mr-3" />
               <span>Exit Mint Process</span>

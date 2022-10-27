@@ -79,7 +79,10 @@ export const MintStep1 = React.memo((p: MintStep1Props) => {
       <Button
         text="Next Step"
         className="mt-12"
-        onClick={() => onNext()}
+        onClick={() => {
+          console.info('click:')
+          onNext()
+        }}
         disabled={!currentEdition}
       />
     </div>

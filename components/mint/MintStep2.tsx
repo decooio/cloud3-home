@@ -3,9 +3,9 @@ import { Button } from "@components/common/Button";
 import { LoadingText } from "@components/common/Loading";
 import { QRCodeStyles } from "@components/common/QRCode";
 import { upload } from "@lib/files";
-import { useLock, useOn, useSafeState } from "@lib/hooks/tools";
+import { useLock, useOn, useSafe, useSafeState } from "@lib/hooks/tools";
 import { BucketEdition } from "@lib/hooks/useBucketEditions";
-import { useGetAuth } from "@lib/hooks/useGetAuth";
+import { useGetAuthForMint } from "@lib/hooks/useGetAuth";
 import { useMintData } from "@lib/hooks/useMintData";
 import { GenIPNS, genUrl, getResData, MintState, Res } from "@lib/http";
 import { shortStr, sleep } from "@lib/utils";
@@ -132,8 +132,9 @@ function PreMetadata(p: { onContinue: OnNext }) {
   const { onContinue } = p;
   const [mintData, updateMint] = useMintData();
   const [uping, setUping] = useSafeState(false);
-  const [getAuth] = useGetAuth("for_mint", true);
+  const [getAuth] = useGetAuthForMint();
   const [, lockFn] = useLock();
+  const refSafe = useSafe();
   const upMeta = useOn(async () => {
     if (uping) return;
     const bucketEle = document.getElementById("generate_bucket_image");
@@ -155,7 +156,8 @@ function PreMetadata(p: { onContinue: OnNext }) {
         if (!isSuccess) throw res.data.message;
         let taskRes: MintState = null;
         while (true) {
-          await sleep(5000);
+          if (!refSafe.safe) break;
+          await sleep(10000);
           taskRes = await axios
             .get<Res<MintState>>(genUrl(`/auth/bucket/uuid/${mintData.uuid}`), {
               headers: { Authorization: `Bearer ${auth}` },
@@ -165,6 +167,7 @@ function PreMetadata(p: { onContinue: OnNext }) {
             break;
           }
         }
+        if (!refSafe.safe) return;
         updateMint({
           metadata: taskRes.metadata,
           metadataCID: taskRes.metadataCid,
@@ -277,7 +280,7 @@ export const MintStep2 = React.memo((p: MintStep2Props) => {
   const [step, setStep] = useSafeState(0);
   const mOnNext = useCallback(() => setStep((o) => o + 1), [setStep]);
   const ipns = mintData.ipns;
-  const [getAuth] = useGetAuth("for_mint", true);
+  const [getAuth] = useGetAuthForMint();
   const [, lockFn] = useLock();
   useEffect(() => {
     if (!ipns) {
@@ -287,7 +290,7 @@ export const MintStep2 = React.memo((p: MintStep2Props) => {
             axios
               .post<Res<GenIPNS>>(
                 genUrl("/auth/ipns/gen"),
-                { editionId: mintData.editionId },
+                { editionId: "" + mintData.editionId },
                 {
                   headers: { Authorization: `Bearer ${auth}` },
                 }
@@ -301,14 +304,17 @@ export const MintStep2 = React.memo((p: MintStep2Props) => {
             });
             setStep(1);
           })
-          .catch(() => {
+          .catch((e) => {
+            console.info("error:", e);
             onNext(-1);
           })
       );
+    } else if (mintData.metadataTX) {
+      setStep(3);
     } else if (ipns) {
       setStep((o) => (o === 0 ? 1 : o));
     }
-  }, [ipns]);
+  }, [ipns, mintData]);
   return (
     <div className=" px-10 pt-9 flex">
       <BucketImage size={currentEdition.capacityInGb} />

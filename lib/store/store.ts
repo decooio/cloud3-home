@@ -9,15 +9,16 @@ import React, {
   useState
 } from "react";
 import { useSafeSet } from "../hooks/tools";
+import { AuthIpfsEndpoint } from '@lib/config';
 
 export interface Store {
   loading: boolean
   mintData?: MintData
+  currentGateway?: AuthIpfsEndpoint
 }
 
 const defStore: Store = {
   loading: false,
-
 }
 
 export interface WrapStore {

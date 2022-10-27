@@ -1,16 +1,20 @@
 import { Select } from "@components/common/Select";
+import { AuthIpfsEndpoint } from "@lib/config";
+import { useOn } from "@lib/hooks/tools";
+import { useGateway } from "@lib/hooks/useGateway";
 import React, { useMemo, useState } from "react";
 import { MainLayout } from "./MainLayout";
 
 export const Setting = React.memo(() => {
-  const optionsGateway: any[] = useMemo(() => {
-    return [
-      { text: "Gateway 1" },
-      { text: "Gateway 2" },
-      { text: "Gateway 3" },
-      { text: "Gateway 4" },
-    ];
-  }, []);
+  const { list, current, setCurrent } = useGateway();
+  const optionsGateway: (AuthIpfsEndpoint & { text: string })[] =
+    useMemo(() => {
+      return list.map((item) => ({
+        ...item,
+        text: `${item.name} ${item.location}`,
+      }));
+    }, [list]);
+
   const optionsStrategy: any[] = useMemo(() => {
     return [
       { text: "Random" },
@@ -19,7 +23,14 @@ export const Setting = React.memo(() => {
       { text: "99999" },
     ];
   }, []);
-  const [currentGateway, setGateway] = useState(optionsGateway[0]);
+
+  const [currentGateway, setGateway] = useState(() =>
+    optionsGateway.find((item) => item.value === current.value)
+  );
+  const onGatewayChange = useOn((item) => {
+    setGateway(item);
+    setCurrent(list.find((l) => l.value === (item as AuthIpfsEndpoint).value));
+  });
   const [currentStrategy, setStrategy] = useState(optionsStrategy[0]);
 
   return (
@@ -35,7 +46,7 @@ export const Setting = React.memo(() => {
               className=" ml-2"
               options={optionsGateway}
               current={currentGateway}
-              onOptionChange={setGateway}
+              onOptionChange={onGatewayChange}
             />
           </div>
           <div className=" mt-4 whitespace-nowrap flex items-center">

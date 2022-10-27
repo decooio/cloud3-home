@@ -99,7 +99,7 @@ export function genBucketId(capcityGb: number | string, tokenId: string) {
   const capBn = new BN(capcityGb).add(baseBn);
   return `${capBn.toString(base)}-${tokenId}`;
 }
-if(IS_LOCAL){
+if (IS_LOCAL) {
   (window as any).parseBucketId = parseBucketId;
   (window as any).genBucketId = genBucketId;
 }
@@ -121,19 +121,26 @@ export function etherscanTx(tx: string) {
   return `${etherscanBase()}/tx/${tx}`;
 }
 
-export function etherscanAddress(address: string){
-  return `${etherscanBase()}/address/${address}`
+export function etherscanAddress(address: string) {
+  return `${etherscanBase()}/address/${address}`;
 }
 
-export function formatW3BucketCapacity(capacityInGb: number) {
-  if (capacityInGb < 1024) return `${capacityInGb} GB`;
-  if (capacityInGb < 1048576) return `${_.floor(capacityInGb / 1024)} TB`;
-  return `${_.floor(capacityInGb / 1048576, 1)} PB`;
+export function formatW3BucketCapacity(
+  capacityInGb: number,
+  decimals: number = 0
+) {
+  if (capacityInGb < 0.0009765625)
+    return `${_.floor(capacityInGb * 1048576, decimals)} KB`;
+  if (capacityInGb < 1) return `${_.floor(capacityInGb * 1024, decimals)} MB`;
+  if (capacityInGb < 1024) return `${_.floor(capacityInGb, decimals)} GB`;
+  if (capacityInGb < 1048576)
+    return `${_.floor(capacityInGb / 1024, decimals)} TB`;
+  return `${_.floor(capacityInGb / 1048576, decimals)} PB`;
 }
 
-export function ipfsUrl(cid: string){
-  return `https://crustwebsites.net/ipfs/${cid}`
+export function ipfsUrl(cid: string) {
+  return `https://crustwebsites.net/ipfs/${cid}`;
 }
-export function ipnsUrl(ipns: string){
-  return `https://crustwebsites.net/ipns/${ipns}`
+export function ipnsUrl(ipns: string) {
+  return `https://crustwebsites.net/ipns/${ipns}`;
 }

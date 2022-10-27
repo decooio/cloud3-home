@@ -24,7 +24,7 @@ const BucketCard = React.memo((p: { data: BucketDTO }) => {
     [capacityInGb]
   );
   const used = useMemo(
-    () => formatW3BucketCapacity(data.usedStorageSize / 1024 / 1024 / 1024),
+    () => formatW3BucketCapacity(data.usedStorageSize / 1024 / 1024 / 1024, 2),
     [data]
   );
   const bucketId = useMemo(

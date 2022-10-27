@@ -1,6 +1,7 @@
 import { Button } from "@components/common/Button";
 import { ProgressBar } from "@components/common/ProgressBar";
 import HomeBg from "@components/homebg";
+import { IS_LOCAL } from "@lib/env";
 import { getClientHeight, openExtUrl } from "@lib/utils";
 import axios from "axios";
 import classNames from "classnames";
@@ -162,7 +163,9 @@ export const SectionTop = React.memo(() => {
             <Button
               text="Launch App"
               className=" ml-3 border-white text-white"
-              onClick={() => push("/buckets")}
+              onClick={() =>
+                IS_LOCAL ? push("/buckets") : openExtUrl("/#/buckets")
+              }
             />
           </div>
         </div>
@@ -207,7 +210,9 @@ export const SectionTop = React.memo(() => {
                     </div>
                     {!account && (
                       <div
-                        onClick={() => openExtUrl("/#/buckets")}
+                        onClick={() =>
+                          openExtUrl("http://test.cloud3.cc/#/buckets")
+                        }
                         className="underline"
                       >
                         Claim your W3Bucket NFT on testnet

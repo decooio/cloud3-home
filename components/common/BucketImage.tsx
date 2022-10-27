@@ -8,9 +8,8 @@ import { QRCode } from "./QRCode";
 
 export const MintColors: { [k in MintColorType]: MintColor } = {
   gray: ["#EEEEEE", "#FFFFFF", "#131521"],
-  // dark: ["#3C3C3C", "#282828", "#FFFFFF"],
-  yellow: ["#FFDC5Ei", "#E9C132i", "#131521"],
-  red: ["#FF6B81", "#F4526Ai", "#131521"],
+  yellow: ["#FFDC5E", "#E9C132", "#131521"],
+  red: ["#FF6B81", "#F4526A", "#131521"],
   purple: ["#B073EF", "#925DC8", "#FFFFFF"],
   green: ["#27C282", "#1EA966", "#FFFFFF"],
   blue: ["#58AEFF", "#3895EB", "#FFFFFF"],

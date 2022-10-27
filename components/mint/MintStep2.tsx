@@ -63,8 +63,9 @@ function TipIpns(p: { ipns: string; onContinue: () => void }) {
     </div>
   );
 }
-const colors = _.keys(MintColors);
+
 function SetStyle(p: { onContinue: () => void }) {
+  const colors = _.keys(MintColors);
   const { onContinue } = p;
   const [mintData, updateMint] = useMintData();
   return (

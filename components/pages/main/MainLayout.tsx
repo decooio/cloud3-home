@@ -56,7 +56,7 @@ export const MainLayout = React.memo(
       >
         <div className=" w-full flex h-full">
           <div className="h-full w-64 flex flex-col border-r-8 border-solid border-[#EEEEEE]">
-            <div className="my-10 flex items-center mx-auto">
+            <div className="my-8 flex items-center mx-auto">
               <Logo className="text-black-1" />
               {isConnected && (
                 <div

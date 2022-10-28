@@ -42,7 +42,7 @@ function TipIpns(p: { ipns: string; onContinue: () => void }) {
         </div>
         <Button
           text="Got it"
-          className=" mt-8 self-center"
+          className=" mt-8 !w-[11.25rem] !py-3 self-center"
           onClick={() => setShowNext(true)}
         />
       </div>
@@ -55,7 +55,7 @@ function TipIpns(p: { ipns: string; onContinue: () => void }) {
           </div>
           <Button
             text="Continue"
-            className=" mt-6 self-center"
+            className=" mt-6 !w-[11.25rem] !py-3 self-center"
             onClick={onContinue}
           />
         </div>
@@ -111,7 +111,7 @@ function SetStyle(p: { onContinue: () => void }) {
       </div>
       <Button
         text="Continue"
-        className=" mt-16 self-center"
+        className=" mt-16 !w-[11.25rem] !py-3 self-center"
         onClick={onContinue}
       />
     </div>
@@ -194,7 +194,7 @@ function PreMetadata(p: { onContinue: OnNext }) {
           </div>
           <Button
             text="Continue"
-            className=" mt-8 self-center"
+            className=" mt-8 !w-[11.25rem] !py-3 self-center"
             onClick={upMeta}
           />
         </div>
@@ -246,7 +246,7 @@ function PreMetadata(p: { onContinue: OnNext }) {
                 </div>
                 <Button
                   text="Got it"
-                  className=" mt-3 self-center"
+                  className=" mt-3 !w-[11.25rem] !py-3 self-center"
                   onClick={() => setShowNext(true)}
                 />
               </div>
@@ -261,7 +261,7 @@ function PreMetadata(p: { onContinue: OnNext }) {
               </div>
               <Button
                 text="Continue"
-                className=" mt-6 self-center"
+                className=" mt-6 !w-[11.25rem] !py-3 self-center"
                 onClick={() => onContinue()}
               />
             </div>

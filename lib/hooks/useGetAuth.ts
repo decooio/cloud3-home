@@ -14,11 +14,12 @@ export function useGetAuth(
   const { signTypedDataAsync } = useSignTypedData();
   const { chain } = useNetwork();
   const chainId = chain && chain.id;
+  const unsupported = (chain && chain.unsupported) || !chain;
   const { address } = useAccount();
 
   const getToken = useOn(async (tokenId?: string) => {
     const old = localStorage.getItem(key) || "";
-    if (!signTypedDataAsync || !address || !chainId) throw "not connect wallet";
+    if (!signTypedDataAsync || !address || !chainId || unsupported) throw "not connect wallet";
     const current = moment().unix();
     if (cache && old) {
       const lastAuth = JSON.parse(window.atob(old)).data;

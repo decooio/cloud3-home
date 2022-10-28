@@ -32,12 +32,13 @@ export const MintStep1 = React.memo((p: MintStep1Props) => {
   return (
     <div className=" px-10 pt-9">
       <div className=" text-2xl">
-        Now you are starting to mint a new W3Bucket! First, choose your
-        preferred bucket type:
+        Now you are starting to mint a new W3Bucket!<br/>
+        First, choose your preferred bucket type:
       </div>
       <Button
         text="W3Bucket"
-        className=" !border-2 !border-orange-15 !text-orange-15 text-2xl mt-5"
+        disHover={true}
+        className=" !border-2 !border-orange-15 !text-orange-15 text-2xl py-[9px] !w-[11.25rem] mt-5"
       />
       <div className=" text-2xl mt-12">Select your preferred bucket size:</div>
       <div className="flex items-center mt-5">
@@ -48,8 +49,9 @@ export const MintStep1 = React.memo((p: MintStep1Props) => {
           >
             <Button
               text={formatW3BucketCapacity(item.capacityInGb)}
+              disHover={item.id === currentEditionId}
               className={classNames(
-                " !border-2 text-2xl mt-5 !w-48 cursor-pointer",
+                " !border-2 text-2xl mt-5 !w-[11.25rem] py-[9px] cursor-pointer",
                 {
                   "!border-orange-15 !text-orange-15":
                     item.id === currentEditionId,
@@ -78,10 +80,10 @@ export const MintStep1 = React.memo((p: MintStep1Props) => {
       )}
       <Button
         text="Next Step"
-        className="mt-12"
+        className="mt-12 !w-[11.25rem] !py-3"
         onClick={() => {
-          console.info('click:')
-          onNext()
+          console.info("click:");
+          onNext();
         }}
         disabled={!currentEdition}
       />

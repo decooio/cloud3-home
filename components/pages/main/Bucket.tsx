@@ -1,8 +1,7 @@
-import { Button } from "@components/common/Button";
 import { Icon } from "@components/common/Icon";
 import { useGetAuth } from "@lib/hooks/useGetAuth";
 import { parseBucketId } from "@lib/utils";
-import React, {useCallback, useMemo, useRef, useState} from "react";
+import React, { useEffect, useMemo, useRef, useState} from "react";
 import { BsBucket } from "react-icons/bs";
 import { FiChevronRight, FiSearch,FiFile,FiFolder } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,9 +12,11 @@ import {UploadRes} from "@components/pages/home/SectionTop";
 import {upload} from "@lib/files";
 import {DropDownBtn} from "@components/common/DropDownBtn";
 import {Modal, ModalHead} from "@components/modals/Modal";
-import {IconMetaMask} from "@components/common/icons";
 import {ProgressBar} from "@components/common/ProgressBar";
 import {Alert} from "@components/common/Alert";
+import {useGateway} from "@lib/hooks/useGateway";
+import {Pagination} from "@components/common/Pagination";
+import _ from "lodash";
 
 const TopInfo = () => {
   const { bucketId } = useParams();
@@ -80,41 +81,57 @@ export const Bucket = React.memo(() => {
   const inputFileRef = useRef(null);
   const inputFolderRef = useRef(null);
   const [upState,setUpState] = useState({ progress: 0, status: 'stop' });
+  const [pgNum,setPgNum] = useState(1);
+  const [total,setTotal] = useState(21);
+
   const files = useMemo(
-    () => [
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-    ],
+    () => {
+        return _.chunk([
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+        ],10)
+    },
     []
   );
   
   const { chain } = useNetwork();
   const [getAuth] = useGetAuth('for_upload')
-  // const doUpload = useCallback(async () => {
-  //
-  // }, [tokenId]);
+    const {current} = useGateway()
+    const getData = async ()=>{
+        await axios.request({
+            // headers: { Authorization: `Bearer ${auth}` },
+            method: 'POST',
+            params:{
+                arg: 'k51qzi5uqu5dj5f5ybxfzdddq0mg9m67a0y1z8w0ynlfjjqid9u9l39brl0ic7'
+            },
+            url: `${current.value}/api/v0/name/resolve`
+        });
+    }
+    useEffect(()=>{
+        getData()
+    })
   const onUploadChange = (file)=>{
       const upFile = file.target.files
-      console.log(upFile)
+      if(!upFile.length) return false
       getAuth(tokenId)
           .then(async (auth) => {
               console.info('auth:', auth)
@@ -130,26 +147,22 @@ export const Bucket = React.memo(() => {
                   }
                   const uploadRes = await upload({
                       data: form,
-                      // authBasic: `Bear ${auth}`,
+                      endpoint: current.value,
+                      authBasic: `Bearer ${auth}`,
                       onProgress: (num)=>{
                           setUpState({ progress: Math.round(num * 99), status: 'upload' });
                       }
+                      //k51qzi5uqu5dj5f5ybxfzdddq0mg9m67a0y1z8w0ynlfjjqid9u9l39brl0ic7
                   })
-                  console.log("--------------------")
-                  console.log(uploadRes)
-                  // let upRes: UploadRes;
-
-                  // if (typeof upResult.data === "string") {
-                  //     const jsonStr = upResult.data.replaceAll("}\n{", "},{");
-                  //     const items = JSON.parse(`[${jsonStr}]`) as UploadRes[];
-                  //     const folder = items.length - 1;
-                  //
-                  //     upRes = items[folder];
-                  //     delete items[folder];
-                  //     upRes.items = items;
-                  // } else {
-                  //     upRes = upResult.data;
-                  // }
+                  await axios.request({
+                      data: {
+                          cid: uploadRes.Hash,
+                          name: uploadRes.Name
+                      },
+                      headers: { Authorization: `Bearer ${auth}` },
+                      method: 'POST',
+                      url: `https://beta-pin.cloud3.cc/psa/pins`
+                  });
                   setUpState({ progress: 100, status: 'success'});
                   // setUploadFileInfo(upRes);
               } catch (e) {
@@ -159,6 +172,14 @@ export const Bucket = React.memo(() => {
               }
           })
           .catch(console.error)
+  }
+  const pin = async ()=>{
+      const res = await axios.request<UploadRes>({
+          // data,
+          method: "POST",
+          url: `https://test-pin.cloud3.cc`
+      });
+      console.log(res)
   }
   const onDropDownChange = (value)=>{
       if(value === 'file'){
@@ -196,7 +217,7 @@ export const Bucket = React.memo(() => {
               <div className="flex-initial w-2/12">TimeStamp</div>
             </div>
             <div className=" text-sm text-gray-6">
-              {files.map((f, index) => (
+              {files[pgNum-1].map((f, index) => (
                 <div
                   key={`files_${index}`}
                   className="flex items-center pt-4 pb-5"
@@ -209,6 +230,7 @@ export const Bucket = React.memo(() => {
                 </div>
               ))}
             </div>
+            <Pagination total={total} pgSize={10} pgNum={pgNum} onChange={(v)=>{setPgNum(v)}}/>
           </div>
         </div>
       </div>

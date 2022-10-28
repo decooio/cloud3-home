@@ -1,7 +1,7 @@
 import { Icon } from "@components/common/Icon";
 import { useGetAuth } from "@lib/hooks/useGetAuth";
 import { parseBucketId } from "@lib/utils";
-import React, { useEffect, useMemo, useRef, useState} from "react";
+import React, { useMemo, useRef, useState} from "react";
 import { BsBucket } from "react-icons/bs";
 import { FiChevronRight, FiSearch,FiFile,FiFolder } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,7 +17,6 @@ import {Alert} from "@components/common/Alert";
 import {useGateway} from "@lib/hooks/useGateway";
 import {Pagination} from "@components/common/Pagination";
 import _ from "lodash";
-import {BucketDTO, genUrl, getResData, Res} from "@lib/http";
 import {useAsync} from "react-use";
 
 const TopInfo = () => {
@@ -84,9 +83,8 @@ export const Bucket = React.memo(() => {
   const inputFolderRef = useRef(null);
   const [upState,setUpState] = useState({ progress: 0, status: 'stop' });
   const [pgNum,setPgNum] = useState(1);
-  const [total,setTotal] = useState(21);
-
-  
+  const [filterText,setFilterText] = useState('')
+  const [confirmFilterText,setConfirmFilterText] = useState('')
   const { chain } = useNetwork();
   const [getAuth] = useGetAuth('for_upload')
     const {current} = useGateway()
@@ -101,16 +99,25 @@ export const Bucket = React.memo(() => {
         const filesRes = await axios.request({
             url: `https://gw-seattle.cloud3.cc${pathRes.data.Path}`
         })
-        setTotal(filesRes.data.length)
-        return _.chunk(filesRes.data,10)
+        return filesRes.data
     }, [ipnsId]);
+
+
+    const {fFiles,total} = useMemo(()=>{
+        const filterFileList = _.filter(files,(item)=>{
+            return item.name.indexOf(filterText.trim())>-1
+        })
+        const fFiles = _.chunk(filterFileList,10)
+        const total = filterFileList.length
+        return {fFiles,total}
+    },[files,confirmFilterText])
+
 
   const onUploadChange = (file)=>{
       const upFile = file.target.files
       if(!upFile.length) return false
       getAuth(tokenId)
           .then(async (auth) => {
-              console.info('auth:', auth)
               try {
                   setUpState({ progress: 0, status: 'upload' });
                   const form = new FormData();
@@ -170,6 +177,9 @@ export const Bucket = React.memo(() => {
           inputFolderRef.current.click();
       }
   }
+  const doSearch = ()=>{
+      setConfirmFilterText(filterText)
+  }
     return (
     <MainLayout menuId={1}>
       <div className="flex-1 h-full overflow-y-auto">
@@ -184,10 +194,11 @@ export const Bucket = React.memo(() => {
               <span className="ml-5">Thundergateway Seattle, US</span>
               <div className="flex-1" />
               <div className="relative w-1/2 h-14 max-w-sm border-solid border-black-1 border rounded overflow-hidden">
-                <input className="w-full h-full pl-5 pr-10 active:border-0" />
+                <input className="w-full h-full pl-5 pr-10 active:border-0" onChange={(v)=>setFilterText(v.target.value)} />
                 <Icon
                   icon={FiSearch}
-                  className="text-2xl absolute top-4 right-2"
+                  className="text-2xl absolute top-4 right-2 cursor-pointer"
+                  onClick={doSearch}
                 />
               </div>
             </div>
@@ -199,7 +210,7 @@ export const Bucket = React.memo(() => {
               <div className="flex-initial w-2/12">TimeStamp</div>
             </div>
             <div className=" text-sm text-gray-6">
-              {files && files[pgNum-1] && files[pgNum-1].map((v, index) => (
+              {fFiles && fFiles[pgNum-1] && fFiles[pgNum-1].map((v, index) => (
                 <div
                   key={`files_${index}`}
                   className="flex items-center pt-4 pb-5"

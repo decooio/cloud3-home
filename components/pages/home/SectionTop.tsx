@@ -134,6 +134,7 @@ export const SectionTop = React.memo(() => {
     e.nativeEvent.stopImmediatePropagation();
     setVisibleDropUpload(false);
     setUploadFileInfo(null);
+    window.scroll(0, 0);
     return false;
   };
   const push = useNavigate();

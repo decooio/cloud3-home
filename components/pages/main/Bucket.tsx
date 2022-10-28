@@ -2,12 +2,20 @@ import { Button } from "@components/common/Button";
 import { Icon } from "@components/common/Icon";
 import { useGetAuth } from "@lib/hooks/useGetAuth";
 import { parseBucketId } from "@lib/utils";
-import React, { useCallback, useMemo } from "react";
+import React, {useCallback, useMemo, useRef, useState} from "react";
 import { BsBucket } from "react-icons/bs";
-import { FiChevronRight, FiSearch } from "react-icons/fi";
+import { FiChevronRight, FiSearch,FiFile,FiFolder } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useNetwork } from "wagmi";
 import { MainLayout } from "./MainLayout";
+import axios from "axios";
+import {UploadRes} from "@components/pages/home/SectionTop";
+import {upload} from "@lib/files";
+import {DropDownBtn} from "@components/common/DropDownBtn";
+import {Modal, ModalHead} from "@components/modals/Modal";
+import {IconMetaMask} from "@components/common/icons";
+import {ProgressBar} from "@components/common/ProgressBar";
+import {Alert} from "@components/common/Alert";
 
 const TopInfo = () => {
   const { bucketId } = useParams();
@@ -69,6 +77,9 @@ export const Bucket = React.memo(() => {
   const { bucketId } = useParams();
   const [ , tokenId] = useMemo(() => parseBucketId(bucketId),[bucketId])
   const push = useNavigate();
+  const inputFileRef = useRef(null);
+  const inputFolderRef = useRef(null);
+  const [upState,setUpState] = useState({ progress: 0, status: 'stop' });
   const files = useMemo(
     () => [
       {},
@@ -98,19 +109,75 @@ export const Bucket = React.memo(() => {
   
   const { chain } = useNetwork();
   const [getAuth] = useGetAuth('for_upload')
-  const doSign = useCallback(async () => {
-    getAuth(tokenId)
-    .then((auth) => console.info('auth:', auth))
-    .catch(console.error)
-  }, [tokenId]);
-  return (
+  // const doUpload = useCallback(async () => {
+  //
+  // }, [tokenId]);
+  const onUploadChange = (file)=>{
+      const upFile = file.target.files
+      console.log(upFile)
+      getAuth(tokenId)
+          .then(async (auth) => {
+              console.info('auth:', auth)
+              try {
+                  setUpState({ progress: 0, status: 'upload' });
+                  const form = new FormData();
+                  if (upFile.length === 1) {
+                      form.append('file', upFile[0], upFile[0].name);
+                  } else if (upFile.length > 1) {
+                      for (const f of upFile) {
+                          form.append('file', f, f._webkitRelativePath || f.webkitRelativePath);
+                      }
+                  }
+                  const uploadRes = await upload({
+                      data: form,
+                      // authBasic: `Bear ${auth}`,
+                      onProgress: (num)=>{
+                          setUpState({ progress: Math.round(num * 99), status: 'upload' });
+                      }
+                  })
+                  console.log("--------------------")
+                  console.log(uploadRes)
+                  // let upRes: UploadRes;
+
+                  // if (typeof upResult.data === "string") {
+                  //     const jsonStr = upResult.data.replaceAll("}\n{", "},{");
+                  //     const items = JSON.parse(`[${jsonStr}]`) as UploadRes[];
+                  //     const folder = items.length - 1;
+                  //
+                  //     upRes = items[folder];
+                  //     delete items[folder];
+                  //     upRes.items = items;
+                  // } else {
+                  //     upRes = upResult.data;
+                  // }
+                  setUpState({ progress: 100, status: 'success'});
+                  // setUploadFileInfo(upRes);
+              } catch (e) {
+                  setUpState({ progress: 0, status: 'fail' });
+                  console.error(e);
+                  throw e;
+              }
+          })
+          .catch(console.error)
+  }
+  const onDropDownChange = (value)=>{
+      if(value === 'file'){
+          inputFileRef.current.click();
+      }else if(value === 'folder') {
+          inputFolderRef.current.click();
+      }
+  }
+    return (
     <MainLayout menuId={1}>
       <div className="flex-1 h-full overflow-y-auto">
         <div className="relative">
           <TopInfo />
           <div className="p-8 flex-1 text-lg v-full flex flex-col">
-            <div className="sticky top-[6.5rem] bg-white w-full flex items-center">
-              <Button text="Upload" className=" w-44" onClick={doSign} />
+            <div className="sticky top-[6.5rem] bg-white w-full flex items-center z-10">
+              <DropDownBtn dropData={[{text:'File',icon: FiFile,value: 'file'},{text:'Folder',icon: FiFolder,value: 'folder'}]} text="Upload" onChange={onDropDownChange}/>
+              <input ref={inputFileRef} type="file" hidden onChange={onUploadChange} />
+              {/*@ts-ignore*/}
+              <input ref={inputFolderRef} type="file" hidden webkitdirectory="" directory onChange={onUploadChange} />
               <span className="ml-5">Thundergateway Seattle, US</span>
               <div className="flex-1" />
               <div className="relative w-1/2 h-14 max-w-sm border-solid border-black-1 border rounded overflow-hidden">
@@ -121,7 +188,7 @@ export const Bucket = React.memo(() => {
                 />
               </div>
             </div>
-            <div className="sticky top-40 bg-white py-4 flex items-center font-medium border-b-1 border-solid border-b-black-1">
+            <div className="top-40 bg-white py-4 flex items-center font-medium border-b-1 border-solid border-b-black-1">
               <div className="flex-initial w-2/12 pl-3">File Name</div>
               <div className="flex-initial w-3/12">CID</div>
               <div className="flex-initial w-4/12">Link</div>
@@ -145,6 +212,25 @@ export const Bucket = React.memo(() => {
           </div>
         </div>
       </div>
+        {
+            upState.status !== 'stop' &&
+            <Modal>
+                <ModalHead title="Upload File" onClose={()=>{setUpState({progress: 0,status: 'stop'})}} />
+                <div
+                    className="bg-white mt-5 flex px-6 py-3 cursor-pointer justify-between items-center"
+                >
+                    {
+                        upState.status === 'upload' &&
+                        <ProgressBar value={upState.progress} />
+                    }
+                    {
+                        upState.status !== 'upload' &&
+                        <Alert text={upState.status === 'success'?'Upload success':'Upload fail'} status={upState.status} />
+                    }
+                </div>
+            </Modal>
+        }
+
     </MainLayout>
   );
 });

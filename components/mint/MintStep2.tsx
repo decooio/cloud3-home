@@ -145,7 +145,9 @@ function PreMetadata(p: { onContinue: OnNext }) {
       try {
         const auth = await getAuth();
         const imageblob = await toBlob(bucketEle);
-        const image = await upload(imageblob, "bucket_image.png");
+        const form = new FormData();
+        form.append("file", imageblob, "bucket_image.png");
+        const image = await upload({data:form});
         const res = await axios.post<Res<void>>(
           genUrl("/auth/bucket/metadata/generate"),
           { uuid: mintData.uuid, cid: image.Hash },

@@ -161,8 +161,9 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
               >
                 <Button
                   text={price.symbol}
+                  disHover={price.currency === mintData.price?.currency}
                   className={classNames(
-                    " !border-2 text-2xl mt-5 !w-48 cursor-pointer",
+                    " !border-2 text-2xl mt-5 !w-[11.25rem] !py-[9px] cursor-pointer",
                     {
                       "!border-orange-15 !text-orange-15":
                         price.currency === mintData.price?.currency,
@@ -212,7 +213,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
           </div>
           <Button
             text="Complete"
-            className=" self-center mt-20"
+            className=" self-center !w-[11.25rem] !py-3 mt-20"
             onClick={onComplete}
           />
         </div>

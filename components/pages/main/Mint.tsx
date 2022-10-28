@@ -1,4 +1,5 @@
 import { Icon } from "@components/common/Icon";
+import { LoadingText } from "@components/common/Loading";
 import { Steps } from "@components/common/Steps";
 import { MintStep1 } from "@components/mint/MintStep1";
 import { MintStep2 } from "@components/mint/MintStep2";
@@ -16,7 +17,7 @@ import { MainLayout } from "./MainLayout";
 
 export const Mint = React.memo(() => {
   const { value: editions, loading } = useBucketEditions();
-  useAppLoading(loading);
+  // useAppLoading(loading);
   const push = useNavigate();
   const steps = useMemo(
     () => [
@@ -32,8 +33,8 @@ export const Mint = React.memo(() => {
   useEffect(() => {
     const task = async () => {
       try {
-        console.info('do taks:')
-        if(!mintData.uuid) return setStep(0);
+        console.info("do taks:");
+        if (!mintData.uuid) return setStep(0);
         const auth = await getAuth();
         const mintstate = await axios
           .get<Res<MintState>>(genUrl(`/auth/bucket/uuid/${mintData.uuid}`), {
@@ -60,17 +61,19 @@ export const Mint = React.memo(() => {
         });
         if (mintstate.mintTxHash) {
           setStep(2);
-        } else if(mintstate.metadataTxHash){
-          setStep(1)
+        } else if (mintstate.metadataTxHash) {
+          setStep(1);
         } else {
-          setStep(0)
+          setStep(0);
         }
       } catch (error) {
-        setStep(0)
+        setStep(0);
       }
     };
-    task()
-    return () => { updateMint({}, true) }
+    task();
+    return () => {
+      updateMint({}, true);
+    };
   }, []);
 
   const onNext = useCallback(
@@ -97,7 +100,7 @@ export const Mint = React.memo(() => {
           </div>
           {editions && (
             <>
-              {currentStep === 0 && (
+              {currentStep === 0 && !loading && (
                 <MintStep1 editions={editions} onNext={onNext} />
               )}
               {currentStep === 1 && (
@@ -107,6 +110,9 @@ export const Mint = React.memo(() => {
                 <MintStep3 editions={editions} onNext={onNext} />
               )}
             </>
+          )}
+          {(loading || currentStep < 0) && (
+            <LoadingText className=" text-black-1 justify-center h-[calc(100vh_-_17.75rem)]" />
           )}
         </div>
       </div>

@@ -30,7 +30,7 @@ export const BucketImage = React.memo(
       >
         <div className="flex items-center" style={{ color: textColor }}>
           <IconCloud3 bg={iconColor} style={{ fontSize: "2.8125rem" }} />
-          <span className=" font-Roboto font-medium ml-[0.625rem]">
+          <span className=" font-Roboto text-3xl font-medium ml-[0.625rem]">
             W3BUCKET
           </span>
         </div>

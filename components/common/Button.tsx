@@ -5,14 +5,23 @@ export interface IProps {
   text: string;
   icon?: string;
   iconClassName?: string;
+  disHover?: boolean;
 }
 function Button_(props: IProps & ButtonHTMLAttributes<HTMLButtonElement>) {
-  const { text, icon, className, iconClassName, ...other } = props;
+  const {
+    text,
+    icon,
+    className,
+    iconClassName,
+    disHover = false,
+    ...other
+  } = props;
   return (
     <button
       className={classnames(
         className,
-        "p-2 w-40 border-black-1 border-solid border border-b-4 flex items-center justify-center disabled:cursor-not-allowed",
+        { "hover:bg-black-1 hover:text-white": !disHover && !props.disabled },
+        "p-2 w-40  border-black-1 border-solid border border-b-4 flex items-center justify-center disabled:cursor-not-allowed"
       )}
       {...other}
     >

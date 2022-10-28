@@ -18,9 +18,9 @@ export const Setting = React.memo(() => {
   const optionsStrategy: any[] = useMemo(() => {
     return [
       { text: "Random" },
-      { text: "77777" },
-      { text: "88888" },
-      { text: "99999" },
+      // { text: "77777" },
+      // { text: "88888" },
+      // { text: "99999" },
     ];
   }, []);
 

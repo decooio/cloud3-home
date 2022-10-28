@@ -1,4 +1,4 @@
-import { W3Bucket_Adress } from "@lib/config";
+import { GatewayList, W3Bucket_Adress } from "@lib/config";
 import BN from "bn.js";
 import classNames, { Argument } from "classnames";
 import isMobile from "ismobilejs";
@@ -142,5 +142,5 @@ export function ipfsUrl(cid: string) {
   return `https://crustwebsites.net/ipfs/${cid}`;
 }
 export function ipnsUrl(ipns: string) {
-  return `https://crustwebsites.net/ipns/${ipns}`;
+  return `${GatewayList[0].value}/ipns/${ipns}`;
 }

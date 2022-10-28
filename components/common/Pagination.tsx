@@ -55,7 +55,10 @@ export function Pagination(p: Props & HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={classnames('flex justify-center text-gray-400 text-sm mt-10',className)}>
       <div className="flex">
-        <span onClick={doPrev} className="mr-8 cursor-pointer">&lt;</span>
+        {
+          count>3 &&
+          <span onClick={doPrev} className="mr-8 cursor-pointer">&lt;</span>
+        }
         {items.map((page, i) => (
           <div key={`key_page_${i}`}
             className={classnames({
@@ -69,7 +72,10 @@ export function Pagination(p: Props & HTMLAttributes<HTMLDivElement>) {
             {page.name}
           </div>
         ))}
-        <span onClick={doNext} className="cursor-pointer">&gt;</span>
+        {
+          count>3 &&
+          <span onClick={doNext} className="cursor-pointer">&gt;</span>
+        }
       </div>
     </div>
   );

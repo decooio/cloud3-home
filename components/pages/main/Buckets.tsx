@@ -32,7 +32,7 @@ const BucketCard = React.memo((p: { data: BucketDTO }) => {
     [data, capacityInGb]
   );
   const onClickBucket = () => {
-    push(`/bucket/${bucketId}`);
+    push(`/bucket/${bucketId}/${data.ipnsId}`);
   };
   return (
     <div className=" h-min p-5 border border-solid border-black-1">

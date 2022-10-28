@@ -16,7 +16,7 @@ function Root_() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/buckets" element={<Buckets />} />
-            <Route path="/bucket/:bucketId" element={<Bucket />} />
+            <Route path="/bucket/:bucketId/:ipnsId" element={<Bucket />} />
             <Route path="/settings" element={<Setting />} />
             <Route path="/mint" element={<Mint />} />
           </Routes>

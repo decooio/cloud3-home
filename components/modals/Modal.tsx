@@ -16,8 +16,8 @@ export const ModalHead = React.memo(
           className
         )}
       >
-        <div className=" text-black-3">{title}</div>
-        <div className="text-gray-12 ">
+        <div className="text-black-3 text-lg">{title}</div>
+        <div className="text-gray-12">
           <Icon
             icon={"cru-fo-x"}
             className=" text-xl cursor-pointer"

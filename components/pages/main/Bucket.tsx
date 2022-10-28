@@ -17,6 +17,8 @@ import {Alert} from "@components/common/Alert";
 import {useGateway} from "@lib/hooks/useGateway";
 import {Pagination} from "@components/common/Pagination";
 import _ from "lodash";
+import {BucketDTO, genUrl, getResData, Res} from "@lib/http";
+import {useAsync} from "react-use";
 
 const TopInfo = () => {
   const { bucketId } = useParams();
@@ -75,7 +77,7 @@ const TopInfo = () => {
 };
 
 export const Bucket = React.memo(() => {
-  const { bucketId } = useParams();
+  const { bucketId,ipnsId } = useParams();
   const [ , tokenId] = useMemo(() => parseBucketId(bucketId),[bucketId])
   const push = useNavigate();
   const inputFileRef = useRef(null);
@@ -84,51 +86,25 @@ export const Bucket = React.memo(() => {
   const [pgNum,setPgNum] = useState(1);
   const [total,setTotal] = useState(21);
 
-  const files = useMemo(
-    () => {
-        return _.chunk([
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-        ],10)
-    },
-    []
-  );
   
   const { chain } = useNetwork();
   const [getAuth] = useGetAuth('for_upload')
     const {current} = useGateway()
-    const getData = async ()=>{
-        await axios.request({
-            // headers: { Authorization: `Bearer ${auth}` },
+    const { value: files } = useAsync(async () => {
+        const pathRes = await axios.request({
             method: 'POST',
             params:{
-                arg: 'k51qzi5uqu5dj5f5ybxfzdddq0mg9m67a0y1z8w0ynlfjjqid9u9l39brl0ic7'
+                arg: ipnsId
             },
             url: `${current.value}/api/v0/name/resolve`
         });
-    }
-    useEffect(()=>{
-        getData()
-    })
+        const filesRes = await axios.request({
+            url: `https://gw-seattle.cloud3.cc${pathRes.data.Path}`
+        })
+        setTotal(filesRes.data.length)
+        return _.chunk(filesRes.data,10)
+    }, [ipnsId]);
+
   const onUploadChange = (file)=>{
       const upFile = file.target.files
       if(!upFile.length) return false
@@ -152,19 +128,33 @@ export const Bucket = React.memo(() => {
                       onProgress: (num)=>{
                           setUpState({ progress: Math.round(num * 99), status: 'upload' });
                       }
-                      //k51qzi5uqu5dj5f5ybxfzdddq0mg9m67a0y1z8w0ynlfjjqid9u9l39brl0ic7
                   })
+                  let cid = ''
+                  let name = ''
+                  if (typeof uploadRes === 'string') {
+                      const jsonStr = (uploadRes as string).replaceAll('}\n{', '},{');
+                      const items = JSON.parse(`[${jsonStr}]`) as UploadRes[];
+                      const folder = items.length - 1;
+                      cid = items[folder].Hash
+                      name = items[folder].Name
+                  } else {
+                      cid = uploadRes.Hash
+                      name = uploadRes.Name
+                  }
+                  if(!cid || !name){
+                      setUpState({ progress: 0, status: 'fail'});
+                      return false
+                  }
                   await axios.request({
                       data: {
-                          cid: uploadRes.Hash,
-                          name: uploadRes.Name
+                          cid,
+                          name
                       },
                       headers: { Authorization: `Bearer ${auth}` },
                       method: 'POST',
                       url: `https://beta-pin.cloud3.cc/psa/pins`
                   });
                   setUpState({ progress: 100, status: 'success'});
-                  // setUploadFileInfo(upRes);
               } catch (e) {
                   setUpState({ progress: 0, status: 'fail' });
                   console.error(e);
@@ -172,14 +162,6 @@ export const Bucket = React.memo(() => {
               }
           })
           .catch(console.error)
-  }
-  const pin = async ()=>{
-      const res = await axios.request<UploadRes>({
-          // data,
-          method: "POST",
-          url: `https://test-pin.cloud3.cc`
-      });
-      console.log(res)
   }
   const onDropDownChange = (value)=>{
       if(value === 'file'){
@@ -211,20 +193,20 @@ export const Bucket = React.memo(() => {
             </div>
             <div className="top-40 bg-white py-4 flex items-center font-medium border-b-1 border-solid border-b-black-1">
               <div className="flex-initial w-2/12 pl-3">File Name</div>
-              <div className="flex-initial w-3/12">CID</div>
-              <div className="flex-initial w-4/12">Link</div>
+              <div className="flex-initial w-5/12">CID</div>
+              <div className="flex-initial w-2/12">Link</div>
               <div className="flex-initial w-1/12">File Size</div>
               <div className="flex-initial w-2/12">TimeStamp</div>
             </div>
             <div className=" text-sm text-gray-6">
-              {files[pgNum-1].map((f, index) => (
+              {files && files[pgNum-1] && files[pgNum-1].map((v, index) => (
                 <div
                   key={`files_${index}`}
                   className="flex items-center pt-4 pb-5"
                 >
-                  <div className="flex-initial w-2/12 pl-3">File Name</div>
-                  <div className="flex-initial w-3/12">CID</div>
-                  <div className="flex-initial w-4/12">Link</div>
+                  <div className="flex-initial w-2/12 pl-3">{v.name}</div>
+                  <div className="flex-initial w-5/12">{v.cid}</div>
+                  <div className="flex-initial w-2/12">Link</div>
                   <div className="flex-initial w-1/12">File Size</div>
                   <div className="flex-initial w-2/12">TimeStamp</div>
                 </div>

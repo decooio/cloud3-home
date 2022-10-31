@@ -46,11 +46,15 @@ export const SectionTop = React.memo(() => {
         e.stopPropagation();
         e.preventDefault();
         drag.style.borderColor = '#131521'
+        if(e.dataTransfer.files.length>1 || e.dataTransfer.files[0].type === ''){
+          alert('不支持文件夹')
+          return false
+        }
         if (!uploadFileInfo) {
           const [file] = e.dataTransfer.files;
           const fileSize = file.size / (1024 * 1024);
           if (fileSize > 100) {
-            console.log("", "e", "用户资料zip文件请不要超过100MB", "消息提醒");
+            alert('文件请不要超过100MB')
             return;
           }
           await upload(file);

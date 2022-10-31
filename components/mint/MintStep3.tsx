@@ -125,8 +125,9 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
           .get<Res<MintState>>(genUrl(`/auth/bucket/uuid/${mintData.uuid}`), {
             headers: { Authorization: `Bearer ${auth}` },
           })
-          .then(getResData);
-        if (taskRes.tokenId && taskRes.mintTxHash) {
+          .then(getResData)
+          .catch(() => null);
+        if (taskRes && taskRes.tokenId && taskRes.mintTxHash) {
           break;
         }
       }

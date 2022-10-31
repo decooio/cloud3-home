@@ -280,7 +280,7 @@ export const Bucket = React.memo(() => {
             <Modal>
                 <ModalHead title="Upload File" onClose={()=>{setUpState({progress: 0,status: 'stop'})}} />
                 <div
-                    className="bg-white mt-5 flex px-6 py-3 cursor-pointer justify-between items-center"
+                    className="bg-white mt-5 flex  py-3 cursor-pointer justify-between items-center"
                 >
                     {
                         upState.status === 'upload' &&

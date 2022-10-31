@@ -32,7 +32,7 @@ export const ConnectWallet = React.memo((p: { onClose: () => void }) => {
         onClick={onConnect}
         className="bg-[#ececec] hover:bg-[#dfdfdf] h-14 mt-5 flex px-6 py-3 cursor-pointer justify-between items-center"
       >
-        <IconMetaMask className=" text-[3.75rem]" />
+        <IconMetaMask className=" text-[3.5rem]" />
         <div className=" text-black-1 text-sm">MetaMask</div>
         <div className=" w-[3.75rem]" />
       </div>

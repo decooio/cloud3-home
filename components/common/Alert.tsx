@@ -11,10 +11,10 @@ function Alert_(props: IProps & ButtonHTMLAttributes<HTMLButtonElement>) {
     const { text, status, className } = props;
     return (
         <div className={classnames('flex items-center text-sm text-black border-1 h-14 w-full px-5',
-            status === 'success'?'border-green-600 bg-green-100':'border-rose-600 bg-rose-100')}>
+            status === 'success'?'border-[#32CB9D] bg-green-50':'border-[#EF4C56] bg-rose-50')}>
             <Icon
                 icon={AiFillCheckCircle}
-                className={classnames('text-sm mr-3',status === 'success'?'text-green-600':'text-rose-600')}
+                className={classnames('text-xl mr-3',status === 'success'?'text-[#32CB9D]':'text-[#EF4C56]')}
             />
             <span>{text}</span>
         </div>

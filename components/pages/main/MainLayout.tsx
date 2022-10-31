@@ -74,7 +74,7 @@ export const MainLayout = React.memo(
               {isConnected && (
                 <div
                   className={classNames(
-                    " ml-4 text-xs px-[0.39rem] py-[0.13rem] text-white",
+                    " ml-4 text-xs px-[0.39rem] py-[0.13rem] mb-[-0.42rem] text-white",
                     chainId === 1 ? "bg-blue-2" : "bg-gray-11"
                   )}
                 >

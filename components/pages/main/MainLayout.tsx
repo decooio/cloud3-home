@@ -4,13 +4,21 @@ import { IconSetting } from "@components/common/icons";
 import { Logo } from "@components/common/Logo";
 import { ConnectWallet } from "@components/modals/ConnectWallet";
 import { IS_DEV, IS_TEST } from "@lib/env";
+import { useConnected } from "@lib/hooks/useConnected";
 import { openExtUrl, shortStr } from "@lib/utils";
 import classNames from "classnames";
-import React, { HTMLAttributes, useEffect, useMemo, useState } from "react";
+import React, {
+  HTMLAttributes,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { BsBucket } from "react-icons/bs";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { useAccount, useNetwork } from "wagmi";
+import { useHoverDirty } from "react-use";
+import { useAccount, useDisconnect, useNetwork } from "wagmi";
 interface Menu {
   id: number;
   icon: any;
@@ -28,17 +36,19 @@ export const MainLayout = React.memo(
   (p: { menuId: number } & HTMLAttributes<HTMLDivElement>) => {
     const { menuId, children, ...props } = p;
     const { address: account } = useAccount();
-    const {chain }= useNetwork();
-    const chainId = chain && chain.id
-    const isConnected = useMemo(() => {
-      if (IS_DEV || IS_TEST) return account && chainId === 5;
-      return account && chainId === 1;
-    }, [account, chainId]);
+    const { chain } = useNetwork();
+    const chainId = chain && chain.id;
+    const isConnected = useConnected();
     const menus: Menu[] = useMemo(() => {
       return [
         { id: 1, icon: BsBucket, text: "W3Buckets", path: "/buckets" },
         { id: 2, icon: IconSetting, text: "Settings", path: "/settings" },
-        { id: 3, icon: "cru-fo-homework", text: "Docs", url: "https://docs.cloud3.cc" },
+        {
+          id: 3,
+          icon: "cru-fo-homework",
+          text: "Docs",
+          url: "https://docs.cloud3.cc",
+        },
       ];
     }, []);
     const push = useNavigate();
@@ -46,6 +56,9 @@ export const MainLayout = React.memo(
     useEffect(() => {
       isConnected && setShowConnect(false);
     }, [isConnected]);
+    const { disconnect } = useDisconnect();
+    const btnAccount = useRef();
+    const isHoverAccount = useHoverDirty(btnAccount);
     return (
       <div
         {...props}
@@ -95,18 +108,21 @@ export const MainLayout = React.memo(
                 </div>
               ))}
             </div>
-            {isConnected && (
-              <Button
-                className=" self-end mx-auto mb-10"
-                text={shortStr(account, 6, 6)}
-              />
-            )}
+            <Button
+              ref={btnAccount}
+              className={classNames(" self-end mx-auto mb-10", {
+                " hidden": !isConnected,
+              })}
+              // disHover={true}
+              onClick={() => disconnect()}
+              text={isHoverAccount ? "Disconnect" : shortStr(account, 6, 6)}
+            />
           </div>
           {isConnected ? (
             children
           ) : (
             <div className="flex-1 flex px-[15%] pt-[30vh] h-full flex-col items-center">
-              <div className=" text-xl text-black">{net_text}</div>
+              <div className=" text-xl text-black text-center">{net_text}</div>
               <Button
                 text="Connect Wallet"
                 className=" mt-8"

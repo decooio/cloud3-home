@@ -7,7 +7,7 @@ export interface IProps {
   iconClassName?: string;
   disHover?: boolean;
 }
-function Button_(props: IProps & ButtonHTMLAttributes<HTMLButtonElement>) {
+function Button_(props: IProps & ButtonHTMLAttributes<HTMLButtonElement>, ref: any) {
   const {
     text,
     icon,
@@ -18,16 +18,17 @@ function Button_(props: IProps & ButtonHTMLAttributes<HTMLButtonElement>) {
   } = props;
   return (
     <button
+      {...other}
+      ref={ref}
       className={classnames(
         className,
         { "hover:bg-black-1 hover:text-white": !disHover && !props.disabled },
         "p-2 w-40  border-black-1 border-solid border border-b-4 flex items-center justify-center disabled:cursor-not-allowed"
       )}
-      {...other}
     >
       {icon && <img src={icon} alt="" className={classnames(iconClassName)} />}
       {text}
     </button>
   );
 }
-export const Button = React.memo(Button_);
+export const Button = React.memo(React.forwardRef(Button_));

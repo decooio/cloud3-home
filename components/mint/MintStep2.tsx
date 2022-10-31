@@ -77,7 +77,7 @@ function SetStyle(p: { onContinue: () => void }) {
             <div
               key={`mint_colors_${key}`}
               style={{ backgroundColor: MintColors[key][0] }}
-              onClick={() => updateMint({ color: key })}
+              onClick={() => updateMint({ color: key as any })}
               className={classNames(
                 "rounded-xl w-5 h-5 overflow-hidden cursor-pointer mr-[1.875rem]",
                 {

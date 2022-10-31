@@ -18,6 +18,7 @@ import {useGateway} from "@lib/hooks/useGateway";
 import {Pagination} from "@components/common/Pagination";
 import _ from "lodash";
 import {useAsync} from "react-use";
+import { BucketCode } from "@components/common/BucketCode";
 
 const TopInfo = () => {
   const { bucketId } = useParams();
@@ -40,11 +41,11 @@ const TopInfo = () => {
       <div className="px-8 pb-8 text-lg border-b-8 border-solid border-[#eeeeee]">
         <div className=" border border-black-1 border-solid px-8 pt-6 pb-5">
           <div className=" text-xl font-medium">Guidance on Storage</div>
-          <div className=" mt-4">
+          <div className=" my-4">
             Files can be uploaded and decentralized pinned to IPFS by using this
             web interface, or by CLI as shown in the curl sample below.
           </div>
-          <img className=" mt-3" alt="Ipfs code" src="/images/ipfs_code.png" />
+          <BucketCode />
           <div className=" mt-8 text-xl font-medium">Get more references</div>
           <div className=" mt-4 flex flex-wrap">
             <a

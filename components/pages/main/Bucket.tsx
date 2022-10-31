@@ -1,6 +1,6 @@
 import { Icon } from "@components/common/Icon";
 import { useGetAuth } from "@lib/hooks/useGetAuth";
-import { parseBucketId } from "@lib/utils";
+import {formatFileSize, formatW3BucketCapacity, parseBucketId, shortStr} from "@lib/utils";
 import React, { useMemo, useRef, useState} from "react";
 import { BsBucket } from "react-icons/bs";
 import { FiChevronRight, FiSearch,FiFile,FiFolder } from "react-icons/fi";
@@ -19,6 +19,8 @@ import {Pagination} from "@components/common/Pagination";
 import _ from "lodash";
 import {useAsync} from "react-use";
 import { BucketCode } from "@components/common/BucketCode";
+import moment from "moment";
+import ReactTooltip from 'react-tooltip';
 
 const TopInfo = () => {
   const { bucketId } = useParams();
@@ -87,6 +89,8 @@ export const Bucket = React.memo(() => {
   const [pgNum,setPgNum] = useState(1);
   const [filterText,setFilterText] = useState('')
   const [confirmFilterText,setConfirmFilterText] = useState('')
+  const [addFiles,setAddFiles] = useState([])
+
   // const { chain } = useNetwork();
   const [getAuth] = useGetAuth('for_upload')
     const {current} = useGateway()
@@ -117,10 +121,13 @@ export const Bucket = React.memo(() => {
         const filterFileList = _.filter(uploadFiles,(item)=>{
             return item.name.indexOf(filterText.trim())>-1
         })
+        addFiles.map(v=>{
+            if(v.name) filterFileList.push(v)
+        })
         const fFiles = _.chunk(filterFileList,10)
         const total = filterFileList.length
         return {fFiles,total}
-    },[files,confirmFilterText])
+    },[files,confirmFilterText,addFiles])
 
 
   const onUploadChange = (file)=>{
@@ -129,13 +136,16 @@ export const Bucket = React.memo(() => {
       getAuth(tokenId)
           .then(async (auth) => {
               try {
+                  let fileSize = 0
                   setUpState({ progress: 0, status: 'upload' });
                   const form = new FormData();
                   if (upFile.length === 1) {
                       form.append('file', upFile[0], upFile[0].name);
+                      fileSize = upFile[0].size
                       inputFileRef.current.value = '';
                   } else if (upFile.length > 1) {
                       for (const f of upFile) {
+                          fileSize = f.size
                           form.append('file', f, f._webkitRelativePath || f.webkitRelativePath);
                       }
                       inputFolderRef.current.value = '';
@@ -174,6 +184,7 @@ export const Bucket = React.memo(() => {
                       url: `https://beta-pin.cloud3.cc/psa/pins`
                   });
                   setUpState({ progress: 100, status: 'success'});
+                  setAddFiles(addFiles.concat([{name,cid,fileSize,createTime: moment().valueOf()}]))
               } catch (e) {
                   setUpState({ progress: 0, status: 'fail' });
                   console.error(e);
@@ -215,11 +226,11 @@ export const Bucket = React.memo(() => {
               </div>
             </div>
             <div className="top-40 bg-white py-4 flex items-center font-medium border-b-1 border-solid border-b-black-1">
-              <div className="flex-initial w-2/12 pl-3">File Name</div>
-              <div className="flex-initial w-5/12">CID</div>
-              <div className="flex-initial w-2/12">Link</div>
-              <div className="flex-initial w-1/12">File Size</div>
-              <div className="flex-initial w-2/12">TimeStamp</div>
+              <div className="flex-initial w-3/12 pl-3 pr-5">File Name</div>
+              <div className="flex-initial w-2/12">CID</div>
+              <div className="flex-initial w-3/12">Link</div>
+              <div className="flex-initial w-2/12">File Size</div>
+              <div className="flex-initial w-[10rem]">TimeStamp</div>
             </div>
             <div className=" text-sm text-gray-6">
               {fFiles && fFiles[pgNum-1] && fFiles[pgNum-1].map((v, index) => (
@@ -227,11 +238,11 @@ export const Bucket = React.memo(() => {
                   key={`files_${index}`}
                   className="flex items-center pt-4 pb-5"
                 >
-                  <div className="flex-initial w-2/12 pl-3">{v.name}</div>
-                  <div className="flex-initial w-5/12">{v.cid}</div>
-                  <div className="flex-initial w-2/12">Link</div>
-                  <div className="flex-initial w-1/12">File Size</div>
-                  <div className="flex-initial w-2/12">TimeStamp</div>
+                  <div className="flex-initial w-3/12 pl-3 truncate pr-5" data-tip={v.name.length>20?v.name:''}>{v.name}</div>
+                  <div className="flex-initial w-2/12" data-tip={v.cid}>{shortStr(v.cid)}</div>
+                  <div className="flex-initial w-3/12">{current.value}</div>
+                  <div className="flex-initial w-2/12">{formatFileSize(v.fileSize)}</div>
+                  <div className="flex-initial w-[10rem]">{moment(v.createTime*1000).format('YYYY-MM-DD HH:mm:ss')}</div>
                 </div>
               ))}
             </div>

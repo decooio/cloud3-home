@@ -14,7 +14,7 @@ module.exports = {
       assert: false,
       fs: false,
       process: false,
-      events: false
+      events: false,
     }
     return config;
   },

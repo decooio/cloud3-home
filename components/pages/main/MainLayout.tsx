@@ -38,7 +38,7 @@ export const MainLayout = React.memo(
       return [
         { id: 1, icon: BsBucket, text: "W3Buckets", path: "/buckets" },
         { id: 2, icon: IconSetting, text: "Settings", path: "/settings" },
-        { id: 3, icon: "cru-fo-homework", text: "Docs", url: "docs" },
+        { id: 3, icon: "cru-fo-homework", text: "Docs", url: "https://docs.cloud3.cc" },
       ];
     }, []);
     const push = useNavigate();

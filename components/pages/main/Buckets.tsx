@@ -37,7 +37,7 @@ const BucketCard = React.memo((p: { data: BucketDTO }) => {
   return (
     <div className=" h-min p-5 border border-solid border-black-1">
       <img className="w-full aspect-[360/531] object-contain" src={ipfsUrl(data.metadata.image.replace('ipfs://',''))} />
-      <div className=" text-lg mt-[0.625rem]">{`W3BUCKET(${bucketId})`}</div>
+      <div className=" text-lg font-semibold mt-[0.625rem]">{`W3BUCKET(${bucketId})`}</div>
       <div className="flex text-sm my-[2px] justify-between">
         <div>Current Usage</div>
         <div>
@@ -47,7 +47,7 @@ const BucketCard = React.memo((p: { data: BucketDTO }) => {
       </div>
       <div className="flex text-sm my-[2px] justify-between">
         <div>Files</div>
-        <div>{`${data.fileCount}Files`}</div>
+        <div>{`${data.fileCount} Files`}</div>
       </div>
       <div className="flex text-sm my-[2px] justify-between">
         <div>Created</div>
@@ -66,7 +66,7 @@ const BucketCard = React.memo((p: { data: BucketDTO }) => {
       </div>
       <Button
         onClick={onClickBucket}
-        className="!w-full mt-[2px] text-lg"
+        className="!w-full mt-[2px] text-lg !py-1"
         text="Enter W3Bucket"
       />
     </div>

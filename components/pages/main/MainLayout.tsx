@@ -57,7 +57,7 @@ export const MainLayout = React.memo(
       isConnected && setShowConnect(false);
     }, [isConnected]);
     const { disconnect } = useDisconnect();
-    const btnAccount = useRef();
+    const btnAccount = useRef(null);
     const isHoverAccount = useHoverDirty(btnAccount);
     return (
       <div

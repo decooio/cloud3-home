@@ -138,16 +138,19 @@ function PreMetadata(p: { onContinue: OnNext }) {
   const refSafe = useSafe();
   const upMeta = useOn(async () => {
     if (uping) return;
-    const bucketEle = document.getElementById("generate_bucket_image");
-    if (!bucketEle) return;
     lockFn(async () => {
-      setUping(true);
       try {
+        setUping(true);
+        await sleep(100);
+        const bucketEle = document.getElementById("generate_bucket_image");
+        if (!bucketEle) {
+          return setUping(false);
+        }
         const auth = await getAuth();
         const imageblob = await toBlob(bucketEle);
         const form = new FormData();
         form.append("file", imageblob, "bucket_image.png");
-        const image = await upload({data:form});
+        const image = await upload({ data: form });
         const res = await axios.post<Res<void>>(
           genUrl("/auth/bucket/metadata/generate"),
           { uuid: mintData.uuid, cid: image.Hash },
@@ -165,8 +168,9 @@ function PreMetadata(p: { onContinue: OnNext }) {
             .get<Res<MintState>>(genUrl(`/auth/bucket/uuid/${mintData.uuid}`), {
               headers: { Authorization: `Bearer ${auth}` },
             })
-            .then(getResData);
-          if (taskRes.metadataTxHash) {
+            .then(getResData)
+            .catch(() => null);
+          if (taskRes && taskRes.metadataTxHash) {
             break;
           }
         }

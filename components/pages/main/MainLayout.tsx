@@ -12,7 +12,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from "react";
 import { BsBucket } from "react-icons/bs";
 import { IoLockClosedOutline } from "react-icons/io5";
@@ -38,7 +38,7 @@ export const MainLayout = React.memo(
     const { address: account } = useAccount();
     const { chain } = useNetwork();
     const chainId = chain && chain.id;
-    const isConnected = useConnected()
+    const isConnected = useConnected();
     const menus: Menu[] = useMemo(() => {
       return [
         { id: 1, icon: BsBucket, text: "W3Buckets", path: "/buckets" },
@@ -108,15 +108,15 @@ export const MainLayout = React.memo(
                 </div>
               ))}
             </div>
-            {isConnected && (
-              <Button
-                ref={btnAccount}
-                className=" self-end mx-auto mb-10"
-                // disHover={true}
-                onClick={() => disconnect()}
-                text={isHoverAccount ? "Disconnect" : shortStr(account, 6, 6)}
-              />
-            )}
+            <Button
+              ref={btnAccount}
+              className={classNames(" self-end mx-auto mb-10", {
+                " hidden": !isConnected,
+              })}
+              // disHover={true}
+              onClick={() => disconnect()}
+              text={isHoverAccount ? "Disconnect" : shortStr(account, 6, 6)}
+            />
           </div>
           {isConnected ? (
             children

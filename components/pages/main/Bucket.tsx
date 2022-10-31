@@ -5,7 +5,7 @@ import React, { useMemo, useRef, useState} from "react";
 import { BsBucket } from "react-icons/bs";
 import { FiChevronRight, FiSearch,FiFile,FiFolder } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
-import { useNetwork } from "wagmi";
+// import { useNetwork } from "wagmi";
 import { MainLayout } from "./MainLayout";
 import axios from "axios";
 import {UploadRes} from "@components/pages/home/SectionTop";
@@ -76,16 +76,17 @@ const TopInfo = () => {
 };
 
 export const Bucket = React.memo(() => {
+  const fileList = localStorage.getItem('fileList')
   const { bucketId,ipnsId } = useParams();
   const [ , tokenId] = useMemo(() => parseBucketId(bucketId),[bucketId])
-  const push = useNavigate();
+  // const push = useNavigate();
   const inputFileRef = useRef(null);
   const inputFolderRef = useRef(null);
   const [upState,setUpState] = useState({ progress: 0, status: 'stop' });
   const [pgNum,setPgNum] = useState(1);
   const [filterText,setFilterText] = useState('')
   const [confirmFilterText,setConfirmFilterText] = useState('')
-  const { chain } = useNetwork();
+  // const { chain } = useNetwork();
   const [getAuth] = useGetAuth('for_upload')
     const {current} = useGateway()
     const { value: files } = useAsync(async () => {
@@ -99,12 +100,20 @@ export const Bucket = React.memo(() => {
         const filesRes = await axios.request({
             url: `https://gw-seattle.cloud3.cc${pathRes.data.Path}`
         })
+        localStorage.setItem('fileList',JSON.stringify(filesRes.data))
         return filesRes.data
     }, [ipnsId]);
 
 
     const {fFiles,total} = useMemo(()=>{
-        const filterFileList = _.filter(files,(item)=>{
+        let uploadFiles = []
+        if(fileList){
+            uploadFiles = JSON.parse(fileList)
+        }
+        if(files && files.length>0){
+            uploadFiles = files
+        }
+        const filterFileList = _.filter(uploadFiles,(item)=>{
             return item.name.indexOf(filterText.trim())>-1
         })
         const fFiles = _.chunk(filterFileList,10)
@@ -123,10 +132,12 @@ export const Bucket = React.memo(() => {
                   const form = new FormData();
                   if (upFile.length === 1) {
                       form.append('file', upFile[0], upFile[0].name);
+                      inputFileRef.current.value = '';
                   } else if (upFile.length > 1) {
                       for (const f of upFile) {
                           form.append('file', f, f._webkitRelativePath || f.webkitRelativePath);
                       }
+                      inputFolderRef.current.value = '';
                   }
                   const uploadRes = await upload({
                       data: form,

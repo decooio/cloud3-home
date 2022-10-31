@@ -36,9 +36,16 @@ export const SectionTop = React.memo(() => {
         e.stopPropagation();
         e.preventDefault();
       });
+      drag.addEventListener("dragenter",async()=>{
+        drag.style.borderColor = '#FC7823'
+      })
+      drag.addEventListener("dragleave",async()=>{
+        drag.style.borderColor = '#131521'
+      })
       drag.addEventListener("drop", async (e) => {
         e.stopPropagation();
         e.preventDefault();
+        drag.style.borderColor = '#131521'
         if (!uploadFileInfo) {
           const [file] = e.dataTransfer.files;
           const fileSize = file.size / (1024 * 1024);
@@ -53,34 +60,16 @@ export const SectionTop = React.memo(() => {
   }, []);
   const upload = async (cFile?: any) => {
     try {
-      // setError('')
-      // 1: sign
-      // setBusy(true);
-
-      // const prefix = getPerfix(user);
-      // const msg = account;
-
-      // const signature = await signer.signMessage(account);
-      // const perSignData = `eth-${account}:${signature}`;
-      // const base64Signature = window.btoa(perSignData);
       const base64Signature =
         "ZXRoLTB4MEVDNzJGNEQ5MWVhN2ZiRjAyZTY2NUQzZDU5QzQ3MmVjY2M0ZWZFZDoweDc3NDdmNDkxMWNhOWY2YWJjODE0MTgxZTkzZmM1YjdlNzQ4MGIwYzM0ZGRmOWFmNGQ4NjQ3OTRiZmYzY2EzMTg2MzQyNWEwZDRjZjAyOTA1Mjc5MTIwNDliYjJlYTRkMTM1OGZlZjQ3ZDU4YzBmMTQxNjI3ZmMzMTIwNzMwODdjMWI=";
       const AuthBasic = `Basic ${base64Signature}`;
-      // const AuthBearer = `Bearer ${base64Signature}`;
-      // const AuthBasic = `Basic ${user.authBasic}`;
-      // const AuthBearer = `Bearer ${user.authBearer}`;
-      // 2: up file
       const cancel = axios.CancelToken.source();
-
-      // setCancelUp(cancel);
       setUpState({ progress: 0, up: true });
-      // 2.**** : encrypt
       const form = new FormData();
       const upFile = cFile;
       if (upFile && upFile.name) {
         form.append("file", upFile, upFile.name);
       } else {
-        console.log("限制文件数量");
         return false;
       }
       const upResult = await axios.request({
@@ -115,9 +104,7 @@ export const SectionTop = React.memo(() => {
       setUploadFileInfo(upRes);
     } catch (e) {
       setUpState({ progress: 0, up: false });
-      // setBusy(false);
       console.error(e);
-      // setError('Network Error,Please try to switch a Gateway.');
       throw e;
     }
   };

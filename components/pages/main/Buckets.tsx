@@ -75,16 +75,16 @@ const BucketCard = React.memo((p: { data: BucketDTO }) => {
 
 export const Buckets = React.memo(() => {
   const { chain } = useNetwork();
-  const chainId = chain && chain.id;
   const { address } = useAccount();
   const [getAuth] = useGetAuthForGet();
   const { value: buckets, loading } = useAsync(async () => {
+    if(!chain || !address || chain.unsupported) return []
     const auth = await getAuth();
     const res = await axios.get<Res<BucketDTO[]>>(genUrl("/auth/bucket/list"), {
       headers: { Authorization: `Bearer ${auth}` },
     });
     return getResData(res);
-  }, [chainId, address]);
+  }, [chain, address]);
   const push = useNavigate();
   const onNewBucket = useCallback(() => push("/mint"), [push]);
   return (

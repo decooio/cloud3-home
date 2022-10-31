@@ -2,7 +2,7 @@ import { BucketImage } from "@components/common/BucketImage";
 import { Button } from "@components/common/Button";
 import { LoadingText } from "@components/common/Loading";
 import { W3Bucket_Adress } from "@lib/config";
-import { useOn, useSafeState } from "@lib/hooks/tools";
+import { useOn, useSafe, useSafeState } from "@lib/hooks/tools";
 import { BucketEdition } from "@lib/hooks/useBucketEditions";
 import { useGetAuthForMint } from "@lib/hooks/useGetAuth";
 import { useMintData } from "@lib/hooks/useMintData";
@@ -13,7 +13,7 @@ import {
   etherscanTx,
   genBucketId,
   shortStr,
-  sleep
+  sleep,
 } from "@lib/utils";
 import axios from "axios";
 import classNames from "classnames";
@@ -63,6 +63,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
   const { data: signer } = useSigner();
   const { address } = useAccount();
   const [getAuth] = useGetAuthForMint();
+  const refSafe = useSafe();
   const doMint = useOn(async () => {
     if (
       minting ||
@@ -118,6 +119,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
       }
       let taskRes: MintState = null;
       while (true) {
+        if (!refSafe.safe) return;
         await sleep(10000);
         taskRes = await axios
           .get<Res<MintState>>(genUrl(`/auth/bucket/uuid/${mintData.uuid}`), {

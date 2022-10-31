@@ -1,8 +1,8 @@
 import { Icon } from "@components/common/Icon";
 import { useGetAuth } from "@lib/hooks/useGetAuth";
 import {formatFileSize, formatW3BucketCapacity, parseBucketId, shortStr} from "@lib/utils";
-import React, { useMemo, useRef, useState} from "react";
-import { BsBucket } from "react-icons/bs";
+import React, {useEffect, useMemo, useRef, useState} from "react";
+import { BsBucket,BsQuestionCircle } from "react-icons/bs";
 import { FiChevronRight, FiSearch,FiFile,FiFolder } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 // import { useNetwork } from "wagmi";
@@ -21,6 +21,7 @@ import {useAsync} from "react-use";
 import { BucketCode } from "@components/common/BucketCode";
 import moment from "moment";
 import ReactTooltip from 'react-tooltip';
+import classnames from "classnames";
 
 const TopInfo = () => {
   const { bucketId } = useParams();
@@ -79,8 +80,8 @@ const TopInfo = () => {
 };
 
 export const Bucket = React.memo(() => {
-  const fileList = localStorage.getItem('fileList')
   const { bucketId,ipnsId } = useParams();
+  const localFileList = localStorage.getItem(bucketId+'_files')
   const [ , tokenId] = useMemo(() => parseBucketId(bucketId),[bucketId])
   // const push = useNavigate();
   const inputFileRef = useRef(null);
@@ -90,7 +91,9 @@ export const Bucket = React.memo(() => {
   const [filterText,setFilterText] = useState('')
   const [confirmFilterText,setConfirmFilterText] = useState('')
   const [addFiles,setAddFiles] = useState([])
-
+    useEffect(() => {
+        ReactTooltip.rebuild();
+    });
   // const { chain } = useNetwork();
   const [getAuth] = useGetAuth('for_upload')
     const {current} = useGateway()
@@ -105,30 +108,38 @@ export const Bucket = React.memo(() => {
         const filesRes = await axios.request({
             url: `https://gw-seattle.cloud3.cc${pathRes.data.Path}`
         })
-        localStorage.setItem('fileList',JSON.stringify(filesRes.data))
+        localStorage.setItem(bucketId+'_files',JSON.stringify(filesRes.data))
         return filesRes.data
     }, [ipnsId]);
 
 
     const {fFiles,total} = useMemo(()=>{
         let uploadFiles = []
-        if(fileList){
-            uploadFiles = JSON.parse(fileList)
+        if(localFileList){
+            uploadFiles = JSON.parse(localFileList)
         }
         if(files && files.length>0){
             uploadFiles = files
         }
-        const filterFileList = _.filter(uploadFiles,(item)=>{
+        let filterFileList = _.filter(uploadFiles,(item)=>{
             return item.name.indexOf(filterText.trim())>-1
         })
         addFiles.map(v=>{
-            if(v.name) filterFileList.push(v)
+            if(v.name) filterFileList.push(Object.assign(v,{isNew: true}))
         })
+        filterFileList = filterFileList.reverse()
         const fFiles = _.chunk(filterFileList,10)
         const total = filterFileList.length
         return {fFiles,total}
     },[files,confirmFilterText,addFiles])
 
+    useMemo(()=>{
+        let oldData = []
+        if(localFileList){
+            oldData = JSON.parse(localFileList)
+        }
+        localStorage.setItem(bucketId+'_files',JSON.stringify(oldData.concat(addFiles)))
+    },[addFiles])
 
   const onUploadChange = (file)=>{
       const upFile = file.target.files
@@ -137,6 +148,7 @@ export const Bucket = React.memo(() => {
           .then(async (auth) => {
               try {
                   let fileSize = 0
+                  let fileType = 0
                   setUpState({ progress: 0, status: 'upload' });
                   const form = new FormData();
                   if (upFile.length === 1) {
@@ -148,6 +160,7 @@ export const Bucket = React.memo(() => {
                           fileSize = f.size
                           form.append('file', f, f._webkitRelativePath || f.webkitRelativePath);
                       }
+                      fileType = 1
                       inputFolderRef.current.value = '';
                   }
                   const uploadRes = await upload({
@@ -184,7 +197,7 @@ export const Bucket = React.memo(() => {
                       url: `https://beta-pin.cloud3.cc/psa/pins`
                   });
                   setUpState({ progress: 100, status: 'success'});
-                  setAddFiles(addFiles.concat([{name,cid,fileSize,createTime: moment().valueOf()}]))
+                  setAddFiles(addFiles.concat([{name,cid,fileSize,fileType}]))
               } catch (e) {
                   setUpState({ progress: 0, status: 'fail' });
                   console.error(e);
@@ -236,13 +249,25 @@ export const Bucket = React.memo(() => {
               {fFiles && fFiles[pgNum-1] && fFiles[pgNum-1].map((v, index) => (
                 <div
                   key={`files_${index}`}
-                  className="flex items-center pt-4 pb-5"
+                  className={classnames('flex items-center pt-4 pb-5',v.isNew?'text-gray-300':'')}
                 >
-                  <div className="flex-initial w-3/12 pl-3 truncate pr-5" data-tip={v.name.length>20?v.name:''}>{v.name}</div>
-                  <div className="flex-initial w-2/12" data-tip={v.cid}>{shortStr(v.cid)}</div>
+                  <div className="flex-initial w-3/12 pl-3 truncate pr-5">
+                      <span className="flex items-center" data-tip={v.name.length>20?v.name:''}>
+                           {v.name}
+                          {
+                              v.fileType === 1 &&
+                              <Icon className="ml-2" icon={FiFolder} />
+                          }
+                      </span>
+
+
+                  </div>
+                  <div className="flex-initial w-2/12">
+                      <span data-tip={v.cid}>{shortStr(v.cid)}</span>
+                  </div>
                   <div className="flex-initial w-3/12">{current.value}</div>
                   <div className="flex-initial w-2/12">{formatFileSize(v.fileSize)}</div>
-                  <div className="flex-initial w-[10rem]">{moment(v.createTime*1000).format('YYYY-MM-DD HH:mm:ss')}</div>
+                  <div className="flex-initial w-[10rem] text-gray-6">{v.isNew?<span data-tip={`The ${v.fileType === 0?'file':'folder'} has been successfully uploaded to your bucket. It takes several minutes to finalize the decentralized storage and IPNS update processes.`}><Icon icon={BsQuestionCircle} /></span>:moment(v.createTime*1000).format('YYYY-MM-DD HH:mm:ss')}</div>
                 </div>
               ))}
             </div>

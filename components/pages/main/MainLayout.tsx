@@ -4,6 +4,7 @@ import { IconSetting } from "@components/common/icons";
 import { Logo } from "@components/common/Logo";
 import { ConnectWallet } from "@components/modals/ConnectWallet";
 import { IS_DEV, IS_TEST } from "@lib/env";
+import { useConnected } from "@lib/hooks/useConnected";
 import { openExtUrl, shortStr } from "@lib/utils";
 import classNames from "classnames";
 import React, {
@@ -11,12 +12,12 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState,
+  useState
 } from "react";
 import { BsBucket } from "react-icons/bs";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { useHover, useHoverDirty } from "react-use";
+import { useHoverDirty } from "react-use";
 import { useAccount, useDisconnect, useNetwork } from "wagmi";
 interface Menu {
   id: number;
@@ -37,10 +38,7 @@ export const MainLayout = React.memo(
     const { address: account } = useAccount();
     const { chain } = useNetwork();
     const chainId = chain && chain.id;
-    const isConnected = useMemo(() => {
-      if (IS_DEV || IS_TEST) return account && chainId === 5;
-      return account && chainId === 1;
-    }, [account, chainId]);
+    const isConnected = useConnected()
     const menus: Menu[] = useMemo(() => {
       return [
         { id: 1, icon: BsBucket, text: "W3Buckets", path: "/buckets" },

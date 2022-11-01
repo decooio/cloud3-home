@@ -227,7 +227,7 @@ function PreMetadata(p: { onContinue: OnNext }) {
                     shortStr(mintData.metadataTX, 10, 10),
                   ]}
                 />
-                <TupleInfo data={["IPNS", shortStr(mintData.ipns)]} />
+                <TupleInfo data={["IPNS", shortStr(mintData.ipns, 10, 10)]} />
                 <TupleInfo data={["Storage Protocol", "Crust"]} />
               </div>
               <div className="flex-1">

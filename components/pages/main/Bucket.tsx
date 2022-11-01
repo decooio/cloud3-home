@@ -158,7 +158,7 @@ export const Bucket = React.memo(() => {
   useMemo(()=>{
     let oldData = []
     if(localFileList){
-      oldData = JSON.parse(localFileList)
+      oldData = localFileList
     }
     setLocalFileListByBucketId(bucketId,oldData.concat(addFiles))
   },[addFiles])
@@ -283,7 +283,7 @@ export const Bucket = React.memo(() => {
                 />
               </div>
             </div>
-            <div className="top-40 bg-white py-4 flex items-center font-medium border-b-1 border-solid border-b-black-1">
+            <div className="sticky top-40 bg-white py-4 flex items-center font-medium border-b-1 border-solid border-b-black-1">
               <div className="flex-initial w-3/12 pl-3 pr-5">File Name</div>
               <div className="flex-initial w-3/12">CID</div>
               <div className="flex-initial w-3/12">Link</div>

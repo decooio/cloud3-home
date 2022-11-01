@@ -7,7 +7,7 @@ import { FiChevronRight, FiSearch,FiFile,FiFolder } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 // import { useNetwork } from "wagmi";
 import { MainLayout } from "./MainLayout";
-import axios from "axios";
+import axios, { CancelTokenSource } from 'axios';
 import {UploadRes} from "@components/pages/home/SectionTop";
 import {upload} from "@lib/files";
 import {DropDownBtn} from "@components/common/DropDownBtn";
@@ -91,6 +91,7 @@ export const Bucket = React.memo(() => {
   const [filterText,setFilterText] = useState('')
   const [confirmFilterText,setConfirmFilterText] = useState('')
   const [addFiles,setAddFiles] = useState([])
+  const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
     useEffect(() => {
         ReactTooltip.rebuild();
     });
@@ -144,11 +145,22 @@ export const Bucket = React.memo(() => {
   const onUploadChange = (file)=>{
       const upFile = file.target.files
       if(!upFile.length) return false
+      let canUp = true
+      for(let i = 0; i<upFile.length; i++){
+          if(upFile[i].name.length>=64){
+              alert('文件名太长')
+              canUp = false
+              break
+          }
+      }
+      if(!canUp) return false
       getAuth(tokenId)
           .then(async (auth) => {
               try {
                   let fileSize = 0
                   let fileType = 0
+                  const cancel = axios.CancelToken.source();
+                  setCancelUp(cancel);
                   setUpState({ progress: 0, status: 'upload' });
                   const form = new FormData();
                   if (upFile.length === 1) {
@@ -164,6 +176,7 @@ export const Bucket = React.memo(() => {
                       inputFolderRef.current.value = '';
                   }
                   const uploadRes = await upload({
+                      cancelToken: cancel.token,
                       data: form,
                       endpoint: current.value,
                       authBasic: `Bearer ${auth}`,
@@ -171,6 +184,7 @@ export const Bucket = React.memo(() => {
                           setUpState({ progress: Math.round(num * 99), status: 'upload' });
                       }
                   })
+                  setCancelUp(null);
                   let cid = ''
                   let name = ''
                   if (typeof uploadRes === 'string') {
@@ -199,7 +213,7 @@ export const Bucket = React.memo(() => {
                   setUpState({ progress: 100, status: 'success'});
                   setAddFiles(addFiles.concat([{name,cid,fileSize,fileType}]))
               } catch (e) {
-                  setUpState({ progress: 0, status: 'fail' });
+                  // setUpState({ progress: 0, status: 'fail' });
                   console.error(e);
                   throw e;
               }
@@ -215,6 +229,16 @@ export const Bucket = React.memo(() => {
   }
   const doSearch = ()=>{
       setConfirmFilterText(filterText)
+  }
+  const onClose = ()=>{
+      if(upState.status === 'upload' && cancelUp){
+          cancelUp.cancel("stop");
+          setUpState({progress: 0,status: 'cancel'})
+          setCancelUp(null)
+      }
+      else {
+          setUpState({progress: 0,status: 'stop'})
+      }
   }
     return (
     <MainLayout menuId={1}>
@@ -240,9 +264,9 @@ export const Bucket = React.memo(() => {
             </div>
             <div className="top-40 bg-white py-4 flex items-center font-medium border-b-1 border-solid border-b-black-1">
               <div className="flex-initial w-3/12 pl-3 pr-5">File Name</div>
-              <div className="flex-initial w-2/12">CID</div>
+              <div className="flex-initial w-3/12">CID</div>
               <div className="flex-initial w-3/12">Link</div>
-              <div className="flex-initial w-2/12">File Size</div>
+              <div className="flex-initial w-1/12">File Size</div>
               <div className="flex-initial w-[10rem]">TimeStamp</div>
             </div>
             <div className=" text-sm text-gray-6">
@@ -262,11 +286,11 @@ export const Bucket = React.memo(() => {
 
 
                   </div>
-                  <div className="flex-initial w-2/12">
-                      <span data-tip={v.cid}>{shortStr(v.cid)}</span>
+                  <div className="flex-initial w-3/12">
+                      <span data-tip={v.cid}>{shortStr(v.cid,10,10)}</span>
                   </div>
                   <div className="flex-initial w-3/12">{current.value}</div>
-                  <div className="flex-initial w-2/12">{formatFileSize(v.fileSize)}</div>
+                  <div className="flex-initial w-1/12">{formatFileSize(v.fileSize)}</div>
                   <div className="flex-initial w-[10rem] text-gray-6">{v.isNew?<span data-tip={`The ${v.fileType === 0?'file':'folder'} has been successfully uploaded to your bucket. It takes several minutes to finalize the decentralized storage and IPNS update processes.`}><Icon icon={BsQuestionCircle} /></span>:moment(v.createTime*1000).format('YYYY-MM-DD HH:mm:ss')}</div>
                 </div>
               ))}
@@ -278,17 +302,25 @@ export const Bucket = React.memo(() => {
         {
             upState.status !== 'stop' &&
             <Modal>
-                <ModalHead title="Upload File" onClose={()=>{setUpState({progress: 0,status: 'stop'})}} />
+                <ModalHead title="Upload File" onClose={onClose} />
                 <div
-                    className="bg-white mt-5 flex  py-3 cursor-pointer justify-between items-center"
+                    className="bg-white mt-5 flex  py-3 cursor-pointer justify-between items-center h-20"
                 >
                     {
                         upState.status === 'upload' &&
                         <ProgressBar value={upState.progress} />
                     }
                     {
-                        upState.status !== 'upload' &&
-                        <Alert text={upState.status === 'success'?'Upload success':'Upload fail'} status={upState.status} />
+                        upState.status === 'success' &&
+                        <Alert text={'Upload success'} status={upState.status} />
+                    }
+                    {
+                        upState.status === 'fail' &&
+                        <Alert text={'Upload fail'} status={upState.status} />
+                    }
+                    {
+                        upState.status === 'cancel' &&
+                        <Alert text={'Upload cancel'} status={"fail"} />
                     }
                 </div>
             </Modal>

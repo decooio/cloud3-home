@@ -12,16 +12,19 @@ export async function upload({
                                data,
                                endpoint = "https://crustwebsites.net",
                                authBasic = AuthBasic,
-                               onProgress
+                               onProgress,
+                               cancelToken = axios.CancelToken.source().token,
                              }:{
   data: FormData,
   endpoint?: string,
   authBasic?: string ,
-  onProgress?: (num: number) => void,}
+  cancelToken?: any
+  onProgress?: (num: number) => void,},
 ) {
 
   const upResult = await axios.request<UploadRes>({
     data,
+    cancelToken,
     headers: { Authorization: authBasic },
     method: "POST",
     onUploadProgress: (p) => {

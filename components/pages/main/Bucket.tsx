@@ -1,9 +1,9 @@
 import { Icon } from "@components/common/Icon";
 import { useGetAuth } from "@lib/hooks/useGetAuth";
-import {formatFileSize, formatW3BucketCapacity, parseBucketId, shortStr} from "@lib/utils";
+import {formatFileSize, parseBucketId, shortStr} from "@lib/utils";
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import { BsBucket,BsQuestionCircle } from "react-icons/bs";
-import { FiChevronRight, FiSearch,FiFile,FiFolder } from "react-icons/fi";
+import { FiChevronRight, FiSearch,FiFile,FiFolder,FiCopy } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 // import { useNetwork } from "wagmi";
 import { MainLayout } from "./MainLayout";
@@ -22,6 +22,8 @@ import { BucketCode } from "@components/common/BucketCode";
 import moment from "moment";
 import ReactTooltip from 'react-tooltip';
 import classnames from "classnames";
+import copy from 'copy-to-clipboard';
+
 
 const TopInfo = () => {
   const { bucketId } = useParams();
@@ -78,10 +80,24 @@ const TopInfo = () => {
     </>
   );
 };
-
+const getLocalFileListByBucketId = (bucketId)=>{
+  return new Promise((resolve,reject) => {
+    const files = localStorage.getItem(bucketId+'_files')
+    if(files){
+      resolve(JSON.parse(files))
+    }else {
+      reject()
+    }
+  })
+}
+const setLocalFileListByBucketId = (bucketId,files)=>{
+  return new Promise((resolve => {
+    if(files) localStorage.setItem(bucketId+'_files',JSON.stringify(files))
+    resolve(true)
+  }))
+}
 export const Bucket = React.memo(() => {
   const { bucketId,ipnsId } = useParams();
-  const localFileList = localStorage.getItem(bucketId+'_files')
   const [ , tokenId] = useMemo(() => parseBucketId(bucketId),[bucketId])
   // const push = useNavigate();
   const inputFileRef = useRef(null);
@@ -91,156 +107,161 @@ export const Bucket = React.memo(() => {
   const [filterText,setFilterText] = useState('')
   const [confirmFilterText,setConfirmFilterText] = useState('')
   const [addFiles,setAddFiles] = useState([])
+  const [localFileList,setLocalFileList] = useState(null)
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
-    useEffect(() => {
-        ReactTooltip.rebuild();
-    });
+  const [currentTipCid, setCurrentTipCid] = useState('');
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  });
+  getLocalFileListByBucketId(bucketId).then(res=>{
+    setLocalFileList(res)
+  }).catch(()=>{
+    setLocalFileList(null)
+  })
   // const { chain } = useNetwork();
   const [getAuth] = useGetAuth('for_upload')
-    const {current} = useGateway()
-    const { value: files } = useAsync(async () => {
-        const pathRes = await axios.request({
-            method: 'POST',
-            params:{
-                arg: ipnsId
-            },
-            url: `${current.value}/api/v0/name/resolve`
-        });
-        const filesRes = await axios.request({
-            url: `https://gw-seattle.cloud3.cc${pathRes.data.Path}`
-        })
-        localStorage.setItem(bucketId+'_files',JSON.stringify(filesRes.data))
-        return filesRes.data
-    }, [ipnsId]);
+  const {current} = useGateway()
+  const { value: files } = useAsync(async () => {
+    const pathRes = await axios.request({
+      method: 'POST',
+      params:{
+        arg: ipnsId
+      },
+      url: `${current.value}/api/v0/name/resolve`
+    });
+    const filesRes = await axios.request({
+      url: `${current.value}${pathRes.data.Path}`
+    })
+    setLocalFileListByBucketId(bucketId,filesRes.data)
+    return filesRes.data
+  }, [ipnsId]);
+  const {fFiles,total} = useMemo(()=>{
+    let uploadFiles = []
+    if(localFileList){
+      uploadFiles = localFileList
+    }
+    if(files && files.length>0){
+      uploadFiles = files
+    }
+    let filterFileList = _.filter(uploadFiles,(item)=>{
+      return item.name.indexOf(filterText.trim())>-1
+    })
+    addFiles.map(v=>{
+      if(v.name) filterFileList.push(Object.assign(v,{isNew: true}))
+    })
+    filterFileList = filterFileList.reverse()
+    const fFiles = _.chunk(filterFileList,10)
+    const total = filterFileList.length
+    return {fFiles,total}
+  },[files,confirmFilterText,addFiles,localFileList])
 
-
-    const {fFiles,total} = useMemo(()=>{
-        let uploadFiles = []
-        if(localFileList){
-            uploadFiles = JSON.parse(localFileList)
-        }
-        if(files && files.length>0){
-            uploadFiles = files
-        }
-        let filterFileList = _.filter(uploadFiles,(item)=>{
-            return item.name.indexOf(filterText.trim())>-1
-        })
-        addFiles.map(v=>{
-            if(v.name) filterFileList.push(Object.assign(v,{isNew: true}))
-        })
-        filterFileList = filterFileList.reverse()
-        const fFiles = _.chunk(filterFileList,10)
-        const total = filterFileList.length
-        return {fFiles,total}
-    },[files,confirmFilterText,addFiles])
-
-    useMemo(()=>{
-        let oldData = []
-        if(localFileList){
-            oldData = JSON.parse(localFileList)
-        }
-        localStorage.setItem(bucketId+'_files',JSON.stringify(oldData.concat(addFiles)))
-    },[addFiles])
+  useMemo(()=>{
+    let oldData = []
+    if(localFileList){
+      oldData = JSON.parse(localFileList)
+    }
+    setLocalFileListByBucketId(bucketId,oldData.concat(addFiles))
+  },[addFiles])
 
   const onUploadChange = (file)=>{
-      const upFile = file.target.files
-      if(!upFile.length) return false
-      let canUp = true
-      for(let i = 0; i<upFile.length; i++){
-          if(upFile[i].name.length>=64){
-              alert('文件名太长')
-              canUp = false
-              break
-          }
+    const upFile = file.target.files
+    if(!upFile.length) return false
+    let canUp = true
+    for(let i = 0; i<upFile.length; i++){
+      if(upFile[i].name.length>=64){
+        alert('文件名太长')
+        canUp = false
+        break
       }
-      if(!canUp) return false
-      getAuth(tokenId)
-          .then(async (auth) => {
-              try {
-                  let fileSize = 0
-                  let fileType = 0
-                  const cancel = axios.CancelToken.source();
-                  setCancelUp(cancel);
-                  setUpState({ progress: 0, status: 'upload' });
-                  const form = new FormData();
-                  if (upFile.length === 1) {
-                      form.append('file', upFile[0], upFile[0].name);
-                      fileSize = upFile[0].size
-                      inputFileRef.current.value = '';
-                  } else if (upFile.length > 1) {
-                      for (const f of upFile) {
-                          fileSize = f.size
-                          form.append('file', f, f._webkitRelativePath || f.webkitRelativePath);
-                      }
-                      fileType = 1
-                      inputFolderRef.current.value = '';
-                  }
-                  const uploadRes = await upload({
-                      cancelToken: cancel.token,
-                      data: form,
-                      endpoint: current.value,
-                      authBasic: `Bearer ${auth}`,
-                      onProgress: (num)=>{
-                          setUpState({ progress: Math.round(num * 99), status: 'upload' });
-                      }
-                  })
-                  setCancelUp(null);
-                  let cid = ''
-                  let name = ''
-                  if (typeof uploadRes === 'string') {
-                      const jsonStr = (uploadRes as string).replaceAll('}\n{', '},{');
-                      const items = JSON.parse(`[${jsonStr}]`) as UploadRes[];
-                      const folder = items.length - 1;
-                      cid = items[folder].Hash
-                      name = items[folder].Name
-                  } else {
-                      cid = uploadRes.Hash
-                      name = uploadRes.Name
-                  }
-                  if(!cid || !name){
-                      setUpState({ progress: 0, status: 'fail'});
-                      return false
-                  }
-                  await axios.request({
-                      data: {
-                          cid,
-                          name
-                      },
-                      headers: { Authorization: `Bearer ${auth}` },
-                      method: 'POST',
-                      url: `https://beta-pin.cloud3.cc/psa/pins`
-                  });
-                  setUpState({ progress: 100, status: 'success'});
-                  setAddFiles(addFiles.concat([{name,cid,fileSize,fileType}]))
-              } catch (e) {
-                  // setUpState({ progress: 0, status: 'fail' });
-                  console.error(e);
-                  throw e;
-              }
+    }
+    if(!canUp) return false
+    getAuth(tokenId)
+      .then(async (auth) => {
+        try {
+          let fileSize = 0
+          let fileType = 0
+          const cancel = axios.CancelToken.source();
+          setCancelUp(cancel);
+          setUpState({ progress: 0, status: 'upload' });
+          const form = new FormData();
+          if (upFile.length === 1) {
+            form.append('file', upFile[0], upFile[0].name);
+            fileSize = upFile[0].size
+            inputFileRef.current.value = '';
+          } else if (upFile.length > 1) {
+            for (const f of upFile) {
+              fileSize = f.size
+              form.append('file', f, f._webkitRelativePath || f.webkitRelativePath);
+            }
+            fileType = 1
+            inputFolderRef.current.value = '';
+          }
+          const uploadRes = await upload({
+            cancelToken: cancel.token,
+            data: form,
+            endpoint: current.value,
+            authBasic: `Bearer ${auth}`,
+            onProgress: (num)=>{
+              setUpState({ progress: Math.round(num * 99), status: 'upload' });
+            }
           })
-          .catch(console.error)
+          setCancelUp(null);
+          let cid = ''
+          let name = ''
+          if (typeof uploadRes === 'string') {
+            const jsonStr = (uploadRes as string).replaceAll('}\n{', '},{');
+            const items = JSON.parse(`[${jsonStr}]`) as UploadRes[];
+            const folder = items.length - 1;
+            cid = items[folder].Hash
+            name = items[folder].Name
+          } else {
+            cid = uploadRes.Hash
+            name = uploadRes.Name
+          }
+          if(!cid || !name){
+            setUpState({ progress: 0, status: 'fail'});
+            return false
+          }
+          await axios.request({
+            data: {
+              cid,
+              name
+            },
+            headers: { Authorization: `Bearer ${auth}` },
+            method: 'POST',
+            url: `https://beta-pin.cloud3.cc/psa/pins`
+          });
+          setUpState({ progress: 100, status: 'success'});
+          setAddFiles(addFiles.concat([{name,cid,fileSize,fileType}]))
+        } catch (e) {
+          // setUpState({ progress: 0, status: 'fail' });
+          console.error(e);
+          throw e;
+        }
+      })
+      .catch(console.error)
   }
   const onDropDownChange = (value)=>{
-      if(value === 'file'){
-          inputFileRef.current.click();
-      }else if(value === 'folder') {
-          inputFolderRef.current.click();
-      }
+    if(value === 'file'){
+      inputFileRef.current.click();
+    }else if(value === 'folder') {
+      inputFolderRef.current.click();
+    }
   }
   const doSearch = ()=>{
-      setConfirmFilterText(filterText)
+    setConfirmFilterText(filterText)
   }
   const onClose = ()=>{
-      if(upState.status === 'upload' && cancelUp){
-          cancelUp.cancel("stop");
-          setUpState({progress: 0,status: 'cancel'})
-          setCancelUp(null)
-      }
-      else {
-          setUpState({progress: 0,status: 'stop'})
-      }
+    if(upState.status === 'upload' && cancelUp){
+      cancelUp.cancel("stop");
+      setUpState({progress: 0,status: 'cancel'})
+      setCancelUp(null)
+    }
+    else {
+      setUpState({progress: 0,status: 'stop'})
+    }
   }
-    return (
+  return (
     <MainLayout menuId={1}>
       <div className="flex-1 h-full overflow-y-auto">
         <div className="relative">
@@ -278,18 +299,16 @@ export const Bucket = React.memo(() => {
                   <div className="flex-initial w-3/12 pl-3 truncate pr-5">
                       <span className="flex items-center" data-tip={v.name.length>20?v.name:''}>
                            {v.name}
-                          {
-                              v.fileType === 1 &&
-                              <Icon className="ml-2" icon={FiFolder} />
-                          }
+                        {
+                          v.fileType === 1 &&
+                          <Icon className="ml-2" icon={FiFolder} />
+                        }
                       </span>
-
-
                   </div>
                   <div className="flex-initial w-3/12">
-                      <span data-tip={v.cid}>{shortStr(v.cid,10,10)}</span>
+                    <span data-tip={v.cid} data-for="cidColumn">{shortStr(v.cid,10,10)}</span>
                   </div>
-                  <div className="flex-initial w-3/12">{current.value}</div>
+                  <div className="flex-initial w-3/12 truncate pr-5" data-tip={`${current.value}\n/ipns/${v.cid}`}>{`${current.value}/ipns/${v.cid}`}</div>
                   <div className="flex-initial w-1/12">{formatFileSize(v.fileSize)}</div>
                   <div className="flex-initial w-[10rem] text-gray-6">{v.isNew?<span data-tip={`The ${v.fileType === 0?'file':'folder'} has been successfully uploaded to your bucket. It takes several minutes to finalize the decentralized storage and IPNS update processes.`}><Icon icon={BsQuestionCircle} /></span>:moment(v.createTime*1000).format('YYYY-MM-DD HH:mm:ss')}</div>
                 </div>
@@ -299,32 +318,38 @@ export const Bucket = React.memo(() => {
           </div>
         </div>
       </div>
-        {
-            upState.status !== 'stop' &&
-            <Modal>
-                <ModalHead title="Upload File" onClose={onClose} />
-                <div
-                    className="bg-white mt-5 flex  py-3 cursor-pointer justify-between items-center h-20"
-                >
-                    {
-                        upState.status === 'upload' &&
-                        <ProgressBar value={upState.progress} />
-                    }
-                    {
-                        upState.status === 'success' &&
-                        <Alert text={'Upload success'} status={upState.status} />
-                    }
-                    {
-                        upState.status === 'fail' &&
-                        <Alert text={'Upload fail'} status={upState.status} />
-                    }
-                    {
-                        upState.status === 'cancel' &&
-                        <Alert text={'Upload cancel'} status={"fail"} />
-                    }
-                </div>
-            </Modal>
-        }
+      {
+        upState.status !== 'stop' &&
+        <Modal>
+          <ModalHead title="Upload File" onClose={onClose} />
+          <div
+            className="bg-white mt-5 flex  py-3 cursor-pointer justify-between items-center h-20"
+          >
+            {
+              upState.status === 'upload' &&
+              <ProgressBar value={upState.progress} />
+            }
+            {
+              upState.status === 'success' &&
+              <Alert text={'Upload success'} status={upState.status} />
+            }
+            {
+              upState.status === 'fail' &&
+              <Alert text={'Upload fail'} status={upState.status} />
+            }
+            {
+              upState.status === 'cancel' &&
+              <Alert text={'Upload cancel'} status={"fail"} />
+            }
+          </div>
+        </Modal>
+      }
+      <ReactTooltip id="cidColumn" effect="solid" delayHide={200} clickable={true} afterShow={(e)=>setCurrentTipCid(e.target.dataset.tip)}>
+        <div className="flex items-center">
+          <span>{currentTipCid}</span>
+          <Icon className="ml-2 cursor-pointer" onClick={()=>{copy(currentTipCid);alert('copy success')}} icon={FiCopy} />
+        </div>
+      </ReactTooltip>
 
     </MainLayout>
   );

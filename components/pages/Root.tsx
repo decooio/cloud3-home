@@ -14,6 +14,9 @@ function Root_() {
     <StoreProvider value={store}>
       <div className="App relative" id="app-root">
         <ReactTooltip
+            effect="solid"
+            clickable={true}
+            delayHide={100}
             overridePosition={(
                 { top, left },
                 currentEvent,

@@ -80,7 +80,7 @@ export const MintStep1 = React.memo((p: MintStep1Props) => {
       )}
       <Button
         text="Next Step"
-        className="mt-12 !w-[11.25rem] !py-3"
+        className="mt-12 text-lg !w-[11.25rem] !h-[3.375rem]"
         onClick={() => {
           console.info("click:");
           onNext();

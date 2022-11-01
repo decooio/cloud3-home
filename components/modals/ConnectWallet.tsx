@@ -2,6 +2,7 @@ import { IconMetaMask } from "@components/common/icons";
 import { SupportChain } from "@lib/config";
 import { useOn } from "@lib/hooks/tools";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useConnect, useSwitchNetwork } from "wagmi";
 import { Modal, ModalHead } from "./Modal";
 
@@ -9,6 +10,7 @@ export const ConnectWallet = React.memo((p: { onClose: () => void }) => {
   const { onClose } = p;
   const { connectAsync, connectors, data } = useConnect();
   const { switchNetworkAsync } = useSwitchNetwork();
+  const push = useNavigate()
   const onConnect = useOn(async () => {
     try {
       console.info("data:", data);
@@ -21,6 +23,7 @@ export const ConnectWallet = React.memo((p: { onClose: () => void }) => {
           connector: connectors[0],
         });
       }
+      push('/buckets')
     } catch (error) {
       console.error(error);
     }

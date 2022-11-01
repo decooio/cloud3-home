@@ -102,7 +102,9 @@ export const Buckets = React.memo(() => {
     const res = await axios.get<Res<BucketDTO[]>>(genUrl("/auth/bucket/list"), {
       headers: { Authorization: `Bearer ${auth}` },
     });
-    return getResData(res);
+    return getResData(res).sort(function (a,b){
+      return b.mintTimestamp-a.mintTimestamp
+    });
   }, [isConnected, address]);
   const push = useNavigate();
   const onNewBucket = useCallback(() => push("/mint"), [push]);

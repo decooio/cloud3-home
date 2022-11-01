@@ -277,11 +277,11 @@ export const Bucket = React.memo(() => {
               <input ref={inputFolderRef} type="file" hidden webkitdirectory="" directory onChange={onUploadChange} />
               <span className="ml-5">Thunder Gateway Seattle, US</span>
               <div className="flex-1" />
-              <div className="relative w-1/2 h-14 max-w-sm border-solid border-black-1 border rounded overflow-hidden">
+              <div className="relative w-1/2 h-12 max-w-sm border-solid border-black-1 border rounded overflow-hidden">
                 <input className="w-full h-full pl-5 pr-10 active:border-0" onChange={(v)=>setFilterText(v.target.value)} />
                 <Icon
                   icon={FiSearch}
-                  className="text-2xl absolute top-4 right-2 cursor-pointer"
+                  className="text-2xl absolute top-[0.7rem] right-2 cursor-pointer"
                   onClick={doSearch}
                 />
               </div>

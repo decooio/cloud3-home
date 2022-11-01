@@ -57,13 +57,15 @@ export function useBucketEditions() {
           });
         }
         console.info("mprices:", prices);
-        res.push({
-          id: item.editionId.toNumber(),
-          capacityInGb: item.capacityInGigabytes.toNumber(),
-          totalSupply: item.maxMintableSupply.toNumber(),
-          minted: item.currentSupplyMinted.toNumber(),
-          prices,
-        });
+        if(prices.length >= 1){
+          res.push({
+            id: item.editionId.toNumber(),
+            capacityInGb: item.capacityInGigabytes.toNumber(),
+            totalSupply: item.maxMintableSupply.toNumber(),
+            minted: item.currentSupplyMinted.toNumber(),
+            prices,
+          });
+        }
       }
       console.info("editions:", res);
       return res;

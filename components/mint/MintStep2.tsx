@@ -42,20 +42,20 @@ function TipIpns(p: { ipns: string; onContinue: () => void }) {
         </div>
         <Button
           text="Got it"
-          className=" mt-8 !w-[11.25rem] !py-3 self-center"
+          className=" mt-8 !w-[8.25rem] h-11 self-center"
           onClick={() => setShowNext(true)}
         />
       </div>
       {showNext && (
-        <div className=" mt-10 text-xl flex flex-col">
-          <div className=" break-all">{ipns}</div>
-          <div className=" font-medium">
+        <div className=" mt-10 text-lg flex flex-col">
+          <div className=" break-all text-center">{ipns}</div>
+          <div className=" font-medium text-center">
             The IPNS name for this W3Bucket has successfully generated and
             published to IPFS.
           </div>
           <Button
             text="Continue"
-            className=" mt-6 !w-[11.25rem] !py-3 self-center"
+            className=" mt-6 !w-[8.25rem] h-11 self-center"
             onClick={onContinue}
           />
         </div>
@@ -124,7 +124,7 @@ function TupleInfo(p: { data: [string, string] }) {
   } = p;
   return (
     <>
-      <div className=" text-sm mt-3">{title}:</div>
+      <div className=" text-sm mt-4">{title}:</div>
       <div className=" text-sm text-gray-7">{value}</div>
     </>
   );
@@ -224,7 +224,7 @@ function PreMetadata(p: { onContinue: OnNext }) {
                 <TupleInfo
                   data={[
                     "Crust Network Storage Order TXID",
-                    shortStr(mintData.metadataTX),
+                    shortStr(mintData.metadataTX, 10, 10),
                   ]}
                 />
                 <TupleInfo data={["IPNS", shortStr(mintData.ipns)]} />
@@ -235,29 +235,29 @@ function PreMetadata(p: { onContinue: OnNext }) {
                 <TupleInfo
                   data={[
                     "IPFS CID",
-                    shortStr(mintData.metadata.image.replace("ipfs://", "")),
+                    shortStr(mintData.metadata.image.replace("ipfs://", ""), 10, 10),
                   ]}
                 />
                 <TupleInfo
                   data={[
                     "Crust Network Storage Order TXID",
-                    shortStr(mintData.metadata.dStorage.dstorage_note),
+                    shortStr(mintData.metadata.dStorage.dstorage_note, 10, 10),
                   ]}
                 />
-                <div className=" font-medium mt-6">
+                <div className=" text-sm font-medium mt-6">
                   You can check them later in the W3Bucket description
                   information.
                 </div>
                 <Button
                   text="Got it"
-                  className=" mt-3 !w-[11.25rem] !py-3 self-center"
+                  className=" mt-3 !w-[8.25rem] h-11 self-center"
                   onClick={() => setShowNext(true)}
                 />
               </div>
             </div>
           </div>
           {showNext && (
-            <div className=" mt-10 text-xl flex flex-col">
+            <div className=" mt-10 text-lg flex flex-col">
               <div className=" font-medium text-center">
                 Congrats! The metadata of this W3Bucket is fully processed. You
                 will soon get this truly Web3 storage bucket NFT! Click the
@@ -265,7 +265,7 @@ function PreMetadata(p: { onContinue: OnNext }) {
               </div>
               <Button
                 text="Continue"
-                className=" mt-6 !w-[11.25rem] !py-3 self-center"
+                className=" mt-6 !w-[8.25rem] h-11  self-center"
                 onClick={() => onContinue()}
               />
             </div>

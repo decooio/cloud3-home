@@ -51,7 +51,7 @@ export const MintStep1 = React.memo((p: MintStep1Props) => {
               text={formatW3BucketCapacity(item.capacityInGb)}
               disHover={item.id === currentEditionId}
               className={classNames(
-                " !border-2 text-2xl mt-5 !w-[11.25rem] py-[9px] cursor-pointer",
+                " font-medium !border-2 text-2xl mt-5 !w-[11.25rem] py-[9px] cursor-pointer",
                 {
                   "!border-orange-15 !text-orange-15":
                     item.id === currentEditionId,

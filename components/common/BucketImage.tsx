@@ -42,7 +42,7 @@ export const BucketImage = React.memo(
         ) : (
           <BsBucket className=" text-[18.75rem]" style={{ color: iconColor }} />
         )}
-        <div className="text-end" style={{ color: textColor }}>
+        <div className=" font-bold text-end" style={{ color: textColor }}>
           { formatW3BucketCapacity(size) }
         </div>
         <QRCode

@@ -24,9 +24,10 @@ import { erc20ABI, useAccount, useSigner } from "wagmi";
 import { getContract } from "wagmi/actions";
 import { OnNext } from "./type";
 
-function TulpeText(p: { data: [string, string] | [string, string, string] }) {
+function TulpeText(p: { data: [string, string] | [string, string, string], target?: '_blank'|'_self' }) {
   const {
     data: [tit, value, link],
+    target = '_blank',
   } = p;
   return (
     <div className=" flex items-center text-2xl">
@@ -34,7 +35,7 @@ function TulpeText(p: { data: [string, string] | [string, string, string] }) {
       {link ? (
         <a
           className=" underline underline-offset-2 !text-black-1"
-          target="_blank"
+          target={target}
           href={link}
         >
           {value}
@@ -167,7 +168,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
                   text={price.symbol}
                   disHover={price.currency === mintData.price?.currency}
                   className={classNames(
-                    " !border-2 text-2xl mt-5 !w-[11.25rem] !py-[9px] cursor-pointer",
+                    "font-medium !border-2 text-2xl mt-5 !w-[11.25rem] !py-[9px] cursor-pointer",
                     {
                       "!border-orange-15 !text-orange-15":
                         price.currency === mintData.price?.currency,
@@ -181,7 +182,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
               </div>
             ))}
           </div>
-          <Button text="Confirm and Pay" className="mt-12" onClick={doMint} />
+          <Button text="Confirm and Pay" className="mt-12 text-lg w-48 h-[3.375rem]" onClick={doMint} />
         </div>
       )}
       {minting && (
@@ -210,14 +211,14 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
               etherscanTx(mintData.mintTx),
             ]}
           />
-          <TulpeText data={["W3Bucket Identifier", bucketId]} />
+          <TulpeText target="_self" data={["W3Bucket Identifier", bucketId, `/#/bucket/${bucketId}/${mintData.ipns}`]} />
           <div className=" text-2xl font-medium mt-8">
             Return to the W3Bucket Home Page and start your Cloud3 journey. Bon
             Voyage!
           </div>
           <Button
             text="Complete"
-            className=" self-center !w-[11.25rem] !py-3 mt-20"
+            className=" self-center text-lg !w-[11.25rem] h-[3.375rem] mt-20"
             onClick={onComplete}
           />
         </div>

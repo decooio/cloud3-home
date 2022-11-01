@@ -23,6 +23,7 @@ import moment from "moment";
 import ReactTooltip from 'react-tooltip';
 import classnames from "classnames";
 import copy from 'copy-to-clipboard';
+import {useOnce} from "@react-spring/shared";
 
 
 const TopInfo = () => {
@@ -113,10 +114,12 @@ export const Bucket = React.memo(() => {
   useEffect(() => {
     ReactTooltip.rebuild();
   });
-  getLocalFileListByBucketId(bucketId).then(res=>{
-    setLocalFileList(res)
-  }).catch(()=>{
-    setLocalFileList(null)
+  useOnce(()=>{
+    getLocalFileListByBucketId(bucketId).then(res=>{
+      setLocalFileList(res)
+    }).catch(()=>{
+      setLocalFileList(null)
+    })
   })
   // const { chain } = useNetwork();
   const [getAuth] = useGetAuth('for_upload')
@@ -149,7 +152,9 @@ export const Bucket = React.memo(() => {
     addFiles.map(v=>{
       if(v.name) filterFileList.push(Object.assign(v,{isNew: true}))
     })
-    filterFileList = filterFileList.reverse()
+    filterFileList = filterFileList.sort(function(a, b) {
+      return b.createTime - a.createTime;
+    });
     const fFiles = _.chunk(filterFileList,10)
     const total = filterFileList.length
     return {fFiles,total}
@@ -254,12 +259,10 @@ export const Bucket = React.memo(() => {
   const onClose = ()=>{
     if(upState.status === 'upload' && cancelUp){
       cancelUp.cancel("stop");
-      setUpState({progress: 0,status: 'cancel'})
       setCancelUp(null)
     }
-    else {
-      setUpState({progress: 0,status: 'stop'})
-    }
+    
+    setUpState({progress: 0,status: 'stop'})
   }
   return (
     <MainLayout menuId={1}>
@@ -272,7 +275,7 @@ export const Bucket = React.memo(() => {
               <input ref={inputFileRef} type="file" hidden onChange={onUploadChange} />
               {/*@ts-ignore*/}
               <input ref={inputFolderRef} type="file" hidden webkitdirectory="" directory onChange={onUploadChange} />
-              <span className="ml-5">Thundergateway Seattle, US</span>
+              <span className="ml-5">Thunder Gateway Seattle, US</span>
               <div className="flex-1" />
               <div className="relative w-1/2 h-14 max-w-sm border-solid border-black-1 border rounded overflow-hidden">
                 <input className="w-full h-full pl-5 pr-10 active:border-0" onChange={(v)=>setFilterText(v.target.value)} />
@@ -296,14 +299,14 @@ export const Bucket = React.memo(() => {
                   key={`files_${index}`}
                   className={classnames('flex items-center pt-4 pb-5',v.isNew?'text-gray-300':'')}
                 >
-                  <div className="flex-initial w-3/12 pl-3 truncate pr-5">
-                      <span className="flex items-center" data-tip={v.name.length>20?v.name:''}>
-                           {v.name}
+                  <div className="flex-initial w-3/12 pl-3">
+                      <div className="flex items-center " data-tip={v.name.length>20?v.name:''}>
+                        <span className="truncate pr-5">{v.name}</span>
                         {
                           v.fileType === 1 &&
                           <Icon className="ml-2" icon={FiFolder} />
                         }
-                      </span>
+                      </div>
                   </div>
                   <div className="flex-initial w-3/12">
                     <span data-tip={v.cid} data-for="cidColumn">{shortStr(v.cid,10,10)}</span>

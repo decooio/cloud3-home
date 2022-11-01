@@ -3,12 +3,13 @@ import { ProgressBar } from "@components/common/ProgressBar";
 import HomeBg from "@components/homebg";
 import { IS_LOCAL } from "@lib/env";
 import { getClientHeight, openExtUrl } from "@lib/utils";
-import axios from "axios";
+import axios, {CancelTokenSource} from "axios";
 import classNames from "classnames";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
 import CloseBtnSvg from "../../../public/images/close_btn.svg";
+import {upload} from "@lib/files";
 
 export interface UploadRes {
   Hash: string;
@@ -23,6 +24,7 @@ export const SectionTop = React.memo(() => {
   const uploadRef = useRef(null);
   const inputFileRef = useRef(null);
   const waitUploadRef = useRef(null);
+  const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
   const { address: account } = useAccount();
   const openDropUpload = () => {
     setVisibleDropUpload(true);
@@ -44,11 +46,6 @@ export const SectionTop = React.memo(() => {
       drag.addEventListener("dragleave",async()=>{
         drag.style.borderColor = '#131521'
       })
-      // waitUploadRef.current.addEventListener("dragenter",async()=>{
-      //   if(waitUploadRef.current.getAttribute('id') === 'waitUpload'){
-      //     drag.style.borderColor = '#FC7823'
-      //   }
-      // })
       drag.addEventListener("drop", async (e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -64,17 +61,18 @@ export const SectionTop = React.memo(() => {
             alert('文件请不要超过100MB')
             return;
           }
-          await upload(file);
+          await doUpload(file);
         }
       });
     }
   }, []);
-  const upload = async (cFile?: any) => {
+  const doUpload = async (cFile?: any) => {
     try {
       const base64Signature =
           "ZXRoLTB4MEVDNzJGNEQ5MWVhN2ZiRjAyZTY2NUQzZDU5QzQ3MmVjY2M0ZWZFZDoweDc3NDdmNDkxMWNhOWY2YWJjODE0MTgxZTkzZmM1YjdlNzQ4MGIwYzM0ZGRmOWFmNGQ4NjQ3OTRiZmYzY2EzMTg2MzQyNWEwZDRjZjAyOTA1Mjc5MTIwNDliYjJlYTRkMTM1OGZlZjQ3ZDU4YzBmMTQxNjI3ZmMzMTIwNzMwODdjMWI=";
       const AuthBasic = `Basic ${base64Signature}`;
       const cancel = axios.CancelToken.source();
+      setCancelUp(cancel);
       setUpState({ progress: 0, status: 'upload' });
       const form = new FormData();
       const upFile = cFile;
@@ -83,40 +81,21 @@ export const SectionTop = React.memo(() => {
       } else {
         return false;
       }
-      const upResult = await axios.request({
-        cancelToken: cancel.token,
+      const upResult = await upload({
         data: form,
-        headers: { Authorization: AuthBasic },
-        maxContentLength: 1024,
-        method: "POST",
-        onUploadProgress: (p) => {
-          const percent = p.loaded / p.total;
-          console.log(percent);
-          setUpState({ progress: Math.round(percent * 99), status: 'upload' });
-        },
-        params: { pin: true },
-        url: `https://crustwebsites.net/api/v0/add`,
-      });
-
+        authBasic: AuthBasic,
+        cancelToken: cancel.token,
+        onProgress: (num)=>{
+          setUpState({ progress: Math.round(num * 99), status: 'upload' });
+        }
+      })
+      setCancelUp(null);
       let upRes: UploadRes;
-
-      if (typeof upResult.data === "string") {
-        const jsonStr = upResult.data.replaceAll("}\n{", "},{");
-        const items = JSON.parse(`[${jsonStr}]`) as UploadRes[];
-        const folder = items.length - 1;
-
-        upRes = items[folder];
-        delete items[folder];
-        upRes.items = items;
-      } else {
-        upRes = upResult.data;
-      }
+      upRes = upResult;
       setUpState({ progress: 100, status: 'success' });
       setUploadFileInfo(upRes);
     } catch (e) {
-      setUpState({ progress: 0, status: 'error' });
       console.error(e);
-      throw e;
     }
   };
   const onUploadChange = async (file) => {
@@ -130,10 +109,14 @@ export const SectionTop = React.memo(() => {
   const onCloseDragUpload = (e) => {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
+    if(cancelUp){
+      cancelUp.cancel("CanceledError")
+      setCancelUp(null)
+    }
+    setUpState({ progress: 0, status: 'stop' });
     setVisibleDropUpload(false);
     setUploadFileInfo(null);
     window.scroll(0, 0);
-    return false;
   };
   const push = useNavigate();
   return (
@@ -184,7 +167,7 @@ export const SectionTop = React.memo(() => {
                 className="absolute z-10 right-2 top-2 cursor-pointer"
                 onClick={onCloseDragUpload}
             />
-            {upState.status !=='stop' || !!uploadFileInfo ? (
+            {upState.status !=='stop'? (
                 upState.status ==='upload' ? (
                     <div className="w-full px-20">
                       <ProgressBar value={upState.progress} />

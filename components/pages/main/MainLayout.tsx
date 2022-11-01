@@ -4,6 +4,7 @@ import { IconSetting } from "@components/common/icons";
 import { Logo } from "@components/common/Logo";
 import { ConnectWallet } from "@components/modals/ConnectWallet";
 import { IS_DEV, IS_TEST } from "@lib/env";
+import { useOn } from "@lib/hooks/tools";
 import { useConnected } from "@lib/hooks/useConnected";
 import { openExtUrl, shortStr } from "@lib/utils";
 import classNames from "classnames";
@@ -57,6 +58,10 @@ export const MainLayout = React.memo(
       isConnected && setShowConnect(false);
     }, [isConnected]);
     const { disconnect } = useDisconnect();
+    const onDis = useOn(() => {
+      disconnect();
+      push('/buckets')
+    })
     const btnAccount = useRef(null);
     const isHoverAccount = useHoverDirty(btnAccount);
     return (
@@ -114,7 +119,7 @@ export const MainLayout = React.memo(
                 " hidden": !isConnected,
               })}
               // disHover={true}
-              onClick={() => disconnect()}
+              onClick={onDis}
               text={isHoverAccount ? "Disconnect" : shortStr(account, 6, 6)}
             />
           </div>

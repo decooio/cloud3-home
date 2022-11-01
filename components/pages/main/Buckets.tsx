@@ -1,4 +1,5 @@
 import { Button } from "@components/common/Button";
+import { EmptyText } from "@components/common/Empty";
 import { LoadingText } from "@components/common/Loading";
 import { W3Bucket_Adress } from "@lib/config";
 import { useConnected } from "@lib/hooks/useConnected";
@@ -9,9 +10,10 @@ import {
   formatW3BucketCapacity,
   genBucketId,
   ipfsUrl,
-  ipnsUrl
+  ipnsUrl,
 } from "@lib/utils";
 import axios from "axios";
+import { size } from "lodash";
 import moment from "moment";
 import React, { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -129,6 +131,12 @@ export const Buckets = React.memo(() => {
             </div>
           )}
         </div>
+        {!loading && size(buckets) < 1 && (
+          <EmptyText
+            text="No Buckets"
+            className=" h-[calc(100%_-_11rem)] justify-center"
+          />
+        )}
         {loading && (
           <LoadingText className=" h-[calc(100%_-_11rem)] justify-center" />
         )}

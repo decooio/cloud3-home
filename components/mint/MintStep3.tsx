@@ -17,7 +17,7 @@ import {
 } from "@lib/utils";
 import axios from "axios";
 import classNames from "classnames";
-import { ethers } from "ethers";
+import { ContractTransaction, ethers } from "ethers";
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { erc20ABI, useAccount, useSigner } from "wagmi";
@@ -85,9 +85,9 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
       const isEth =
         mintData.price.currency ===
         "0x0000000000000000000000000000000000000000";
-      // let res: ContractTransaction = null;
+      let res: ContractTransaction = null;
       if (isEth) {
-        await w3b.mint(
+        res = await w3b.mint(
           address,
           ethers.utils.parseUnits(mintData.editionId + "", 0),
           mintData.price.currency,
@@ -109,7 +109,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
           )
           .catch(() => ethers.utils.parseUnits("396277", 0));
         await erc20.approve(W3Bucket_Adress, value);
-        await w3b.mint(
+        res = await w3b.mint(
           address,
           ethers.utils.parseUnits(mintData.editionId + "", 0),
           mintData.price.currency,
@@ -117,10 +117,10 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
           { gasLimit: gas }
         );
       }
+      await res.wait(1)
       let taskRes: MintState = null;
       while (true) {
         if (!refSafe.safe) return;
-        await sleep(10000);
         taskRes = await axios
           .get<Res<MintState>>(genUrl(`/auth/bucket/uuid/${mintData.uuid}`), {
             headers: { Authorization: `Bearer ${auth}` },
@@ -130,6 +130,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
         if (taskRes && taskRes.tokenId && taskRes.mintTxHash) {
           break;
         }
+        await sleep(10000);
       }
       updateMint({ mintTx: taskRes.mintTxHash, tokenId: taskRes.tokenId });
       onNext();
@@ -152,7 +153,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
       <BucketImage size={currentEdition.capacityInGb} />
       {!minting && !mintData.mintTx && (
         <div className="flex flex-1 px-12 flex-col items-center justify-center">
-          <div className=" text-2xl">
+          <div className=" text-2xl text-center">
             Choose your preferred payment method and click the ‘Confirm and Pay’
             button to proceed:
           </div>
@@ -192,7 +193,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
       {!minting && mintData.mintTx && (
         <div className="flex flex-1 px-12 flex-col ">
           <div className=" text-2xl font-medium mb-8">
-            Congrats, You have completed all the minting processes for this
+            Congrats,<br/>You have completed all the minting processes for this
             W3Bucket NFT!
           </div>
           <TulpeText

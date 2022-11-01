@@ -24,7 +24,7 @@ function TipIpns(p: { ipns: string; onContinue: () => void }) {
   const { ipns, onContinue } = p;
   const [showNext, setShowNext] = useState(false);
   return (
-    <div className="pl-12 flex-1 break-all">
+    <div className="pl-12 flex-1 break-words">
       <div className="p-8 border-solid border-black-1 border flex flex-col">
         <div className=" font-medium text-xl mb-4">Tips:</div>
         <div className="text-lg">
@@ -48,7 +48,7 @@ function TipIpns(p: { ipns: string; onContinue: () => void }) {
       </div>
       {showNext && (
         <div className=" mt-10 text-xl flex flex-col">
-          <div>{ipns}</div>
+          <div className=" break-all">{ipns}</div>
           <div className=" font-medium">
             The IPNS name for this W3Bucket has successfully generated and
             published to IPFS.
@@ -191,7 +191,7 @@ function PreMetadata(p: { onContinue: OnNext }) {
     <>
       {!mintData.metadata && !uping && (
         <div className="px-12 flex-1 flex flex-col items-center justify-center">
-          <div className=" text-2xl">
+          <div className=" text-2xl text-center">
             The metadata file (including this profile image) for your W3Bucket
             NFT has been fully generated. Click the Continue button to process
             decentralized storage for the metadata.
@@ -258,7 +258,7 @@ function PreMetadata(p: { onContinue: OnNext }) {
           </div>
           {showNext && (
             <div className=" mt-10 text-xl flex flex-col">
-              <div className=" font-medium">
+              <div className=" font-medium text-center">
                 Congrats! The metadata of this W3Bucket is fully processed. You
                 will soon get this truly Web3 storage bucket NFT! Click the
                 Continue button to the last step.
@@ -281,7 +281,7 @@ export const MintStep2 = React.memo((p: MintStep2Props) => {
   const [mintData, updateMint] = useMintData();
   const currentEditionId = mintData.editionId;
   const currentEdition = useMemo(
-    () => editions.find((item) => item.id === currentEditionId),
+    () => editions.find((item) => item.id === currentEditionId) || editions[0],
     [editions, currentEditionId]
   );
   const [step, setStep] = useSafeState(0);

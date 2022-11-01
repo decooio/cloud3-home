@@ -28,7 +28,7 @@ export const LoadingText = React.memo(
         {!!text && (
           <div
             {...text_attr}
-            className={classNames(" text-2xl mt-9", text_attr.className)}
+            className={classNames(" text-2xl text-center mt-9", text_attr.className)}
           >
             {text}
           </div>

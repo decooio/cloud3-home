@@ -9,7 +9,6 @@ import { useBucketEditions } from "@lib/hooks/useBucketEditions";
 import { useGetAuthForMint } from "@lib/hooks/useGetAuth";
 import { useMintData } from "@lib/hooks/useMintData";
 import { genUrl, getResData, MintState, Res } from "@lib/http";
-import { useAppLoading } from "@lib/store/useAppLoading";
 import axios from "axios";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";

@@ -237,7 +237,7 @@ export const Bucket = React.memo(() => {
             url: `https://beta-pin.cloud3.cc/psa/pins`
           });
           setUpState({ progress: 100, status: 'success'});
-          setAddFiles(addFiles.concat([{name,cid,fileSize,fileType}]))
+          setAddFiles(addFiles.concat([{name,cid,fileSize,fileType,createTime: moment().format('X').valueOf()}]))
         } catch (e) {
           // setUpState({ progress: 0, status: 'fail' });
           console.error(e);

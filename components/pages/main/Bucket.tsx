@@ -356,13 +356,13 @@ export const Bucket = React.memo(() => {
           </div>
         </Modal>
       }
-      <ReactTooltip id="cidColumn" effect="solid" delayHide={100} clickable={true} afterShow={(e)=>setCurrentTipCid(e.target.dataset.tip)}>
+      <ReactTooltip id="cidColumn" effect="solid" isCapture={true} delayHide={250} clickable={true} afterShow={(e)=>setCurrentTipCid(e.target.dataset.tip)}>
         <div className="flex items-center">
           <span>{currentTipCid}</span>
           <Icon className="ml-2 cursor-pointer" onClick={()=>{copy(currentTipCid);alert('copy success')}} icon={FiCopy} />
         </div>
       </ReactTooltip>
-      <ReactTooltip id="linkColumn" effect="solid" delayHide={100} clickable={true} afterShow={(e)=>setCurrentTipLink(e.target.dataset.tip)}>
+      <ReactTooltip id="linkColumn" effect="solid" isCapture={true} delayHide={250} clickable={true} afterShow={(e)=>setCurrentTipLink(e.target.dataset.tip)}>
         <div className="flex items-center">
           <span>{currentTipLink}</span>
           <Icon className="ml-2 cursor-pointer" onClick={()=>{copy(currentTipLink);alert('copy success')}} icon={FiCopy} />

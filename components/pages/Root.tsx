@@ -16,7 +16,8 @@ function Root_() {
         <ReactTooltip
             effect="solid"
             clickable={true}
-            delayHide={100}
+            delayHide={200}
+            isCapture={true}
             overridePosition={(
                 { top, left },
                 currentEvent,

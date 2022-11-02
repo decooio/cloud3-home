@@ -111,6 +111,7 @@ export const Bucket = React.memo(() => {
   const [localFileList,setLocalFileList] = useState(null)
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
   const [currentTipCid, setCurrentTipCid] = useState('');
+  const [currentTipLink, setCurrentTipLink] = useState('');
   useEffect(() => {
     ReactTooltip.rebuild();
   });
@@ -146,11 +147,11 @@ export const Bucket = React.memo(() => {
     if(files && files.length>0){
       uploadFiles = files
     }
+    addFiles.map(v=>{
+      if(v.name) uploadFiles.push(Object.assign(v,{isNew: true}))
+    })
     let filterFileList = _.filter(uploadFiles,(item)=>{
       return item.name.indexOf(filterText.trim())>-1
-    })
-    addFiles.map(v=>{
-      if(v.name) filterFileList.push(Object.assign(v,{isNew: true}))
     })
     filterFileList = filterFileList.sort(function(a, b) {
       return b.createTime - a.createTime;
@@ -286,7 +287,7 @@ export const Bucket = React.memo(() => {
                 />
               </div>
             </div>
-            <div className="sticky top-40 bg-white py-4 flex items-center font-medium border-b-1 border-solid border-b-black-1">
+            <div className="sticky top-36 bg-white py-4 flex items-center font-medium border-b-1 border-solid border-b-black-1 pt-5">
               <div className="flex-initial w-3/12 pl-3 pr-5">File Name</div>
               <div className="flex-initial w-3/12">CID</div>
               <div className="flex-initial w-3/12">Link</div>
@@ -307,11 +308,12 @@ export const Bucket = React.memo(() => {
                           <Icon className="ml-2" icon={FiFolder} />
                         }
                       </div>
+
                   </div>
                   <div className="flex-initial w-3/12">
                     <span data-tip={v.cid} data-for="cidColumn">{shortStr(v.cid,10,10)}</span>
                   </div>
-                  <div className="flex-initial w-3/12 truncate pr-5" data-tip={`${current.value}\n/ipns/${v.cid}`}>{`${current.value}/ipns/${v.cid}`}</div>
+                  <div className="flex-initial w-3/12 truncate pr-5" data-for="linkColumn" data-tip={`${current.value}\n/ipfs/${v.cid}`}>{`${current.value}/ipns/${v.cid}`}</div>
                   <div className="flex-initial w-1/12">{formatFileSize(v.fileSize)}</div>
                   <div className="flex-initial w-[10rem] text-gray-6">{v.isNew?<span data-tip={`The ${v.fileType === 0?'file':'folder'} has been successfully uploaded to your bucket. It takes several minutes to finalize the decentralized storage and IPNS update processes.`}><Icon icon={BsQuestionCircle} /></span>:moment(v.createTime*1000).format('YYYY-MM-DD HH:mm:ss')}</div>
                 </div>
@@ -347,10 +349,16 @@ export const Bucket = React.memo(() => {
           </div>
         </Modal>
       }
-      <ReactTooltip id="cidColumn" effect="solid" delayHide={200} clickable={true} afterShow={(e)=>setCurrentTipCid(e.target.dataset.tip)}>
+      <ReactTooltip id="cidColumn" effect="solid" delayHide={100} clickable={true} afterShow={(e)=>setCurrentTipCid(e.target.dataset.tip)}>
         <div className="flex items-center">
           <span>{currentTipCid}</span>
           <Icon className="ml-2 cursor-pointer" onClick={()=>{copy(currentTipCid);alert('copy success')}} icon={FiCopy} />
+        </div>
+      </ReactTooltip>
+      <ReactTooltip id="linkColumn" effect="solid" delayHide={100} clickable={true} afterShow={(e)=>setCurrentTipLink(e.target.dataset.tip)}>
+        <div className="flex items-center">
+          <span>{currentTipLink}</span>
+          <Icon className="ml-2 cursor-pointer" onClick={()=>{copy(currentTipLink);alert('copy success')}} icon={FiCopy} />
         </div>
       </ReactTooltip>
 

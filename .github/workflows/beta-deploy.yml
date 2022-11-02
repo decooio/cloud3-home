@@ -20,14 +20,14 @@ jobs:
         with:
           path: |
             .next
-            .yarn
+            .yarn/cache
             ./node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Build
         run: yarn export

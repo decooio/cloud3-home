@@ -26,4 +26,4 @@ yarn-error.log*
 
 /.fleet
 /.vscode
-.yarn
+.yarn/cache

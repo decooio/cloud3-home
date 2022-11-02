@@ -295,34 +295,34 @@ export const Bucket = React.memo(() => {
               </div>
             </div>
             <div className="sticky top-36 bg-white py-4 flex items-center font-medium border-b-1 border-solid border-b-black-1 pt-5">
-              <div className="flex-initial w-3/12 pl-3 pr-5">File Name</div>
-              <div className="flex-initial w-3/12">CID</div>
-              <div className="flex-initial w-3/12">Link</div>
-              <div className="flex-initial w-1/12">File Size</div>
-              <div className="flex-initial w-[10rem]">TimeStamp</div>
+              <div className="flex-initial w-[25%] pl-3">File Name</div>
+              <div className="flex-initial w-[20%]">CID</div>
+              <div className="flex-initial w-[30%]">Link</div>
+              <div className="flex-initial w-[10%]">File Size</div>
+              <div className="flex-initial w-[15%]">TimeStamp</div>
             </div>
             <div className=" text-sm text-gray-6">
               {fFiles && fFiles[pgNum-1] && fFiles[pgNum-1].map((v, index) => (
                 <div
                   key={`files_${index}`}
-                  className={classnames('flex items-center pt-4 pb-5',v.isNew?'text-gray-300':'')}
+                  className={classnames('flex items-center pt-4 pb-8',v.isNew?'text-gray-300':'')}
                 >
-                  <div className="flex-initial w-3/12 pl-3">
-                      <div className="flex items-center " data-tip={v.name.length>20?v.name:''}>
-                        <span className="truncate pr-5">{v.name}</span>
+                  <div className="flex-initial w-[25%] pl-3">
+                      <div className="flex items-center pr-8" data-tip={v.name.length>20?v.name:''}>
+                        <span className="truncate">{v.name}</span>
                         {
                           v.fileType === 1 &&
-                          <Icon icon={FiFolder} />
+                          <Icon className="ml-2 min-w-[14px]" icon={FiFolder} />
                         }
                       </div>
 
                   </div>
-                  <div className="flex-initial w-3/12">
+                  <div className="flex-initial w-[20%]">
                     <span data-tip={v.cid} data-for="cidColumn">{shortStr(v.cid,10,10)}</span>
                   </div>
-                  <div className="flex-initial w-3/12 truncate pr-5" data-for="linkColumn" data-tip={`${current.value}\n/ipfs/${v.cid}`}>{`${current.value}/ipns/${v.cid}`}</div>
-                  <div className="flex-initial w-1/12">{formatFileSize(v.fileSize)}</div>
-                  <div className="flex-initial w-[10rem] text-gray-6">{v.isNew?<span data-tip={`The ${v.fileType === 0?'file':'folder'} has been successfully uploaded to your bucket. It takes several minutes to finalize the decentralized storage and IPNS update processes.`}><Icon icon={BsQuestionCircle} /></span>:moment(v.createTime*1000).format('YYYY-MM-DD HH:mm:ss')}</div>
+                  <div className="flex-initial w-[30%] truncate pr-8" data-for="linkColumn" data-tip={`${current.value}\n/ipfs/${v.cid}`}>{`${current.value}/ipns/${v.cid}`}</div>
+                  <div className="flex-initial w-[10%]">{formatFileSize(v.fileSize)}</div>
+                  <div className="flex-initial w-[15%] text-gray-6">{v.isNew?<span data-tip={`The ${v.fileType === 0?'file':'folder'} has been successfully uploaded to your bucket. It takes several minutes to finalize the decentralized storage and IPNS update processes.`}><Icon icon={BsQuestionCircle} /></span>:moment(v.createTime*1000).format('YYYY-MM-DD HH:mm:ss')}</div>
                 </div>
               ))}
             </div>

@@ -1,13 +1,33 @@
 import "@decooio/crust-fonts/style.css";
 import { SupportChain } from "@lib/config";
 import { IS_DEV, IS_TEST } from "@lib/env";
-import "leaflet/dist/leaflet.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { publicProvider } from "wagmi/providers/public";
+import { Squada_One, Work_Sans, Roboto } from "@next/font/google";
+const so = Squada_One({
+  weight: "400",
+  display: "auto",
+  preload: true,
+  variable: "--squada-one",
+});
+const ws = Work_Sans({
+  weight: ["300", "400", "500", "600", "700"],
+  display: "auto",
+  preload: true,
+  variable: "--work-sans",
+});
+const rb = Roboto({
+  weight: "400",
+  display: "auto",
+  preload: true,
+  variable: "--roboto",
+});
+const fontvarClass = [so, ws, rb].map((item) => item.variable).join(" ");
 import "../styles/global.css";
+import classNames from "classnames";
 const hostOne = IS_TEST ? "test." : IS_DEV ? "beta." : "";
 
 const connector = new MetaMaskConnector();
@@ -25,7 +45,7 @@ export default function App({ Component, pageProps }: AppProps) {
   // useGaPageView();
 
   return (
-    <div suppressHydrationWarning className="App">
+    <div suppressHydrationWarning className={classNames("App", fontvarClass)}>
       <Head>
         <meta name="viewport" content="width=device-width,user-scalable=no" />
         {/* <meta name="twitter:card" content="summary_large_image" />

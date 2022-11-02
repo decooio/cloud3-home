@@ -3,6 +3,12 @@ module.exports = {
   reactStrictMode: false,
   experimental: {
     // ssr and displayName are configured by default
+    fontLoaders: [{
+      loader: '@next/font/google', options: { subsets: ['normal','medium', 'semibod', 'bold'] }
+    }]
+  },
+  env: {
+    NEXT_FONT_GOOGLE_MOCKED_RESPONSES: false
   },
   webpack: (config) => {
     config.module.rules.push({

@@ -6,6 +6,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        WorkSans: 'var(--work-sans)',
+        SquadaOne: 'var(--squada-one)',
+        Roboto: 'var(--roboto)',
+      },
       colors: {
         black: {
           DEFAULT: '#000000',

@@ -144,7 +144,7 @@ export const Bucket = React.memo(() => {
       uploadFiles = localFileList
     }
     let filterFileList = _.filter(uploadFiles,(item)=>{
-      return item.name.indexOf(filterText.trim())>-1
+      return item.name.indexOf(confirmFilterText.trim())>-1
     })
     filterFileList = filterFileList.sort(function(a, b) {
       return b.createTime - a.createTime;

@@ -169,7 +169,9 @@ export const Bucket = React.memo(() => {
           }
         }
       })
-      setLocalFileList(localFileList)
+      const arr = files.concat(localFileList)
+      const res = new Map();
+      setLocalFileList(arr.filter((item) => !res.has(item.cid) && res.set(item.cid, 1)))
     }else {
       setLocalFileList(files)
     }
@@ -283,7 +285,7 @@ export const Bucket = React.memo(() => {
       <div className="flex-1 h-full overflow-y-auto">
         <div className="relative">
           <TopInfo />
-          <div className="p-8 flex-1 text-lg v-full flex flex-col min-w-[75rem]">
+          <div className="p-8 flex-1 text-lg v-full flex flex-col min-w-[68rem]">
             <div className="sticky top-[6.5rem] bg-white w-full flex items-center z-10">
               <DropDownBtn dropData={[{text:'File',icon: FiFile,value: 'file'},{text:'Folder',icon: FiFolder,value: 'folder'}]} text="Upload" onChange={onDropDownChange}/>
               <input ref={inputFileRef} type="file" hidden onChange={onUploadChange} />

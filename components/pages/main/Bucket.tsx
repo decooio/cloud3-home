@@ -100,14 +100,12 @@ const setLocalFileListByBucketId = (bucketId,files)=>{
 export const Bucket = React.memo(() => {
   const { bucketId,ipnsId } = useParams();
   const [ , tokenId] = useMemo(() => parseBucketId(bucketId),[bucketId])
-  // const push = useNavigate();
   const inputFileRef = useRef(null);
   const inputFolderRef = useRef(null);
   const [upState,setUpState] = useState({ progress: 0, status: 'stop' });
   const [pgNum,setPgNum] = useState(1);
   const [filterText,setFilterText] = useState('')
   const [confirmFilterText,setConfirmFilterText] = useState('')
-  const [addFiles,setAddFiles] = useState([])
   const [localFileList,setLocalFileList] = useState(null)
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
   const [currentTipCid, setCurrentTipCid] = useState('');
@@ -136,20 +134,15 @@ export const Bucket = React.memo(() => {
     const filesRes = await axios.request({
       url: `${current.value}${pathRes.data.Path}`
     })
-    setLocalFileListByBucketId(bucketId,filesRes.data)
     return filesRes.data
   }, [ipnsId]);
+
+
   const {fFiles,total} = useMemo(()=>{
     let uploadFiles = []
     if(localFileList){
       uploadFiles = localFileList
     }
-    if(files && files.length>0){
-      uploadFiles = files
-    }
-    addFiles.map(v=>{
-      if(v.name) uploadFiles.push(Object.assign(v,{isNew: true}))
-    })
     let filterFileList = _.filter(uploadFiles,(item)=>{
       return item.name.indexOf(filterText.trim())>-1
     })
@@ -159,15 +152,28 @@ export const Bucket = React.memo(() => {
     const fFiles = _.chunk(filterFileList,10)
     const total = filterFileList.length
     return {fFiles,total}
-  },[files,confirmFilterText,addFiles,localFileList])
+  },[confirmFilterText,localFileList])
+
 
   useMemo(()=>{
-    let oldData = []
+    setLocalFileListByBucketId(bucketId,localFileList)
+  },[localFileList])
+
+  useMemo(()=>{
     if(localFileList){
-      oldData = localFileList
+      localFileList.map(v=>{
+        for(let i=0; i<files.length; i++){
+          if(v.isNew && files[i].cid === v.cid){
+            delete v.isNew
+            break
+          }
+        }
+      })
+      setLocalFileList(localFileList)
+    }else {
+      setLocalFileList(files)
     }
-    setLocalFileListByBucketId(bucketId,oldData.concat(addFiles))
-  },[addFiles])
+  },[files])
 
   const onUploadChange = (file)=>{
     const upFile = file.target.files
@@ -239,8 +245,7 @@ export const Bucket = React.memo(() => {
             url: `https://beta-pin.cloud3.cc/psa/pins`
           });
           setUpState({ progress: 100, status: 'success'});
-          console.log(addFiles)
-          setAddFiles(addFiles.concat([{name,cid,fileSize,fileType,createTime: moment().format('X').valueOf()}]))
+          setLocalFileList(localFileList.concat([{name,cid,fileSize,fileType,createTime: moment().format('X').valueOf(),isNew: true}]))
         } catch (e) {
           // setUpState({ progress: 0, status: 'fail' });
           console.error(e);

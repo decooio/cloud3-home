@@ -24,7 +24,8 @@ function Root_() {
                 currentTarget,
                 node
             ) => {
-              node.style.maxWidth = '450px'; // Your custom width
+              node.style.maxWidth = '300px'; // Your custom width
+              node.style.wordBreak = 'break-all'; // Your custom width
               return {
                 top,
                 left

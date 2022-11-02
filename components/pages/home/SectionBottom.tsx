@@ -2,7 +2,7 @@ import React from "react";
 import HomeImg1Svg from "../../../public/images/home_img1.svg";
 export const SectionBottom = React.memo(() => {
     return (
-        <div className="w-full py-6 px-12 flex justify-center items-center text-lg mt-3 text-slate-700 text-lg">
+        <div className="w-full py-6 px-12 pb-20 flex justify-center items-center text-lg mt-3 text-slate-700 text-lg bg-[#F5F5F5]">
             <div className="w-[32.25rem]">
                 <h3 className="text-black text-4xl my-14 font-medium">W3Bucket NFT</h3>
                 <p>

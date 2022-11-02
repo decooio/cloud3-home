@@ -239,6 +239,7 @@ export const Bucket = React.memo(() => {
             url: `https://beta-pin.cloud3.cc/psa/pins`
           });
           setUpState({ progress: 100, status: 'success'});
+          console.log(addFiles)
           setAddFiles(addFiles.concat([{name,cid,fileSize,fileType,createTime: moment().format('X').valueOf()}]))
         } catch (e) {
           // setUpState({ progress: 0, status: 'fail' });
@@ -277,7 +278,7 @@ export const Bucket = React.memo(() => {
       <div className="flex-1 h-full overflow-y-auto">
         <div className="relative">
           <TopInfo />
-          <div className="p-8 flex-1 text-lg v-full flex flex-col">
+          <div className="p-8 flex-1 text-lg v-full flex flex-col min-w-[75rem]">
             <div className="sticky top-[6.5rem] bg-white w-full flex items-center z-10">
               <DropDownBtn dropData={[{text:'File',icon: FiFile,value: 'file'},{text:'Folder',icon: FiFolder,value: 'folder'}]} text="Upload" onChange={onDropDownChange}/>
               <input ref={inputFileRef} type="file" hidden onChange={onUploadChange} />
@@ -308,8 +309,8 @@ export const Bucket = React.memo(() => {
                   className={classnames('flex items-center pt-4 pb-8',v.isNew?'text-gray-300':'')}
                 >
                   <div className="flex-initial w-[25%] pl-3">
-                      <div className="flex items-center pr-8" data-tip={v.name.length>20?v.name:''}>
-                        <span className="truncate">{v.name}</span>
+                      <div className="flex items-center pr-8">
+                        <span className="truncate" data-tip={v.name.length>20?v.name:''}>{v.name}</span>
                         {
                           v.fileType === 1 &&
                           <Icon className="ml-2 min-w-[14px]" icon={FiFolder} />
@@ -320,7 +321,7 @@ export const Bucket = React.memo(() => {
                   <div className="flex-initial w-[20%]">
                     <span data-tip={v.cid} data-for="cidColumn">{shortStr(v.cid,10,10)}</span>
                   </div>
-                  <div className="flex-initial w-[30%] truncate pr-8" data-for="linkColumn" data-tip={`${current.value}\n/ipfs/${v.cid}`}>{`${current.value}/ipns/${v.cid}`}</div>
+                  <div className="flex-initial w-[30%] truncate pr-8" data-for="linkColumn" data-tip={`${current.value}\n/ipfs/${v.cid}`}>{`${current.value}/ipfs/${v.cid}`}</div>
                   <div className="flex-initial w-[10%]">{formatFileSize(v.fileSize)}</div>
                   <div className="flex-initial w-[15%] text-gray-6">{v.isNew?<span data-tip={`The ${v.fileType === 0?'file':'folder'} has been successfully uploaded to your bucket. It takes several minutes to finalize the decentralized storage and IPNS update processes.`}><Icon icon={BsQuestionCircle} /></span>:moment(v.createTime*1000).format('YYYY-MM-DD HH:mm:ss')}</div>
                 </div>
@@ -356,16 +357,20 @@ export const Bucket = React.memo(() => {
           </div>
         </Modal>
       }
-      <ReactTooltip id="cidColumn" effect="solid" isCapture={true} delayHide={250} clickable={true} afterShow={(e)=>setCurrentTipCid(e.target.dataset.tip)}>
+      <ReactTooltip id="cidColumn" effect="solid"  isCapture={true} delayHide={250} clickable={true} afterShow={(e)=>setCurrentTipCid(e.target.dataset.tip)}>
         <div className="flex items-center">
-          <span>{currentTipCid}</span>
-          <Icon className="ml-2 cursor-pointer" onClick={()=>{copy(currentTipCid);alert('copy success')}} icon={FiCopy} />
+          <span className="inline-block w-[13rem] break-words">
+            {currentTipCid}
+            <Icon className="ml-2 cursor-pointer inline-block" onClick={()=>{copy(currentTipCid);alert('copy success')}} icon={FiCopy} />
+          </span>
         </div>
       </ReactTooltip>
       <ReactTooltip id="linkColumn" effect="solid" isCapture={true} delayHide={250} clickable={true} afterShow={(e)=>setCurrentTipLink(e.target.dataset.tip)}>
         <div className="flex items-center">
-          <span>{currentTipLink}</span>
-          <Icon className="ml-2 cursor-pointer" onClick={()=>{copy(currentTipLink);alert('copy success')}} icon={FiCopy} />
+          <span className="inline-block w-[15rem] break-words">
+            {currentTipLink}
+            <Icon className="ml-2 cursor-pointer inline-block" onClick={()=>{copy(currentTipLink);alert('copy success')}} icon={FiCopy} />
+          </span>
         </div>
       </ReactTooltip>
 

@@ -233,6 +233,7 @@ export const Bucket = React.memo(() => {
               cid,
               name
             },
+            cancelToken: cancel.token,
             headers: { Authorization: `Bearer ${auth}` },
             method: 'POST',
             url: `https://beta-pin.cloud3.cc/psa/pins`
@@ -257,6 +258,12 @@ export const Bucket = React.memo(() => {
   const doSearch = ()=>{
     setConfirmFilterText(filterText)
   }
+  const onInputKeyDownSearch = (e)=>{
+    const evt = window.event || e;
+    if (evt.keyCode == 13) {
+      doSearch()
+    }
+  }
   const onClose = ()=>{
     if(upState.status === 'upload' && cancelUp){
       cancelUp.cancel("stop");
@@ -279,7 +286,7 @@ export const Bucket = React.memo(() => {
               <span className="ml-5">Thunder Gateway Seattle, US</span>
               <div className="flex-1" />
               <div className="relative w-1/2 h-12 max-w-sm border-solid border-black-1 border rounded overflow-hidden">
-                <input className="w-full h-full pl-5 pr-10 active:border-0" onChange={(v)=>setFilterText(v.target.value)} />
+                <input className="w-full h-full pl-5 pr-10 active:border-0" onKeyDown={onInputKeyDownSearch} onChange={(v)=>setFilterText(v.target.value)} />
                 <Icon
                   icon={FiSearch}
                   className="text-2xl absolute top-[0.7rem] right-2 cursor-pointer"
@@ -305,7 +312,7 @@ export const Bucket = React.memo(() => {
                         <span className="truncate pr-5">{v.name}</span>
                         {
                           v.fileType === 1 &&
-                          <Icon className="ml-2" icon={FiFolder} />
+                          <Icon icon={FiFolder} />
                         }
                       </div>
 

@@ -29,14 +29,14 @@ function LinePointGroup() {
   const data_fly = useMemo(() => {
     const datas: [V3, V3, V3[]][] = [];
     const v3 = new THREE.Vector3();
-    for (let i = 0; i < 400; i++) {
-      v3.x = i % 2 === 0 ? -1 : 1;
+    for (let i = 0; i < 300; i++) {
+      v3.x = i % 2 === 0 ? -1 : 1 ;
       v3.y = (Math.random() * 2 - 1) * 0.5;
       v3.z = (Math.random() * 2 - 1) * 0.3;
       v3.normalize();
-      v3.multiplyScalar(26);
+      v3.multiplyScalar(26 + Math.random() * 4  - 2);
       const start: V3 = [v3.x, v3.y, v3.z];
-      v3.multiplyScalar(Math.random() * 2 + 1);
+      v3.multiplyScalar(Math.random() * 2 + 1.3);
       const end: V3 = [v3.x, v3.y, v3.z];
       const dx = Math.abs(start[0] - end[0]);
       const count = Math.round(1 + (5 * dx) / 27);
@@ -74,7 +74,7 @@ function LinePointGroup() {
   useFrame((state, delta, xrFrame) => {
     if (group.current) {
       const pi = Math.PI * 2;
-      const nr = group.current.rotation.x + pi * 0.0002;
+      const nr = group.current.rotation.x + pi * delta * 0.01;
       group.current.rotation.x = nr > pi ? nr - pi : nr;
     }
     if (fly.current) {
@@ -90,8 +90,8 @@ function LinePointGroup() {
             const cache = animStart[i];
             if (cache) {
               const nCount = cache.count + (isRun ? 1 : 0);
-              const nextCount = nCount > cache.max ? 1 : nCount;
-              const nextIndex = nextCount - 1;
+              const nextCount = nCount > cache.max * 2 ? 1 : nCount;
+              const nextIndex = nextCount <= cache.max? nextCount - 1: cache.max * 2 - nextCount - 1;
               attr.setXYZ(
                 i,
                 buffer.getX(nextIndex),
@@ -99,7 +99,7 @@ function LinePointGroup() {
                 buffer.getZ(nextIndex)
               );
             } else {
-              attr.setXYZ(i, buffer.getX(0), buffer.getY(0), buffer.getZ(0));
+               attr.setXYZ(i,  buffer.getX(0), buffer.getY(0), buffer.getZ(0));
             }
           }
           attr.needsUpdate = true;
@@ -108,8 +108,9 @@ function LinePointGroup() {
           const cache = animStart[line.name];
           if (cache) {
             const nCount = cache.count + (isRun ? 1 : 0);
-            const nextCount = nCount > cache.max ? 1 : nCount;
-            line.geometry.setDrawRange(0, nextCount);
+            const nextCount = nCount > cache.max * 2 ? 1 : nCount;
+            const nextRange = nextCount <= cache.max? nextCount: cache.max * 2 - nextCount;
+            line.geometry.setDrawRange(0, nextRange);
             cache.count = nextCount;
           } else {
             line.geometry.setDrawRange(0, 0);
@@ -202,11 +203,11 @@ function LinePointGroup() {
         <points>
           <bufferGeometry attributes={{ position: position_fly }} />
           <pointsMaterial
-            color={color}
+            color={'#cdcccc'}
             opacity={0.7}
             map={disc}
             size={POINT_SIZE}
-            // blending={THREE.AdditiveBlending}
+            blending={THREE.AdditiveBlending}
             depthTest={false}
             transparent={true}
           />

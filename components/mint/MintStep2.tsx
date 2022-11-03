@@ -26,7 +26,7 @@ function TipIpns(p: { ipns: string; onContinue: () => void }) {
   return (
     <div className="pl-12 flex-1 break-words">
       <div className="p-8 border-solid border-black-1 border flex flex-col">
-        <div className=" font-medium text-xl mb-4">Tips:</div>
+        <div className=" font-medium text-xl mb-4">Tip:</div>
         <div className="text-lg">
           This is the QR Code of the{" "}
           <span className="font-semibold">IPNS name</span> for this W3Bucket.
@@ -71,15 +71,15 @@ function SetStyle(p: { onContinue: () => void }) {
   return (
     <div className="px-20 flex-1 flex flex-col justify-center">
       <div className="flex">
-        <div className=" mr-10">Background Color</div>
-        <div className=" flex items-center">
+        <div className=" whitespace-nowrap mr-10 mt-3">Background Color</div>
+        <div className=" flex flex-wrap items-center">
           {colors.map((key) => (
             <div
               key={`mint_colors_${key}`}
               style={{ backgroundColor: MintColors[key][0] }}
               onClick={() => updateMint({ color: key as any })}
               className={classNames(
-                "rounded-xl w-5 h-5 overflow-hidden cursor-pointer mr-[1.875rem]",
+                "rounded-xl w-5 h-5 overflow-hidden cursor-pointer mr-[1.875rem] my-4",
                 {
                   "border-solid border-orange-15 border":
                     mintData.color === key,
@@ -212,7 +212,7 @@ function PreMetadata(p: { onContinue: OnNext }) {
       {mintData.metadata && !uping && (
         <div className="px-12 flex-1 flex flex-col items-center">
           <div className="p-8 w-full border-solid border-black-1 border flex flex-col">
-            <div className=" font-medium text-xl mb-4">Tips:</div>
+            <div className=" font-medium text-xl mb-4">Tip:</div>
             <div className="flex">
               <div className="flex-1 mr-8">
                 <div className="font-semibold text-lg">

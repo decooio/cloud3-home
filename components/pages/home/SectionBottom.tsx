@@ -22,7 +22,7 @@ export const SectionBottom = React.memo(() => {
             </div>
             <div className="block h-full w-[32.25rem] ml-32 mt-36">
                 <HomeImg1Svg />
-                <h4 className="text-xl my-5 pt-[2.85rem] mt-20 text-black font-medium">IPFS Remote Pin</h4>
+                <h4 className="text-xl my-5 mt-[4.95rem] text-black font-medium">IPFS Remote Pin</h4>
                 <p className="w-[28.8rem]">
                     Called by Standard IPFS Remote Pinning Service API that makes your files always available (alive!) on IPFS.
                 </p>

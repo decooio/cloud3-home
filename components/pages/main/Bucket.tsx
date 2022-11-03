@@ -44,7 +44,7 @@ const TopInfo = () => {
         <Icon icon={FiChevronRight} className="mr-2" />
         <span>{`W3BUCKET(${bucketId})`}</span>
       </div>
-      <div className="px-8 pb-8 text-lg border-b-8 border-solid border-[#eeeeee]">
+      <div className="px-8 pb-8 text-lg border-b-8 border-solid border-[#eeeeee] min-w-[68rem]">
         <div className=" border border-black-1 border-solid px-8 pt-6 pb-5">
           <div className=" text-xl font-medium">Guidance on Storage</div>
           <div className=" my-4">

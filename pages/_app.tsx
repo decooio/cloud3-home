@@ -1,6 +1,5 @@
 import "@decooio/crust-fonts/style.css";
 import { SupportChain } from "@lib/config";
-import { IS_DEV, IS_TEST } from "@lib/env";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
@@ -28,7 +27,6 @@ const rb = Roboto({
 const fontvarClass = [so, ws, rb].map((item) => item.variable).join(" ");
 import "../styles/global.css";
 import classNames from "classnames";
-const hostOne = IS_TEST ? "test." : IS_DEV ? "beta." : "";
 
 const connector = new MetaMaskConnector();
 const { provider, webSocketProvider } = configureChains(SupportChain, [
@@ -45,7 +43,7 @@ export default function App({ Component, pageProps }: AppProps) {
   // useGaPageView();
 
   return (
-    <div suppressHydrationWarning className={classNames("App", fontvarClass)}>
+    <div suppressHydrationWarning className={classNames("App font-WorkSans", fontvarClass)}>
       <Head>
         <meta name="viewport" content="width=device-width,user-scalable=no" />
         {/* <meta name="twitter:card" content="summary_large_image" />

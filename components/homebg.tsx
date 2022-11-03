@@ -203,7 +203,8 @@ function LinePointGroup() {
         <points>
           <bufferGeometry attributes={{ position: position_fly }} />
           <pointsMaterial
-            color={'#e8e8e8'}
+            color={'#cdcccc'}
+            opacity={0.7}
             map={disc}
             size={POINT_SIZE}
             blending={THREE.AdditiveBlending}

@@ -131,12 +131,12 @@ export const SectionTop = React.memo(() => {
             <div className="font-SquadaOne text-4xl">Cloud3.cc</div>
             <Button text="Documentations" className="border-white text-white" />
           </div>
-          <div className="my-10 w-2/3 flex flex-col justify-center mt-[23vh]">
+          <div className="my-10 w-10/12 flex flex-col justify-center mt-[23vh]">
             <div className="text-5xl leading-tight">
               <p>Store in IPFS W3Bucket,</p>
               <p>Decentralized, Guaranteed & Alive.</p>
             </div>
-            <div className="flex mt-12">
+            <div className="flex mt-12 pl-1">
               <Button
                   text="Quick Start"
                   onClick={openDropUpload}
@@ -206,7 +206,7 @@ export const SectionTop = React.memo(() => {
                 )
             ) : (
                 <span style={{pointerEvents: 'none'}}
-                                    ref={waitUploadRef} id="waitUpload" className="text-black text-4xl">
+                                    ref={waitUploadRef} id="waitUpload" className="text-black text-4xl font-Roboto">
               Drag and Drop Your File here
             </span>
             )}

@@ -108,11 +108,9 @@ export const Bucket = React.memo(() => {
   const [confirmFilterText,setConfirmFilterText] = useState('')
   const [localFileList,setLocalFileList] = useState(null)
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
-  const [currentTipCid, setCurrentTipCid] = useState('');
-  const [currentTipLink, setCurrentTipLink] = useState('');
   useEffect(() => {
     ReactTooltip.rebuild();
-  });
+  },[localFileList]);
   useOnce(()=>{
     getLocalFileListByBucketId(bucketId).then(res=>{
       setLocalFileList(res)
@@ -277,7 +275,7 @@ export const Bucket = React.memo(() => {
       cancelUp.cancel("stop");
       setCancelUp(null)
     }
-    
+
     setUpState({progress: 0,status: 'stop'})
   }
   return (
@@ -316,13 +314,13 @@ export const Bucket = React.memo(() => {
                   className={classnames('flex items-center pt-4 pb-8',v.isNew?'text-gray-300':'')}
                 >
                   <div className="flex-initial w-[25%] pl-3">
-                      <div className="flex items-center pr-8">
-                        <span className="truncate" data-tip={v.name.length>20?v.name:''}>{v.name}</span>
-                        {
-                          v.fileType === 1 &&
-                          <Icon className="ml-2 min-w-[14px]" icon={FiFolder} />
-                        }
-                      </div>
+                    <div className="flex items-center pr-8">
+                      <span className="truncate" data-tip={v.name.length>20?v.name:''}>{v.name}</span>
+                      {
+                        v.fileType === 1 &&
+                        <Icon className="ml-2 min-w-[14px]" icon={FiFolder} />
+                      }
+                    </div>
 
                   </div>
                   <div className="flex-initial w-[20%]">
@@ -364,23 +362,38 @@ export const Bucket = React.memo(() => {
           </div>
         </Modal>
       }
-      <ReactTooltip id="cidColumn" effect="solid"  isCapture={true} delayHide={250} clickable={true} afterShow={(e)=>setCurrentTipCid(e.target.dataset.tip)}>
-        <div className="flex items-center">
-          <span className="inline-block w-[13rem] break-words">
-            {currentTipCid}
-            <Icon className="ml-2 cursor-pointer inline-block" onClick={()=>{copy(currentTipCid);alert('copy success')}} icon={FiCopy} />
-          </span>
-        </div>
-      </ReactTooltip>
-      <ReactTooltip id="linkColumn" effect="solid" isCapture={true} delayHide={250} clickable={true} afterShow={(e)=>setCurrentTipLink(e.target.dataset.tip)}>
-        <div className="flex items-center">
-          <span className="inline-block w-[15rem] break-words">
-            {currentTipLink}
-            <Icon className="ml-2 cursor-pointer inline-block" onClick={()=>{copy(currentTipLink);alert('copy success')}} icon={FiCopy} />
-          </span>
-        </div>
-      </ReactTooltip>
-
+      <ReactTooltip
+        id="cidColumn"
+        effect="solid"
+        isCapture={true}
+        delayHide={250}
+        clickable={true}
+        getContent={(cid) => {
+          return (
+            <div className="flex items-center">
+              <div className="inline-block w-[13rem] break-words">
+                {cid}
+                <Icon className="ml-2 cursor-pointer inline-block" onClick={()=>{copy(cid);alert('copy success')}} icon={FiCopy} />
+              </div>
+            </div>
+          );
+        }} />
+      <ReactTooltip
+        id="linkColumn"
+        effect="solid"
+        isCapture={true}
+        delayHide={250}
+        clickable={true}
+        getContent={(link) => {
+          return (
+            <div className="flex items-center">
+              <div className="inline-block w-[15rem] break-words">
+                {link}
+                <Icon className="ml-2 cursor-pointer inline-block" onClick={()=>{copy(link);alert('copy success')}} icon={FiCopy} />
+              </div>
+            </div>
+          );
+        }} />
     </MainLayout>
   );
 });

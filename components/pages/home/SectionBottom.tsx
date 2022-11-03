@@ -2,7 +2,7 @@ import React from "react";
 import HomeImg1Svg from "../../../public/images/home_img1.svg";
 export const SectionBottom = React.memo(() => {
     return (
-        <div className="w-full py-6 px-12 pb-20 flex justify-center items-center text-lg mt-3 text-slate-700 text-lg bg-[#F5F5F5]">
+        <div className="w-full py-6 px-12 pb-20 flex justify-center text-lg mt-3 text-slate-700 text-lg bg-[#F5F5F5]">
             <div className="w-[32.25rem]">
                 <h3 className="text-black text-4xl my-14 font-medium">W3Bucket NFT</h3>
                 <p>
@@ -20,13 +20,13 @@ export const SectionBottom = React.memo(() => {
                     All you need for achieving truly decentralized storage in various scenarios is here: GitHub Pin Flow, IPFS retrieval solutions, and W3Editor.
                 </p>
             </div>
-            <div className="w-[32.25rem] ml-32 mt-32">
+            <div className="block h-full w-[32.25rem] ml-32 mt-36">
                 <HomeImg1Svg />
-                <h4 className="text-xl my-5 pt-2 mt-20 text-black font-medium">IPFS Remote Pin</h4>
+                <h4 className="text-xl my-5 pt-[2.85rem] mt-20 text-black font-medium">IPFS Remote Pin</h4>
                 <p className="w-[28.8rem]">
                     Called by Standard IPFS Remote Pinning Service API that makes your files always available (alive!) on IPFS.
                 </p>
-                <h4 className="text-xl mb-5 pt-24 text-black font-medium">Verifiable on IPFS</h4>
+                <h4 className="text-xl mb-5 mt-[5.75rem] text-black font-medium">Verifiable on IPFS</h4>
                 <p className="w-[30rem]">
                     Are your contents really decentralized stored and accessible across the world? Try this simple site IPFS Scan to verify.
                 </p>

@@ -9,7 +9,7 @@ export const SectionMid = React.memo(() => {
         {x:20,y:22}
     ])
     const onMonitorMapChange = ()=>{
-        let maxPos = 30
+        let maxPos = 120
         let arr = []
         for(let i = 0; i<=maxPos; i++){
             arr.push(

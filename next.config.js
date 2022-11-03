@@ -7,9 +7,6 @@ module.exports = {
       loader: '@next/font/google', options: { subsets: ['normal','medium', 'semibod', 'bold'] }
     }]
   },
-  env: {
-    NEXT_FONT_GOOGLE_MOCKED_RESPONSES: false
-  },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/,

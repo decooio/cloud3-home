@@ -29,7 +29,7 @@ function LinePointGroup() {
   const data_fly = useMemo(() => {
     const datas: [V3, V3, V3[]][] = [];
     const v3 = new THREE.Vector3();
-    for (let i = 0; i < 400; i++) {
+    for (let i = 0; i < 300; i++) {
       v3.x = i % 2 === 0 ? -1 : 1 ;
       v3.y = (Math.random() * 2 - 1) * 0.5;
       v3.z = (Math.random() * 2 - 1) * 0.3;

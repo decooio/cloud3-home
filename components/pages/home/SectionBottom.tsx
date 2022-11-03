@@ -22,11 +22,11 @@ export const SectionBottom = React.memo(() => {
             </div>
             <div className="w-[32.25rem] ml-32 mt-32">
                 <HomeImg1Svg />
-                <h4 className="text-xl my-5 mt-24 text-black font-medium">IPFS Remote Pin</h4>
+                <h4 className="text-xl my-5 pt-2 mt-20 text-black font-medium">IPFS Remote Pin</h4>
                 <p className="w-[28.8rem]">
                     Called by Standard IPFS Remote Pinning Service API that makes your files always available (alive!) on IPFS.
                 </p>
-                <h4 className="text-xl my-5 mt-20 text-black font-medium">Verifiable on IPFS</h4>
+                <h4 className="text-xl mb-5 pt-24 text-black font-medium">Verifiable on IPFS</h4>
                 <p className="w-[30rem]">
                     Are your contents really decentralized stored and accessible across the world? Try this simple site IPFS Scan to verify.
                 </p>

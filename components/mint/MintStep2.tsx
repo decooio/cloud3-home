@@ -71,15 +71,15 @@ function SetStyle(p: { onContinue: () => void }) {
   return (
     <div className="px-20 flex-1 flex flex-col justify-center">
       <div className="flex">
-        <div className=" mr-10">Background Color</div>
-        <div className=" flex items-center">
+        <div className=" whitespace-nowrap mr-10 mt-3">Background Color</div>
+        <div className=" flex flex-wrap items-center">
           {colors.map((key) => (
             <div
               key={`mint_colors_${key}`}
               style={{ backgroundColor: MintColors[key][0] }}
               onClick={() => updateMint({ color: key as any })}
               className={classNames(
-                "rounded-xl w-5 h-5 overflow-hidden cursor-pointer mr-[1.875rem]",
+                "rounded-xl w-5 h-5 overflow-hidden cursor-pointer mr-[1.875rem] my-4",
                 {
                   "border-solid border-orange-15 border":
                     mintData.color === key,

@@ -61,7 +61,7 @@ export const MintStep1 = React.memo((p: MintStep1Props) => {
                 updateMint({ editionId: item.id, price: item.prices[0] });
               }}
             />
-            <span className=" text-sm mt-2 font-light">{`${fmtPrices(
+            <span className=" whitespace-nowrap text-sm mt-2 font-light">{`${fmtPrices(
               item.prices
             )}`}</span>
           </div>

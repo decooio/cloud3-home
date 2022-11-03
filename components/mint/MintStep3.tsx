@@ -178,7 +178,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
                     updateMint({ price: price });
                   }}
                 />
-                <span className=" text-sm mt-2 font-light">{`${price.fmtPrice} ${price.symbol} payable in 15 min`}</span>
+                <span className=" text-sm mt-2 font-light whitespace-nowrap">{`${price.fmtPrice} ${price.symbol} payable in 15 min`}</span>
               </div>
             ))}
           </div>

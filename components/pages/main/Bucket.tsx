@@ -158,6 +158,7 @@ export const Bucket = React.memo(() => {
   },[localFileList])
 
   useMemo(()=>{
+    if(!files || !files.length) return false
     if(localFileList){
       localFileList.map(v=>{
         for(let i=0; i<files.length; i++){

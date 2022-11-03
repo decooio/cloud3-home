@@ -53,10 +53,10 @@ export function Pagination(p: Props & HTMLAttributes<HTMLDivElement>) {
     onChange && pgNum>1 && onChange(_.toNumber(pgNum-1))
   }
   return (
-    <div className={classnames('flex justify-center text-gray-400 text-sm mt-10',className)}>
+    <div className={classnames('flex justify-center text-gray-400 text-sm mt-5',className)}>
       <div className="flex">
         {
-          count>3 &&
+          count>1 &&
           <span onClick={doPrev} className="mr-8 cursor-pointer">&lt;</span>
         }
         {items.map((page, i) => (
@@ -73,7 +73,7 @@ export function Pagination(p: Props & HTMLAttributes<HTMLDivElement>) {
           </div>
         ))}
         {
-          count>3 &&
+          count>1 &&
           <span onClick={doNext} className="cursor-pointer">&gt;</span>
         }
       </div>

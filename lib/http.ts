@@ -9,6 +9,13 @@ export function genUrl(path: `/${string}`) {
   return `${base}${path}`;
 }
 
+export function pinUrl(path: `/${string}`){
+  let base = "https://pin.cloud3.cc";
+  if (IS_DEV) base = "https://beta-pin.cloud3.cc";
+  if (IS_TEST) base = "https://test-pin.cloud3.cc";
+  return `${base}${path}`;
+}
+
 export interface Res<T> {
   code: number;
   message: string;

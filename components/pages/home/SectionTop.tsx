@@ -99,7 +99,7 @@ export const SectionTop = React.memo(() => {
     }
   };
   const onUploadChange = async (file) => {
-    await upload(file.target.files[0]);
+    await doUpload(file.target.files[0]);
   };
   const onOpenUpload = async () => {
     if (!uploadFileInfo) {
@@ -129,7 +129,7 @@ export const SectionTop = React.memo(() => {
         <div className="z-1 h-[100vh] relative w-full py-6 px-12 flex flex-col items-center">
           <div className="h-14 w-full flex justify-between items-center font-WorkSans">
             <div className="font-SquadaOne text-4xl">Cloud3.cc</div>
-            <Button text="Documentations" className="border-white text-white" />
+            <Button text="Documentations" onClick={()=>openExtUrl('https://docs.cloud3.cc/')} className="border-white text-white" />
           </div>
           <div className="my-10 w-10/12 flex flex-col justify-center mt-[23vh]">
             <div className="text-5xl leading-tight">

@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark as style } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { pinUrl } from "@lib/http";
 
 const code = `
 **Upload** file with the standard [IPFS API](https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add) and get the CID:
@@ -14,7 +15,7 @@ curl -X POST 'https://<GATEWAY_HOST>/api/v0/add?pin=true' --header 'Authorizatio
 **Pin** the CID with the standard [IPFS Pinning Service API](https://ipfs.github.io/pinning-services-api-spec/#operation/addPin):
 
 ~~~bash
-curl -X POST 'https://pin.cloud3.cc' \
+curl -X POST '${pinUrl('/psa/pins')}' \
 --header 'Authorization: Bearer <YOUR_W3AUTH_TOKEN>' \
 --data-raw '{
     "cid": "<FILE_CID>",

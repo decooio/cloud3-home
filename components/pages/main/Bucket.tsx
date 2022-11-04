@@ -24,6 +24,7 @@ import ReactTooltip from 'react-tooltip';
 import classnames from "classnames";
 import copy from 'copy-to-clipboard';
 import {useOnce} from "@react-spring/shared";
+import { pinUrl } from "@lib/http";
 
 
 const TopInfo = () => {
@@ -247,7 +248,7 @@ export const Bucket = React.memo(() => {
             cancelToken: cancel.token,
             headers: { Authorization: `Bearer ${auth}` },
             method: 'POST',
-            url: `https://beta-pin.cloud3.cc/psa/pins`
+            url: pinUrl('/psa/pins')
           });
           setUpState({ progress: 100, status: 'success'});
           setLocalFileList(localFileList.concat([{name,cid,fileSize,fileType,createTime: moment().format('X').valueOf(),isNew: true}]))

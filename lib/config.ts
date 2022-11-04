@@ -21,20 +21,5 @@ export const GatewayList: AuthIpfsEndpoint[] = [
     location: "Seattle, US",
     name: "Thunder Gateway",
     value: "https://gw-seattle.cloud3.cc",
-  },
-  // {
-  //   location: "Shanghai, China",
-  //   name: "️⚡ Thunder Gateway",
-  //   value: "https://gw.crustapps.net",
-  // },
-  // {
-  //   location: "Singapore",
-  //   name: "DCF",
-  //   value: "https://crustipfs.xyz",
-  // },
-  // {
-  //   location: "United States",
-  //   name: "Crust Network",
-  //   value: "https://ipfs-gw.decloud.foundation",
-  // },
+  }
 ];

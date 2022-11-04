@@ -121,7 +121,7 @@ export const Bucket = React.memo(() => {
     })
   })
   // const { chain } = useNetwork();
-  const [getAuth] = useGetAuth('for_upload')
+  const [getAuth] = useGetAuth('for_upload',false,1)
   const {current} = useGateway()
   const { value: files } = useAsync(async () => {
     const pathRes = await axios.request({

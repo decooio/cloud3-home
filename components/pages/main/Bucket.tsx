@@ -106,16 +106,17 @@ export const Bucket = React.memo(() => {
   const [pgNum,setPgNum] = useState(1);
   const [filterText,setFilterText] = useState('')
   const [confirmFilterText,setConfirmFilterText] = useState('')
-  const [localFileList,setLocalFileList] = useState(null)
+  const [localFileList,setLocalFileList] = useState<any>([])
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
   useEffect(() => {
     ReactTooltip.rebuild();
   },[localFileList]);
+
   useOnce(()=>{
     getLocalFileListByBucketId(bucketId).then(res=>{
       setLocalFileList(res)
     }).catch(()=>{
-      setLocalFileList(null)
+      setLocalFileList([])
     })
   })
   // const { chain } = useNetwork();
@@ -154,25 +155,28 @@ export const Bucket = React.memo(() => {
 
 
   useMemo(()=>{
-    setLocalFileListByBucketId(bucketId,localFileList)
+    if(localFileList && localFileList.length>0){
+      setLocalFileListByBucketId(bucketId,localFileList)
+    }
   },[localFileList])
 
   useMemo(()=>{
-    if(!files || !files.length) return false
-    if(localFileList){
-      localFileList.map(v=>{
-        for(let i=0; i<files.length; i++){
-          if(v.isNew && files[i].cid === v.cid){
-            delete v.isNew
-            break
+    if(files && files.length){
+      if(localFileList){
+        localFileList.map(v=>{
+          for(let i=0; i<files.length; i++){
+            if(v.isNew && files[i].cid === v.cid){
+              delete v.isNew
+              break
+            }
           }
-        }
-      })
-      const arr = files.concat(localFileList)
-      const res = new Map();
-      setLocalFileList(arr.filter((item) => !res.has(item.cid) && res.set(item.cid, 1)))
-    }else {
-      setLocalFileList(files)
+        })
+        const arr = files.concat(localFileList)
+        const res = new Map();
+        setLocalFileList(arr.filter((item) => !res.has(item.cid) && res.set(item.cid, 1)))
+      }else {
+        setLocalFileList(files)
+      }
     }
   },[files])
 

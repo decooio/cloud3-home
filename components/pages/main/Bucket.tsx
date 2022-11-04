@@ -331,7 +331,7 @@ export const Bucket = React.memo(() => {
                   <div className="flex-initial w-[20%]">
                     <span data-tip={v.cid} data-for="cidColumn">{shortStr(v.cid,10,10)}</span>
                   </div>
-                  <div className="flex-initial w-[30%] truncate pr-8" data-for="linkColumn" data-tip={`${current.value}\n/ipfs/${v.cid}`}>{`${current.value}/ipfs/${v.cid}`}</div>
+                  <div className="flex-initial w-[30%] truncate pr-8" data-for="linkColumn" data-tip={`${current.value}/ipfs/${v.cid}`}>{`${current.value}/ipfs/${v.cid}`}</div>
                   <div className="flex-initial w-[10%]">{formatFileSize(v.fileSize)}</div>
                   <div className="flex-initial w-[15%] text-gray-6">{v.isNew?<span data-tip={`The ${v.fileType === 0?'file':'folder'} has been successfully uploaded to your bucket. It takes several minutes to finalize the decentralized storage and IPNS update processes.`}><Icon icon={BsQuestionCircle} /></span>:moment(v.createTime*1000).format('YYYY-MM-DD HH:mm:ss')}</div>
                 </div>

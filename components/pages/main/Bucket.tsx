@@ -133,7 +133,7 @@ export const Bucket = React.memo(() => {
     const filesRes = await axios.request({
       url: `${current.value}${pathRes.data.Path}`
     })
-    return []
+    return filesRes.data
   }, [ipnsId]);
 
 

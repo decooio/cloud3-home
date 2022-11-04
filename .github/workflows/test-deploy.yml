@@ -1,11 +1,11 @@
-name: Beta Deploy
+name: Test Deploy
 
 on:
   push:
     branches: [ test ]
 
 jobs:
-  beta-deploy:
+  test-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

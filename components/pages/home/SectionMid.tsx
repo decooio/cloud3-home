@@ -1,19 +1,23 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {MonitorMap} from "@components/common/MonitorMap";
 import UniswapSvg from '../../../public/images/uniswp.svg'
 import ArrowSvg from '../../../public/images/arrow.svg'
+import {randomNum} from "@lib/utils";
 export const SectionMid = React.memo(() => {
-    const [activePos,setActivePos] = useState([
-        {x:20,y:20},
-        {x:20,y:21},
-        {x:20,y:22}
-    ])
+    const [activePos,setActivePos] = useState([])
+    useEffect(()=>{
+        onMonitorMapChange()
+    },[])
     const onMonitorMapChange = ()=>{
-        let maxPos = 120
         let arr = []
-        for(let i = 0; i<=maxPos; i++){
+        for(let i = 0; i<=230; i++){
             arr.push(
-                {x:Math.ceil(Math.random()*120),y:Math.ceil(Math.random()*60)},
+                {x:Math.ceil(Math.random()*120),y:randomNum(0,30)},
+            )
+        }
+        for(let i = 0; i<=80; i++){
+            arr.push(
+              {x:Math.ceil(Math.random()*120),y:randomNum(31,60)},
             )
         }
         setActivePos(arr)

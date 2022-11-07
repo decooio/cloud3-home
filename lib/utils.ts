@@ -1,11 +1,11 @@
-import { GatewayList, W3Bucket_Adress } from "@lib/config";
+import {GatewayList, W3Bucket_Adress} from "@lib/config";
 import BN from "bn.js";
-import classNames, { Argument } from "classnames";
+import classNames, {Argument} from "classnames";
 import isMobile from "ismobilejs";
 import _ from "lodash";
-import { utc } from "moment";
+import {utc} from "moment";
 import numbro from "numbro";
-import { IS_DEV, IS_LOCAL, IS_TEST } from "./env";
+import {IS_DEV, IS_LOCAL, IS_TEST} from "./env";
 
 export const IS_MOBILE = isMobile(window.navigator).phone;
 
@@ -155,4 +155,10 @@ export function ipfsUrl(cid: string) {
 }
 export function ipnsUrl(ipns: string) {
   return `${GatewayList[0].value}/ipns/${ipns}`;
+}
+export function randomNum(Min, Max) {
+  let Range = Max - Min;
+  let Rand = Math.random();
+   //舍去
+  return Min + Math.floor(Rand * Range);
 }

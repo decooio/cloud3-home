@@ -1,12 +1,14 @@
-import {memo} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {BaseProps} from '../../lib/type'
 import classnames from "classnames";
 import _ from "lodash";
 interface IProps extends BaseProps{
     activePos?: any
+    onChange?: Function
 }
 function MonitorMap_(p:IProps){
-    const {className,activePos} = p
+    const {className,activePos,onChange} = p
+    const [redDoc,setRedDoc] = useState([])
     const basePos = [
         [[42,49]],
         [[41,50]],
@@ -72,6 +74,32 @@ function MonitorMap_(p:IProps){
         [[34,37]],
         [[35,36]],
     ]
+    useMemo(()=>{
+        if(activePos.length>0){
+            const arr = []
+            activePos.map(v=>{
+                for(let i = 0; i<basePos.length; i++){
+                    let yGroup = basePos[i]
+                    let isStop = false
+                    for(let j=0; j<yGroup.length; j++){
+                        let item = yGroup[j]
+                        if(v.x>=item[0] && v.x<=item[1] && v.y === i){
+                            arr.push(item)
+                            isStop = true
+                            break
+                        }
+                    }
+                    if(isStop) break
+                }
+            })
+            setRedDoc(arr)
+        }
+    },[activePos])
+    useMemo(()=>{
+        if(redDoc.length>0){
+            onChange && onChange(redDoc)
+        }
+    },[redDoc])
     const pos2arr = (arr)=>{
         const start  = arr[0]
         const end  = arr[1]
@@ -85,7 +113,7 @@ function MonitorMap_(p:IProps){
         const item = _.find(activePos,(item)=>{
             return item.x === x && item.y === y
         })
-        return !!item?'red':'#666'
+        return  !!item?'red':'#666'
     }
     return(
         <svg width={954} height={450} className={classnames(className)}>

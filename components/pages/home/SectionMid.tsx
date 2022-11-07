@@ -5,6 +5,7 @@ import ArrowSvg from '../../../public/images/arrow.svg'
 import {randomNum} from "@lib/utils";
 export const SectionMid = React.memo(() => {
     const [activePos,setActivePos] = useState([])
+    const [realActiveNum,setRealActiveNum] = useState(0)
     useEffect(()=>{
         onMonitorMapChange()
     },[])
@@ -25,7 +26,7 @@ export const SectionMid = React.memo(() => {
     return(
         <div className="w-full py-6 px-12 flex flex-col items-center">
             <div className="my-10 flex justify-center mt-20">
-                <MonitorMap activePos={activePos} className="mt-10" />
+                <MonitorMap activePos={activePos} onChange={(arr)=>{setRealActiveNum(arr.length)}} className="mt-10" />
                 <div className="flex flex-col items-center w-96 ml-10">
                     <div className="w-full flex justify-between items-center">
                         <ArrowSvg className="cursor-pointer" onClick={onMonitorMapChange} />
@@ -37,7 +38,7 @@ export const SectionMid = React.memo(() => {
                   </span>
                     <div className="text-slate-700 text-lg mt-3">
                         <p className="mt-5">
-                            <span className="text-orange-500 text-lg text-2xl">124</span> IPFS Replicas all around the globe
+                            <span className="text-orange-500 text-lg text-2xl">{realActiveNum}</span> IPFS Replicas all around the globe
                         </p>
                         <p className="mt-5">
                             <span className="text-orange-500 text-lg text-2xl">99+</span> Years guaranteed with <span className="text-orange-500 text-lg text-2xl">1.5ETH</span> in payment contract

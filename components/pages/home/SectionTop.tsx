@@ -5,11 +5,12 @@ import { IS_LOCAL } from "@lib/env";
 import { getClientHeight, openExtUrl } from "@lib/utils";
 import axios, {CancelTokenSource} from "axios";
 import classNames from "classnames";
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
 import CloseBtnSvg from "../../../public/images/close_btn.svg";
 import {upload} from "@lib/files";
+import {useOnce} from "@react-spring/shared";
 
 export interface UploadRes {
   Hash: string;
@@ -26,6 +27,11 @@ export const SectionTop = React.memo(() => {
   const waitUploadRef = useRef(null);
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
   const { address: account } = useAccount();
+  useOnce(()=>{
+    setTimeout(()=>{
+      window.scroll(0, 0);
+    },0)
+  })
   const openDropUpload = () => {
     setVisibleDropUpload(true);
     setTimeout(() => {
@@ -93,13 +99,21 @@ export const SectionTop = React.memo(() => {
       let upRes: UploadRes;
       upRes = upResult;
       setUpState({ progress: 100, status: 'success' });
+      inputFileRef.current.value = '';
       setUploadFileInfo(upRes);
     } catch (e) {
       console.error(e);
     }
   };
-  const onUploadChange = async (file) => {
-    await doUpload(file.target.files[0]);
+  const onUploadChange = async (e) => {
+    const file = e.target.files[0]
+    // const [file] = e.dataTransfer.files;
+    const fileSize = file.size / (1024 * 1024);
+    if (fileSize > 100) {
+      alert('文件请不要超过100MB')
+      return;
+    }
+    await doUpload(file);
   };
   const onOpenUpload = async () => {
     if (!uploadFileInfo) {

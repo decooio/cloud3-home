@@ -7,12 +7,11 @@ import {randomNum} from "@lib/utils";
 import classnames from "classnames";
 
 const getRedDoc = ()=>{
-    console.log(1)
     let arr = []
     // 美国
     for(let i = 0; i<=50; i++){
         arr.push(
-          {x:randomNum(30,50),y:randomNum(15,22)},
+          {x:randomNum(30,50),y:randomNum(15,26)},
         )
     }
     for(let i = 0; i<=8; i++){

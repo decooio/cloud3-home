@@ -30,7 +30,7 @@ export const SectionTop = React.memo(() => {
   useOnce(()=>{
     setTimeout(()=>{
       window.scroll(0, 0);
-    },0)
+    },50)
   })
   const openDropUpload = () => {
     setVisibleDropUpload(true);

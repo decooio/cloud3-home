@@ -109,11 +109,14 @@ export const Bucket = React.memo(() => {
   const [confirmFilterText,setConfirmFilterText] = useState('')
   const [localFileList,setLocalFileList] = useState<any>([])
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
+  const [getAuth,auth] = useGetAuth('for_upload',false,1)
+
   useEffect(() => {
     ReactTooltip.rebuild();
   },[localFileList]);
 
   useOnce(()=>{
+    if(!auth) getAuth(tokenId)
     getLocalFileListByBucketId(bucketId).then(res=>{
       setLocalFileList(res)
     }).catch(()=>{
@@ -121,7 +124,6 @@ export const Bucket = React.memo(() => {
     })
   })
   // const { chain } = useNetwork();
-  const [getAuth,auth] = useGetAuth('for_upload',false,1)
   const {current} = useGateway()
   const { value: files } = useAsync(async () => {
     const pathRes = await axios.request({
@@ -143,7 +145,7 @@ export const Bucket = React.memo(() => {
       method: 'GET',
       url: genUrl(`/auth/bucket/${ipnsId}`)
     });
-    return res.data
+    return res.data.data
   }, [ipnsId]);
 
 
@@ -191,7 +193,7 @@ export const Bucket = React.memo(() => {
   },[files])
 
   const onUploadChange = (file)=>{
-    const {maxStorageSize,usedStorageSize} = detail
+
     const upFile = file.target.files
     let fileSize = 0
     if(!upFile.length) return false
@@ -204,8 +206,13 @@ export const Bucket = React.memo(() => {
         break
       }
     }
-    if(fileSize>(maxStorageSize-usedStorageSize)){
-      alert('No enough space for this file/folder!')
+    if(detail){
+      const {maxStorageSize,usedStorageSize} = detail
+      alert(maxStorageSize-usedStorageSize)
+      if(fileSize>(maxStorageSize-usedStorageSize)){
+        alert('No enough space for this file/folder!')
+        return false
+      }
     }
     if(!canUp) return false
     getAuth(tokenId)

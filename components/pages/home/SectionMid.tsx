@@ -121,7 +121,7 @@ export const SectionMid = React.memo(() => {
                           i === selectedMonitorProjectIndex &&
                           <div key={`monitorProject${i}`} className={classnames("flex justify-center")}>
                               <MonitorMap activePos={v.activePos} className="mt-10" />
-                              <div className="flex flex-col items-center w-[20rem] ml-10">
+                              <div className="flex flex-col items-center w-[20.6rem] ml-10">
                                   <div className="h-10 w-full flex justify-between items-center">
                                       <ArrowSvg className="cursor-pointer" onClick={onMonitorMapChangePrev} />
                                       {v.logo}
@@ -138,10 +138,10 @@ export const SectionMid = React.memo(() => {
                                           <span className="text-orange-500 text-lg text-2xl">99+</span> Years guaranteed with <span className="text-orange-500 text-lg text-2xl">1.5ETH</span> in payment contract
                                       </p>
                                       <p className="mt-5">
-                                          Guranteed by decentralized incentive protocol on IPFS
+                                          Guranteed <a className="text-slate-700 underline" href="https://crustfiles.io/" target="_blank">by decentralized incentive protocol</a> on IPFS
                                       </p>
                                       <p className="mt-5">
-                                          Verifiable on IPFS Scan
+                                          Verifiable on <a className="text-slate-700 underline" href="" target="_blank">IPFS Scan</a>
                                       </p>
                                   </div>
                               </div>

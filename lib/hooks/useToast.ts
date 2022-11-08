@@ -8,12 +8,14 @@ export interface UseToast {
 export function useToast(): UseToast {
   const { update } = useStore();
   const error = (msg: any, disableTheme?: boolean) => {
-    update({
-      toasts: [{ type: "error", msg: getErrorMsg(msg), disableTheme }],
-    });
+    update(({ toasts }) => ({
+      toasts: [{ type: "error", msg }].concat(toasts || []),
+    }));
   };
   const success = (msg: string, disableTheme?: boolean) => {
-    update({ toasts: [{ type: "success", msg, disableTheme }] });
+    update(({ toasts }) => ({
+      toasts: [{ type: "success", msg }].concat(toasts || []),
+    }));
   };
   return { error, success };
 }

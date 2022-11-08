@@ -214,16 +214,14 @@ export const SectionTop = React.memo(() => {
                           <div className="mr-5 w-1/2 underline" onClick={()=>openExtUrl(`https://docs.cloud3.cc`)}>
                             Learn more about Cloud3's storage solution
                           </div>
-                          {!account && (
-                              <div
-                                  onClick={() =>
-                                      openExtUrl("http://test.cloud3.cc/#/buckets")
-                                  }
-                                  className="underline"
-                              >
-                                Claim your W3Bucket NFT on testnet
-                              </div>
-                          )}
+                          <div
+                            onClick={() =>
+                              openExtUrl("http://test.cloud3.cc/#/buckets")
+                            }
+                            className="underline"
+                          >
+                            Claim your W3Bucket NFT on testnet
+                          </div>
                         </div>
                       </div>
                     </div>

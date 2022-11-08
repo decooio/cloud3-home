@@ -208,7 +208,6 @@ export const Bucket = React.memo(() => {
     }
     if(detail){
       const {maxStorageSize,usedStorageSize} = detail
-      alert(maxStorageSize-usedStorageSize)
       if(fileSize>(maxStorageSize-usedStorageSize)){
         alert('No enough space for this file/folder!')
         return false

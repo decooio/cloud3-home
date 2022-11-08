@@ -58,23 +58,16 @@ const TopInfo = () => {
             <a
               className=" underline text-black-1 mr-5"
               target="_blank"
-              href="/general"
+              href="https://docs.cloud3.cc/w3bucket/aboutnft"
             >
-              General Dey Guidance
+              General Guidance on W3Bucket
             </a>
             <a
               className=" underline text-black-1 mr-5"
               target="_blank"
-              href="/general"
+              href="https://docs.cloud3.cc/w3bucket/uploadfile"
             >
-              Hosting Dapps
-            </a>
-            <a
-              className=" underline text-black-1 mr-5"
-              target="_blank"
-              href="/general"
-            >
-              NFT Metadata
+              Using APIs and W3Auth
             </a>
           </div>
         </div>

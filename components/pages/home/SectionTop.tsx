@@ -197,12 +197,12 @@ export const SectionTop = React.memo(() => {
                           You may want to:
                         </label>
                         <div className="flex flex-wrap mt-5">
-                          <div className="mr-5 w-1/2 mb-2 underline">
+                          <div className="mr-5 w-1/2 mb-2 underline" onClick={()=>openExtUrl(`https://crustwebsites.net/ipfs/${uploadFileInfo.Hash}`)}>
                             Get download link for this file
                           </div>
-                          <div className="underline">Verify on IPFS</div>
-                          <div className="mr-5 w-1/2 underline">
-                            View NFT Metadata
+                          <div className="underline" onClick={()=>openExtUrl(`https://ipfs-scan.io/?cid=${uploadFileInfo.Hash}`)}>Verify on IPFS</div>
+                          <div className="mr-5 w-1/2 underline" onClick={()=>openExtUrl(`https://docs.cloud3.cc`)}>
+                            Learn more about Cloud3's storage solution
                           </div>
                           {!account && (
                               <div

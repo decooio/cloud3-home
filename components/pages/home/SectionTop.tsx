@@ -58,13 +58,13 @@ export const SectionTop = React.memo(() => {
         if (drag.querySelector('#waitUpload')) {
           drag.style.borderColor = '#131521'
           if(e.dataTransfer.files.length>1 || !/\.[a-zA-Z]+$/.test(e.dataTransfer.files[0].name)){
-            alert('不支持文件夹')
+            alert('Folders are not supported!')
             return false
           }
           const [file] = e.dataTransfer.files;
           const fileSize = file.size / (1024 * 1024);
           if (fileSize > 100) {
-            alert('文件请不要超过100MB')
+            alert('Please select a file less than 100MB.')
             return;
           }
           await doUpload(file);
@@ -110,7 +110,7 @@ export const SectionTop = React.memo(() => {
     // const [file] = e.dataTransfer.files;
     const fileSize = file.size / (1024 * 1024);
     if (fileSize > 100) {
-      alert('文件请不要超过100MB')
+      alert('Please select a file less than 100MB.')
       return;
     }
     await doUpload(file);
@@ -145,7 +145,7 @@ export const SectionTop = React.memo(() => {
             <div className="font-SquadaOne text-4xl">Cloud3.cc</div>
             <Button text="Documentations" onClick={()=>openExtUrl('https://docs.cloud3.cc/')} className="border-white text-white" />
           </div>
-          <div className="my-10 w-10/12 flex flex-col justify-center mt-[23vh]">
+          <div className="h-full my-10 w-10/12 flex flex-col justify-center mt-[-1rem]">
             <div className="text-5xl leading-tight">
               <p>Store in IPFS W3Bucket,</p>
               <p>Decentralized, Guaranteed & Alive.</p>

@@ -121,7 +121,7 @@ export const SectionMid = React.memo(() => {
                           i === selectedMonitorProjectIndex &&
                           <div key={`monitorProject${i}`} className={classnames("flex justify-center")}>
                               <MonitorMap activePos={v.activePos} className="mt-10" />
-                              <div className="flex flex-col items-center w-96 ml-10">
+                              <div className="flex flex-col items-center w-[20rem] ml-10">
                                   <div className="h-10 w-full flex justify-between items-center">
                                       <ArrowSvg className="cursor-pointer" onClick={onMonitorMapChangePrev} />
                                       {v.logo}

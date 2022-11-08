@@ -24,7 +24,7 @@ import ReactTooltip from 'react-tooltip';
 import classnames from "classnames";
 import copy from 'copy-to-clipboard';
 import {useOnce} from "@react-spring/shared";
-import { pinUrl } from "@lib/http";
+import {genUrl, pinUrl} from "@lib/http";
 
 
 const TopInfo = () => {
@@ -121,7 +121,7 @@ export const Bucket = React.memo(() => {
     })
   })
   // const { chain } = useNetwork();
-  const [getAuth] = useGetAuth('for_upload',false,1)
+  const [getAuth,auth] = useGetAuth('for_upload',false,1)
   const {current} = useGateway()
   const { value: files } = useAsync(async () => {
     const pathRes = await axios.request({
@@ -135,6 +135,15 @@ export const Bucket = React.memo(() => {
       url: `${current.value}${pathRes.data.Path}`
     })
     return filesRes.data
+  }, [ipnsId]);
+
+  const { value: detail } = useAsync(async () => {
+    const res = await axios.request({
+      headers: { Authorization: `Bearer ${auth}` },
+      method: 'GET',
+      url: genUrl(`/auth/bucket/${ipnsId}`)
+    });
+    return res.data
   }, [ipnsId]);
 
 
@@ -182,21 +191,26 @@ export const Bucket = React.memo(() => {
   },[files])
 
   const onUploadChange = (file)=>{
+    const {maxStorageSize,usedStorageSize} = detail
     const upFile = file.target.files
+    let fileSize = 0
     if(!upFile.length) return false
     let canUp = true
     for(let i = 0; i<upFile.length; i++){
-      if(upFile[i].name.length>=64){
-        alert('文件名太长')
+      fileSize += upFile[i].size
+      if(upFile[i].name.length>64){
+        alert('The file name cannot exceed 64 characters.')
         canUp = false
         break
       }
+    }
+    if(fileSize>(maxStorageSize-usedStorageSize)){
+      alert('No enough space for this file/folder!')
     }
     if(!canUp) return false
     getAuth(tokenId)
       .then(async (auth) => {
         try {
-          let fileSize = 0
           let fileType = 0
           const cancel = axios.CancelToken.source();
           setCancelUp(cancel);
@@ -204,11 +218,9 @@ export const Bucket = React.memo(() => {
           const form = new FormData();
           if (upFile.length === 1) {
             form.append('file', upFile[0], upFile[0].name);
-            fileSize = upFile[0].size
             inputFileRef.current.value = '';
           } else if (upFile.length > 1) {
             for (const f of upFile) {
-              fileSize = f.size
               form.append('file', f, f._webkitRelativePath || f.webkitRelativePath);
             }
             fileType = 1

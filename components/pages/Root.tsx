@@ -8,6 +8,7 @@ import { Buckets } from "./main/Buckets";
 import { Mint } from "./main/Mint";
 import { Setting } from "./main/Setting";
 import ReactTooltip from "react-tooltip";
+import {Toasts} from "@components/common/Toast";
 function Root_() {
   const store = useInitStore();
   return (
@@ -42,6 +43,7 @@ function Root_() {
           </Routes>
         </HashRouter>
         <AppLoading/>
+        <Toasts />
       </div>
     </StoreProvider>
   );

@@ -11,6 +11,7 @@ import { useAccount } from "wagmi";
 import CloseBtnSvg from "../../../public/images/close_btn.svg";
 import {upload} from "@lib/files";
 import {useOnce} from "@react-spring/shared";
+import {useToast} from "@lib/hooks/useToast";
 
 export interface UploadRes {
   Hash: string;
@@ -27,6 +28,7 @@ export const SectionTop = React.memo(() => {
   const waitUploadRef = useRef(null);
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
   const { address: account } = useAccount();
+  const toast = useToast();
   useOnce(()=>{
     setTimeout(()=>{
       window.scroll(0, 0);
@@ -58,13 +60,17 @@ export const SectionTop = React.memo(() => {
         if (drag.querySelector('#waitUpload')) {
           drag.style.borderColor = '#131521'
           if(e.dataTransfer.files.length>1 || !/\.[a-zA-Z]+$/.test(e.dataTransfer.files[0].name)){
-            alert('Folders are not supported!')
+            toast.error('Folders are not supported!');
             return false
           }
           const [file] = e.dataTransfer.files;
+          if(!file){
+            toast.error('Please select a file.');
+            return false
+          }
           const fileSize = file.size / (1024 * 1024);
           if (fileSize > 100) {
-            alert('Please select a file less than 100MB.')
+            toast.error('Please select a file less than 100MB.');
             return;
           }
           await doUpload(file);
@@ -107,10 +113,14 @@ export const SectionTop = React.memo(() => {
   };
   const onUploadChange = async (e) => {
     const file = e.target.files[0]
+    if(!file){
+      toast.error('Please select a file.');
+      return false
+    }
     // const [file] = e.dataTransfer.files;
     const fileSize = file.size / (1024 * 1024);
     if (fileSize > 100) {
-      alert('Please select a file less than 100MB.')
+      toast.error('Please select a file less than 100MB.');
       return;
     }
     await doUpload(file);

@@ -162,3 +162,9 @@ export function randomNum(Min, Max) {
    //舍去
   return Min + Math.floor(Rand * Range);
 }
+
+export function getErrorMsg(error: any): string {
+  if (!error) return "Unkown Error";
+  if (typeof error === "string") return error as string;
+  return _.get(error, "message", "Unkown Error");
+}

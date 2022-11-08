@@ -25,6 +25,7 @@ import classnames from "classnames";
 import copy from 'copy-to-clipboard';
 import {useOnce} from "@react-spring/shared";
 import {genUrl, pinUrl} from "@lib/http";
+import {useToast} from "@lib/hooks/useToast";
 
 
 const TopInfo = () => {
@@ -101,6 +102,7 @@ export const Bucket = React.memo(() => {
   const [filterText,setFilterText] = useState('')
   const [confirmFilterText,setConfirmFilterText] = useState('')
   const [localFileList,setLocalFileList] = useState<any>([])
+  const toast = useToast()
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
   const [getAuth,auth] = useGetAuth('for_upload',false,1)
 
@@ -194,7 +196,7 @@ export const Bucket = React.memo(() => {
     for(let i = 0; i<upFile.length; i++){
       fileSize += upFile[i].size
       if(upFile[i].name.length>64){
-        alert('The file name cannot exceed 64 characters.')
+        toast.error('The file name cannot exceed 64 characters.')
         canUp = false
         break
       }
@@ -202,7 +204,7 @@ export const Bucket = React.memo(() => {
     if(detail){
       const {maxStorageSize,usedStorageSize} = detail
       if(fileSize>(maxStorageSize-usedStorageSize)){
-        alert('No enough space for this file/folder!')
+        toast.error('No enough space for this file/folder!')
         return false
       }
     }
@@ -390,7 +392,7 @@ export const Bucket = React.memo(() => {
             <div className="flex items-center">
               <div className="inline-block w-[13rem] break-words">
                 {cid}
-                <Icon className="ml-2 cursor-pointer inline-block" onClick={()=>{copy(cid);alert('copy success')}} icon={FiCopy} />
+                <Icon className="ml-2 cursor-pointer inline-block" onClick={()=>{copy(cid);toast.success('copy success')}} icon={FiCopy} />
               </div>
             </div>
           );
@@ -406,7 +408,7 @@ export const Bucket = React.memo(() => {
             <div className="flex items-center">
               <div className="inline-block w-[15rem] break-words">
                 {link}
-                <Icon className="ml-2 cursor-pointer inline-block" onClick={()=>{copy(link);alert('copy success')}} icon={FiCopy} />
+                <Icon className="ml-2 cursor-pointer inline-block" onClick={()=>{copy(link);toast.success('copy success')}} icon={FiCopy} />
               </div>
             </div>
           );

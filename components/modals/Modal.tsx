@@ -42,7 +42,7 @@ export const Modal = React.memo((p: ModalProps & HTMLAttributes<HTMLDivElement>)
       onClick={outClick}
       className={classNames(
         outClassname,
-        " absolute left-0 top-0 w-screen h-screen z-40 bg-opacity-50 bg-black flex justify-center items-center"
+        "fixed left-0 top-0 w-screen h-screen z-40 bg-opacity-50 bg-black flex justify-center items-center"
       )}
     >
       <div

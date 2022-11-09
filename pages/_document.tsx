@@ -24,7 +24,7 @@ export default class MyDocument extends Document {
                     `,
             }}
           /> */}
-          <script src="https://platform.twitter.com/widgets.js"/>
+          {/* <script src="https://platform.twitter.com/widgets.js"/> */}
           <link rel="icon" type="image/png" href="/fav.png" />
         </Head>
         <body>

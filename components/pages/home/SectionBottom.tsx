@@ -13,11 +13,11 @@ export const SectionBottom = React.memo(() => {
                 </p>
                 <h4 className="text-xl my-5 mt-16 font-medium text-black">Guaranteed Storage</h4>
                 <p>
-                    Guaranteed with permanent, multi-replica persistence for your files with IPFS Cloud3, powered by Crust Network - the native incentive layer of IPFS.
+                    Guaranteed with permanent, multi-replica persistence for your files with IPFS Cloud3, powered by <a className="text-slate-700 underline" href="https://crustfiles.io/" target="_blank">Crust Network</a> - the native incentive layer of IPFS.
                 </p>
                 <h4 className="text-xl my-5 mt-16 font-medium text-black">Toolkits & Support</h4>
                 <p>
-                    All you need for achieving truly decentralized storage in various scenarios is here: GitHub Pin Flow, IPFS retrieval solutions, and W3Editor.
+                    Cloud3 provides toolkits to serve Dapps and Web3 developert to better acheive truly decentralized storage experiences.
                 </p>
             </div>
             <div className="block h-full w-[32.25rem] ml-32 mt-36">
@@ -28,7 +28,7 @@ export const SectionBottom = React.memo(() => {
                 </p>
                 <h4 className="text-xl mb-5 mt-[4rem] text-black font-medium">Verifiable on IPFS</h4>
                 <p className="w-[30rem]">
-                    Are your contents really decentralized stored and accessible across the world? Try this simple site IPFS Scan to verify.
+                    Are your contents really decentralized stored and accessible across the world? Try this simple site <a className="text-slate-700 underline" href="https://ipfs-scan.io/" target="_blank">IPFS Scan</a>  to verify.
                 </p>
             </div>
         </div>

@@ -5,11 +5,13 @@ import { IS_LOCAL } from "@lib/env";
 import { getClientHeight, openExtUrl } from "@lib/utils";
 import axios, {CancelTokenSource} from "axios";
 import classNames from "classnames";
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
 import CloseBtnSvg from "../../../public/images/close_btn.svg";
 import {upload} from "@lib/files";
+import {useOnce} from "@react-spring/shared";
+import {useToast} from "@lib/hooks/useToast";
 
 export interface UploadRes {
   Hash: string;
@@ -26,6 +28,12 @@ export const SectionTop = React.memo(() => {
   const waitUploadRef = useRef(null);
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
   const { address: account } = useAccount();
+  const toast = useToast();
+  useOnce(()=>{
+    setTimeout(()=>{
+      window.scroll(0, 0);
+    },50)
+  })
   const openDropUpload = () => {
     setVisibleDropUpload(true);
     setTimeout(() => {
@@ -52,13 +60,17 @@ export const SectionTop = React.memo(() => {
         if (drag.querySelector('#waitUpload')) {
           drag.style.borderColor = '#131521'
           if(e.dataTransfer.files.length>1 || !/\.[a-zA-Z]+$/.test(e.dataTransfer.files[0].name)){
-            alert('不支持文件夹')
+            toast.error('Folders are not supported!');
             return false
           }
           const [file] = e.dataTransfer.files;
+          if(!file){
+            toast.error('Please select a file.');
+            return false
+          }
           const fileSize = file.size / (1024 * 1024);
           if (fileSize > 100) {
-            alert('文件请不要超过100MB')
+            toast.error('Please select a file less than 100MB.');
             return;
           }
           await doUpload(file);
@@ -93,13 +105,25 @@ export const SectionTop = React.memo(() => {
       let upRes: UploadRes;
       upRes = upResult;
       setUpState({ progress: 100, status: 'success' });
+      inputFileRef.current.value = '';
       setUploadFileInfo(upRes);
     } catch (e) {
       console.error(e);
     }
   };
-  const onUploadChange = async (file) => {
-    await doUpload(file.target.files[0]);
+  const onUploadChange = async (e) => {
+    const file = e.target.files[0]
+    if(!file){
+      toast.error('Please select a file.');
+      return false
+    }
+    // const [file] = e.dataTransfer.files;
+    const fileSize = file.size / (1024 * 1024);
+    if (fileSize > 100) {
+      toast.error('Please select a file less than 100MB.');
+      return;
+    }
+    await doUpload(file);
   };
   const onOpenUpload = async () => {
     if (!uploadFileInfo) {
@@ -131,7 +155,7 @@ export const SectionTop = React.memo(() => {
             <div className="font-SquadaOne text-4xl">Cloud3.cc</div>
             <Button text="Documentations" onClick={()=>openExtUrl('https://docs.cloud3.cc/')} className="border-white text-white" />
           </div>
-          <div className="my-10 w-10/12 flex flex-col justify-center mt-[23vh]">
+          <div className="h-full my-10 w-10/12 flex flex-col justify-center mt-[-1rem]">
             <div className="text-5xl leading-tight">
               <p>Store in IPFS W3Bucket,</p>
               <p>Decentralized, Guaranteed & Alive.</p>
@@ -183,23 +207,21 @@ export const SectionTop = React.memo(() => {
                           You may want to:
                         </label>
                         <div className="flex flex-wrap mt-5">
-                          <div className="mr-5 w-1/2 mb-2 underline">
+                          <div className="mr-5 w-1/2 mb-2 underline" onClick={()=>openExtUrl(`https://crustwebsites.net/ipfs/${uploadFileInfo.Hash}`)}>
                             Get download link for this file
                           </div>
-                          <div className="underline">Verify on IPFS</div>
-                          <div className="mr-5 w-1/2 underline">
-                            View NFT Metadata
+                          <div className="underline" onClick={()=>openExtUrl(`https://ipfs-scan.io/?cid=${uploadFileInfo.Hash}`)}>Verify on IPFS</div>
+                          <div className="mr-5 w-1/2 underline" onClick={()=>openExtUrl(`https://docs.cloud3.cc`)}>
+                            Learn more about Cloud3's storage solution
                           </div>
-                          {!account && (
-                              <div
-                                  onClick={() =>
-                                      openExtUrl("http://test.cloud3.cc/#/buckets")
-                                  }
-                                  className="underline"
-                              >
-                                Claim your W3Bucket NFT on testnet
-                              </div>
-                          )}
+                          <div
+                            onClick={() =>
+                              openExtUrl("http://test.cloud3.cc/#/buckets")
+                            }
+                            className="underline"
+                          >
+                            Claim your W3Bucket NFT on testnet
+                          </div>
                         </div>
                       </div>
                     </div>

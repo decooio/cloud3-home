@@ -138,7 +138,7 @@ export const SectionMid = React.memo(() => {
                                           <span className="text-orange-500 text-lg text-2xl">99+</span> Years guaranteed with <span className="text-orange-500 text-lg text-2xl">1.5ETH</span> in payment contract
                                       </p>
                                       <p className="mt-5">
-                                          Guranteed <a className="text-slate-700 underline" href="https://crustfiles.io/" target="_blank">by decentralized incentive protocol</a> on IPFS
+                                          Guranteed by <a className="text-slate-700 underline" href="https://crustfiles.io/" target="_blank">decentralized incentive protocol</a> on IPFS
                                       </p>
                                       <p className="mt-5">
                                           Verifiable on <a className="text-slate-700 underline" href="" target="_blank">IPFS Scan</a>

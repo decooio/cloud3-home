@@ -3,7 +3,7 @@ import { MintColor, MintColorType } from "@lib/type";
 import { formatW3BucketCapacity } from "@lib/utils";
 import React from "react";
 import { BsBucket, BsBucketFill } from "react-icons/bs";
-import { IconCloud3 } from "./IconCloud3";
+import { IconCloud3 } from "./icons";
 import { QRCode } from "./QRCode";
 
 export const MintColors: { [k in MintColorType]: MintColor } = {
@@ -29,7 +29,9 @@ export const BucketImage = React.memo(
         style={{ backgroundColor }}
       >
         <div className="flex items-center" style={{ color: textColor }}>
-          <IconCloud3 bg={iconColor} style={{ fontSize: "2.8125rem" }} />
+          <div className="p-[3px] overflow-hidden rounded-xl" style={{ backgroundColor: iconColor }}>
+            <IconCloud3 style={{ fontSize: "2.1875rem" }} />
+          </div>
           <span className=" font-Roboto text-3xl font-medium ml-[0.625rem]">
             W3BUCKET
           </span>

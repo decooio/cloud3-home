@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-deploy:
+  deploy:
+    if: ${{github.ref == 'refs/heads/prod'}}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

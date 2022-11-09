@@ -118,7 +118,7 @@ function MonitorMap_(p:IProps){
         return  !!item?'red':'#666'
     }
     return(
-        <svg width={954} height={450} className={classnames(className)}>
+        <svg className={classnames('w-[954px] md:w-[880px] h-[450px] md:h-[400]',className)}>
             { basePos.map((pos,posIndex) => {
                 return pos.map(yItems=>{
                     return pos2arr(yItems).map((item,index)=>{

@@ -6,6 +6,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        'md': [
+          {'min': '0', 'max': '1280px'},
+        ]
+      },
       fontFamily: {
         WorkSans: 'var(--work-sans)',
         SquadaOne: 'var(--squada-one)',

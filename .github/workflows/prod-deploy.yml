@@ -1,8 +1,7 @@
 name: Prod Deploy
 
 on:
-  push:
-    branches: [ prod ]
+  workflow_dispatch:
 
 jobs:
   test-deploy:

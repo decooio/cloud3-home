@@ -32,6 +32,7 @@ export function useBucketEditions() {
       console.info("data:", data);
       const res: BucketEdition[] = [];
       for (const item of data) {
+        if(item.maxMintableSupply.lte(item.currentSupplyMinted)) continue;
         const price_list = await w3b.getBucketEditionPrices(item.editionId);
         console.info("prices:", price_list);
         const prices: Price[] = [];

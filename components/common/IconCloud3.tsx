@@ -1,6 +1,7 @@
 import React, { HTMLAttributes } from "react";
 
-export const IconCloud3 = React.memo(
+// old icon maybe used on feature
+export const IconOldCloud3 = React.memo(
   (p: { bg: string } & HTMLAttributes<HTMLOrSVGElement>) => {
     const { bg, ...other } = p;
     return (

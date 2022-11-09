@@ -13,7 +13,7 @@ export const SectionBottom = React.memo(() => {
                 </p>
                 <h4 className="text-xl my-5 mt-16 font-medium text-black">Guaranteed Storage</h4>
                 <p>
-                    Guaranteed with permanent, multi-replica persistence for your files with IPFS Cloud3, powered by <a className="text-slate-700 underline" href="https://crustfiles.io/" target="_blank">Crust Network</a> - the native incentive layer of IPFS.
+                    Guaranteed with permanent, multi-replica persistence for your files with IPFS Cloud3, powered by <a className="text-slate-700 underline" href="https://crust.network/" target="_blank">Crust Network</a> - the native incentive layer of IPFS.
                 </p>
                 <h4 className="text-xl my-5 mt-16 font-medium text-black">Toolkits & Support</h4>
                 <p>

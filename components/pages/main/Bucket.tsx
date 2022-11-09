@@ -24,7 +24,8 @@ import ReactTooltip from 'react-tooltip';
 import classnames from "classnames";
 import copy from 'copy-to-clipboard';
 import {useOnce} from "@react-spring/shared";
-import { pinUrl } from "@lib/http";
+import {genUrl, pinUrl} from "@lib/http";
+import {useToast} from "@lib/hooks/useToast";
 
 
 const TopInfo = () => {
@@ -58,23 +59,16 @@ const TopInfo = () => {
             <a
               className=" underline text-black-1 mr-5"
               target="_blank"
-              href="/general"
+              href="https://docs.cloud3.cc/w3bucket/aboutnft"
             >
-              General Dey Guidance
+              General Guidance on W3Bucket
             </a>
             <a
               className=" underline text-black-1 mr-5"
               target="_blank"
-              href="/general"
+              href="https://docs.cloud3.cc/w3bucket/uploadfile"
             >
-              Hosting Dapps
-            </a>
-            <a
-              className=" underline text-black-1 mr-5"
-              target="_blank"
-              href="/general"
-            >
-              NFT Metadata
+              Using APIs and W3Auth
             </a>
           </div>
         </div>
@@ -108,12 +102,16 @@ export const Bucket = React.memo(() => {
   const [filterText,setFilterText] = useState('')
   const [confirmFilterText,setConfirmFilterText] = useState('')
   const [localFileList,setLocalFileList] = useState<any>([])
+  const toast = useToast()
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
+  const [getAuth,auth] = useGetAuth('for_upload',false,1)
+
   useEffect(() => {
     ReactTooltip.rebuild();
   },[localFileList]);
 
   useOnce(()=>{
+    if(!auth) getAuth(tokenId)
     getLocalFileListByBucketId(bucketId).then(res=>{
       setLocalFileList(res)
     }).catch(()=>{
@@ -121,7 +119,6 @@ export const Bucket = React.memo(() => {
     })
   })
   // const { chain } = useNetwork();
-  const [getAuth] = useGetAuth('for_upload',false,1)
   const {current} = useGateway()
   const { value: files } = useAsync(async () => {
     const pathRes = await axios.request({
@@ -135,6 +132,15 @@ export const Bucket = React.memo(() => {
       url: `${current.value}${pathRes.data.Path}`
     })
     return filesRes.data
+  }, [ipnsId]);
+
+  const { value: detail } = useAsync(async () => {
+    const res = await axios.request({
+      headers: { Authorization: `Bearer ${auth}` },
+      method: 'GET',
+      url: genUrl(`/auth/bucket/${ipnsId}`)
+    });
+    return res.data.data
   }, [ipnsId]);
 
 
@@ -182,21 +188,30 @@ export const Bucket = React.memo(() => {
   },[files])
 
   const onUploadChange = (file)=>{
+
     const upFile = file.target.files
+    let fileSize = 0
     if(!upFile.length) return false
     let canUp = true
     for(let i = 0; i<upFile.length; i++){
-      if(upFile[i].name.length>=64){
-        alert('文件名太长')
+      fileSize += upFile[i].size
+      if(upFile[i].name.length>64){
+        toast.error('The file name cannot exceed 64 characters.')
         canUp = false
         break
+      }
+    }
+    if(detail){
+      const {maxStorageSize,usedStorageSize} = detail
+      if(fileSize>(maxStorageSize-usedStorageSize)){
+        toast.error('No enough space for this file/folder!')
+        return false
       }
     }
     if(!canUp) return false
     getAuth(tokenId)
       .then(async (auth) => {
         try {
-          let fileSize = 0
           let fileType = 0
           const cancel = axios.CancelToken.source();
           setCancelUp(cancel);
@@ -204,11 +219,9 @@ export const Bucket = React.memo(() => {
           const form = new FormData();
           if (upFile.length === 1) {
             form.append('file', upFile[0], upFile[0].name);
-            fileSize = upFile[0].size
             inputFileRef.current.value = '';
           } else if (upFile.length > 1) {
             for (const f of upFile) {
-              fileSize = f.size
               form.append('file', f, f._webkitRelativePath || f.webkitRelativePath);
             }
             fileType = 1
@@ -355,7 +368,7 @@ export const Bucket = React.memo(() => {
             }
             {
               upState.status === 'success' &&
-              <Alert text={'Upload success'} status={upState.status} />
+              <Alert text={'Upload successful'} status={upState.status} />
             }
             {
               upState.status === 'fail' &&
@@ -379,7 +392,7 @@ export const Bucket = React.memo(() => {
             <div className="flex items-center">
               <div className="inline-block w-[13rem] break-words">
                 {cid}
-                <Icon className="ml-2 cursor-pointer inline-block" onClick={()=>{copy(cid);alert('copy success')}} icon={FiCopy} />
+                <Icon className="ml-2 cursor-pointer inline-block" onClick={()=>{copy(cid);toast.success('copy success')}} icon={FiCopy} />
               </div>
             </div>
           );
@@ -395,7 +408,7 @@ export const Bucket = React.memo(() => {
             <div className="flex items-center">
               <div className="inline-block w-[15rem] break-words">
                 {link}
-                <Icon className="ml-2 cursor-pointer inline-block" onClick={()=>{copy(link);alert('copy success')}} icon={FiCopy} />
+                <Icon className="ml-2 cursor-pointer inline-block" onClick={()=>{copy(link);toast.success('copy success')}} icon={FiCopy} />
               </div>
             </div>
           );

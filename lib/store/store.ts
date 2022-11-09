@@ -17,6 +17,9 @@ export interface Store {
   currentGateway?: AuthIpfsEndpoint
 }
 
+export interface Store {
+  [k: string]: any;
+}
 const defStore: Store = {
   loading: false,
 }

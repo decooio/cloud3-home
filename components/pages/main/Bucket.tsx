@@ -33,7 +33,7 @@ const TopInfo = () => {
   const push = useNavigate();
   return (
     <>
-      <div className="sticky top-0 bg-white px-8 pt-16 flex items-center pb-5 mb-2">
+      <div className="sticky top-0 bg-white px-8 pt-16 flex items-center pb-5 mb-2 min-w-[68rem]">
         <Icon icon={BsBucket} className="text-xl mr-2" />
         <span
           className="mr-2 cursor-pointer"

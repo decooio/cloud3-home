@@ -368,7 +368,7 @@ export const Bucket = React.memo(() => {
             }
             {
               upState.status === 'success' &&
-              <Alert text={'Upload success'} status={upState.status} />
+              <Alert text={'Upload successful'} status={upState.status} />
             }
             {
               upState.status === 'fail' &&

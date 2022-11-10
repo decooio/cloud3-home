@@ -266,10 +266,6 @@ export const Bucket = React.memo(() => {
             method: 'POST',
             url: pinUrl('/psa/pins')
           });
-          console.log(res.data)
-          res.data.error = {
-            details: 'xdsdadasx'
-          }
           const {error} = res.data
           if(error){
             setUpState({ progress: 0, status: 'fail',errorMsg: error.details?error.details:'' });

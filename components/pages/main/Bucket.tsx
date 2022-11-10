@@ -97,7 +97,7 @@ export const Bucket = React.memo(() => {
   const [ , tokenId] = useMemo(() => parseBucketId(bucketId),[bucketId])
   const inputFileRef = useRef(null);
   const inputFolderRef = useRef(null);
-  const [upState,setUpState] = useState({ progress: 0, status: 'stop' });
+  const [upState,setUpState] = useState({ progress: 0, status: 'stop', errorMsg:'' });
   const [pgNum,setPgNum] = useState(1);
   const [filterText,setFilterText] = useState('')
   const [confirmFilterText,setConfirmFilterText] = useState('')
@@ -215,7 +215,7 @@ export const Bucket = React.memo(() => {
           let fileType = 0
           const cancel = axios.CancelToken.source();
           setCancelUp(cancel);
-          setUpState({ progress: 0, status: 'upload' });
+          setUpState({ progress: 0, status: 'upload',errorMsg:'' });
           const form = new FormData();
           if (upFile.length === 1) {
             form.append('file', upFile[0], upFile[0].name);
@@ -233,7 +233,7 @@ export const Bucket = React.memo(() => {
             endpoint: current.value,
             authBasic: `Bearer ${auth}`,
             onProgress: (num)=>{
-              setUpState({ progress: Math.round(num * 99), status: 'upload' });
+              setUpState({ progress: Math.round(num * 99), status: 'upload',errorMsg:'' });
             }
           })
           setCancelUp(null);
@@ -250,20 +250,32 @@ export const Bucket = React.memo(() => {
             name = uploadRes.Name
           }
           if(!cid || !name){
-            setUpState({ progress: 0, status: 'fail'});
+            setUpState({ progress: 0, status: 'fail',errorMsg:''});
             return false
           }
-          await axios.request({
+          const res = await axios.request({
             data: {
               cid,
-              name
+              name,
+              meta: {
+                gatewayId: 1
+              }
             },
             cancelToken: cancel.token,
             headers: { Authorization: `Bearer ${auth}` },
             method: 'POST',
             url: pinUrl('/psa/pins')
           });
-          setUpState({ progress: 100, status: 'success'});
+          console.log(res.data)
+          res.data.error = {
+            details: 'xdsdadasx'
+          }
+          const {error} = res.data
+          if(error){
+            setUpState({ progress: 0, status: 'fail',errorMsg: error.details?error.details:'' });
+            return false
+          }
+          setUpState({ progress: 100, status: 'success',errorMsg:''});
           setLocalFileList(localFileList.concat([{name,cid,fileSize,fileType,createTime: moment().format('X').valueOf(),isNew: true}]))
         } catch (e) {
           // setUpState({ progress: 0, status: 'fail' });
@@ -295,7 +307,7 @@ export const Bucket = React.memo(() => {
       setCancelUp(null)
     }
 
-    setUpState({progress: 0,status: 'stop'})
+    setUpState({progress: 0,status: 'stop',errorMsg: ''})
   }
   return (
     <MainLayout menuId={1}>
@@ -372,7 +384,7 @@ export const Bucket = React.memo(() => {
             }
             {
               upState.status === 'fail' &&
-              <Alert text={'Upload fail'} status={upState.status} />
+              <Alert text={upState.errorMsg?upState.errorMsg:'Upload fail'} status={upState.status} />
             }
             {
               upState.status === 'cancel' &&

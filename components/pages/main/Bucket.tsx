@@ -1,5 +1,5 @@
 import { Icon } from "@components/common/Icon";
-import { useGetAuth } from "@lib/hooks/useGetAuth";
+import {useGetAuth, useGetAuthForGet} from "@lib/hooks/useGetAuth";
 import {formatFileSize, parseBucketId, shortStr} from "@lib/utils";
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import { BsBucket,BsQuestionCircle } from "react-icons/bs";
@@ -105,13 +105,13 @@ export const Bucket = React.memo(() => {
   const toast = useToast()
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
   const [getAuth,auth] = useGetAuth('for_upload',false,1)
+  const [getAuthForGetDetail] = useGetAuthForGet();
 
   useEffect(() => {
     ReactTooltip.rebuild();
   },[localFileList]);
 
   useOnce(()=>{
-    if(!auth) getAuth(tokenId)
     getLocalFileListByBucketId(bucketId).then(res=>{
       setLocalFileList(res)
     }).catch(()=>{
@@ -135,6 +135,7 @@ export const Bucket = React.memo(() => {
   }, [ipnsId]);
 
   const { value: detail } = useAsync(async () => {
+    const auth = await getAuthForGetDetail(tokenId)
     const res = await axios.request({
       headers: { Authorization: `Bearer ${auth}` },
       method: 'GET',

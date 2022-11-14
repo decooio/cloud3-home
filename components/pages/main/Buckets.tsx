@@ -49,7 +49,7 @@ const BucketCard = React.memo((p: { data: BucketDTO }) => {
         className="w-full aspect-[360/531] object-contain"
         src={ipfsUrl(data.metadata.image.replace("ipfs://", ""))}
       />
-      <div className=" text-lg font-semibold mt-[0.625rem]">{`W3BUCKET(${bucketId})`}</div>
+      <div className=" text-lg font-semibold mt-[0.625rem] truncate">{`W3BUCKET(${bucketId})`}</div>
       <div className="flex text-sm my-[2px] justify-between">
         <div>Current Usage</div>
         <div>
@@ -126,9 +126,9 @@ export const Buckets = React.memo(() => {
             <div className="h-5 border-t-1 border-solid border-black-1" />
           </div>
           {buckets && !loading && (
-            <div className="w-full overflow-y-auto gap-5 grid grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))]">
+            <div className="w-full overflow-y-auto gap-5 grid grid-cols-[repeat(auto-fill,_minmax(310px,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(300px,300px))]">
               {buckets.map((b, index) => (
-                <BucketCard data={b} key={`bucket_${index}`} />
+                index === 0 && <BucketCard data={b} key={`bucket_${index}`} />
               ))}
             </div>
           )}

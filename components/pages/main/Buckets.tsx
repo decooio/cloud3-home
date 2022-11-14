@@ -127,7 +127,7 @@ export const Buckets = React.memo(() => {
             <div className="h-5 border-t-1 border-solid border-black-1" />
           </div>
           {buckets && !loading && (
-            <div className={classnames('w-full overflow-y-auto gap-5 grid grid-cols-[repeat(auto-fill,_minmax(310px,_1fr))]',buckets.length<2?'grid-cols-[repeat(auto-fill,_minmax(310px,310px))]':'')}>
+            <div className={classnames('w-full overflow-y-auto gap-5 grid grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))]',buckets.length<2?'grid-cols-[repeat(auto-fill,_minmax(310px,310px))]':'')}>
               {buckets.map((b, index) => (
                 <BucketCard data={b} key={`bucket_${index}`} />
               ))}

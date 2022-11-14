@@ -1,5 +1,5 @@
 import { Icon } from "@components/common/Icon";
-import { useGetAuth } from "@lib/hooks/useGetAuth";
+import {useGetAuth, useGetAuthForGet} from "@lib/hooks/useGetAuth";
 import {formatFileSize, parseBucketId, shortStr} from "@lib/utils";
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import { BsBucket,BsQuestionCircle } from "react-icons/bs";
@@ -33,7 +33,7 @@ const TopInfo = () => {
   const push = useNavigate();
   return (
     <>
-      <div className="sticky top-0 bg-white px-8 pt-16 flex items-center pb-5 mb-2">
+      <div className="sticky top-0 bg-white px-8 pt-16 flex items-center pb-5 mb-2 min-w-[62rem]">
         <Icon icon={BsBucket} className="text-xl mr-2" />
         <span
           className="mr-2 cursor-pointer"
@@ -46,7 +46,7 @@ const TopInfo = () => {
         <Icon icon={FiChevronRight} className="mr-2" />
         <span>{`W3BUCKET(${bucketId})`}</span>
       </div>
-      <div className="px-8 pb-8 text-lg border-b-8 border-solid border-[#eeeeee] min-w-[68rem]">
+      <div className="px-8 pb-8 text-lg border-b-8 border-solid border-[#eeeeee] min-w-[62rem]">
         <div className=" border border-black-1 border-solid px-8 pt-6 pb-5">
           <div className=" text-xl font-medium">Guidance on Storage</div>
           <div className=" my-4">
@@ -97,21 +97,21 @@ export const Bucket = React.memo(() => {
   const [ , tokenId] = useMemo(() => parseBucketId(bucketId),[bucketId])
   const inputFileRef = useRef(null);
   const inputFolderRef = useRef(null);
-  const [upState,setUpState] = useState({ progress: 0, status: 'stop' });
+  const [upState,setUpState] = useState({ progress: 0, status: 'stop', errorMsg:'' });
   const [pgNum,setPgNum] = useState(1);
   const [filterText,setFilterText] = useState('')
   const [confirmFilterText,setConfirmFilterText] = useState('')
   const [localFileList,setLocalFileList] = useState<any>([])
   const toast = useToast()
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
-  const [getAuth,auth] = useGetAuth('for_upload',false,1)
+  const [getAuth] = useGetAuth('for_upload',false,1)
+  const [getAuthForGetDetail,authForDetail] = useGetAuthForGet();
 
   useEffect(() => {
     ReactTooltip.rebuild();
   },[localFileList]);
 
   useOnce(()=>{
-    if(!auth) getAuth(tokenId)
     getLocalFileListByBucketId(bucketId).then(res=>{
       setLocalFileList(res)
     }).catch(()=>{
@@ -135,6 +135,10 @@ export const Bucket = React.memo(() => {
   }, [ipnsId]);
 
   const { value: detail } = useAsync(async () => {
+    let auth = authForDetail
+    if(!auth){
+      auth = await getAuthForGetDetail(tokenId)
+    }
     const res = await axios.request({
       headers: { Authorization: `Bearer ${auth}` },
       method: 'GET',
@@ -215,7 +219,7 @@ export const Bucket = React.memo(() => {
           let fileType = 0
           const cancel = axios.CancelToken.source();
           setCancelUp(cancel);
-          setUpState({ progress: 0, status: 'upload' });
+          setUpState({ progress: 0, status: 'upload',errorMsg:'' });
           const form = new FormData();
           if (upFile.length === 1) {
             form.append('file', upFile[0], upFile[0].name);
@@ -233,7 +237,7 @@ export const Bucket = React.memo(() => {
             endpoint: current.value,
             authBasic: `Bearer ${auth}`,
             onProgress: (num)=>{
-              setUpState({ progress: Math.round(num * 99), status: 'upload' });
+              setUpState({ progress: Math.round(num * 99), status: 'upload',errorMsg:'' });
             }
           })
           setCancelUp(null);
@@ -250,20 +254,28 @@ export const Bucket = React.memo(() => {
             name = uploadRes.Name
           }
           if(!cid || !name){
-            setUpState({ progress: 0, status: 'fail'});
+            setUpState({ progress: 0, status: 'fail',errorMsg:''});
             return false
           }
-          await axios.request({
+          const res = await axios.request({
             data: {
               cid,
-              name
+              name,
+              meta: {
+                gatewayId: 1
+              }
             },
             cancelToken: cancel.token,
             headers: { Authorization: `Bearer ${auth}` },
             method: 'POST',
             url: pinUrl('/psa/pins')
           });
-          setUpState({ progress: 100, status: 'success'});
+          const {error} = res.data
+          if(error){
+            setUpState({ progress: 0, status: 'fail',errorMsg: error.details?error.details:'' });
+            return false
+          }
+          setUpState({ progress: 100, status: 'success',errorMsg:''});
           setLocalFileList(localFileList.concat([{name,cid,fileSize,fileType,createTime: moment().format('X').valueOf(),isNew: true}]))
         } catch (e) {
           // setUpState({ progress: 0, status: 'fail' });
@@ -295,14 +307,14 @@ export const Bucket = React.memo(() => {
       setCancelUp(null)
     }
 
-    setUpState({progress: 0,status: 'stop'})
+    setUpState({progress: 0,status: 'stop',errorMsg: ''})
   }
   return (
     <MainLayout menuId={1}>
       <div className="flex-1 h-full overflow-y-auto">
         <div className="relative">
           <TopInfo />
-          <div className="p-8 flex-1 text-lg v-full flex flex-col min-w-[68rem]">
+          <div className="p-8 flex-1 text-lg v-full flex flex-col min-w-[62rem]">
             <div className="sticky top-[6.5rem] bg-white w-full flex items-center z-10">
               <DropDownBtn dropData={[{text:'File',icon: FiFile,value: 'file'},{text:'Folder',icon: FiFolder,value: 'folder'}]} text="Upload" onChange={onDropDownChange}/>
               <input ref={inputFileRef} type="file" hidden onChange={onUploadChange} />
@@ -320,8 +332,8 @@ export const Bucket = React.memo(() => {
               </div>
             </div>
             <div className="sticky top-36 bg-white py-4 flex items-center font-medium border-b-1 border-solid border-b-black-1 pt-5">
-              <div className="flex-initial w-[25%] pl-3">File Name</div>
-              <div className="flex-initial w-[20%]">CID</div>
+              <div className="flex-initial w-[25%] md:w-[20%] pl-3">File Name</div>
+              <div className="flex-initial w-[20%] md:w-[25%]">CID</div>
               <div className="flex-initial w-[30%]">Link</div>
               <div className="flex-initial w-[10%]">File Size</div>
               <div className="flex-initial w-[15%]">TimeStamp</div>
@@ -332,7 +344,7 @@ export const Bucket = React.memo(() => {
                   key={`files_${index}`}
                   className={classnames('flex items-center pt-4 pb-8',v.isNew?'text-gray-300':'')}
                 >
-                  <div className="flex-initial w-[25%] pl-3">
+                  <div className="flex-initial w-[25%] md:w-[20%] pl-3">
                     <div className="flex items-center pr-8">
                       <span className="truncate" data-tip={v.name.length>20?v.name:''}>{v.name}</span>
                       {
@@ -342,7 +354,7 @@ export const Bucket = React.memo(() => {
                     </div>
 
                   </div>
-                  <div className="flex-initial w-[20%]">
+                  <div className="flex-initial w-[20%] md:w-[25%]">
                     <span data-tip={v.cid} data-for="cidColumn">{shortStr(v.cid,10,10)}</span>
                   </div>
                   <div className="flex-initial w-[30%] truncate pr-8" data-for="linkColumn" data-tip={`${current.value}/ipfs/${v.cid}`}>{`${current.value}/ipfs/${v.cid}`}</div>
@@ -372,7 +384,7 @@ export const Bucket = React.memo(() => {
             }
             {
               upState.status === 'fail' &&
-              <Alert text={'Upload fail'} status={upState.status} />
+              <Alert text={upState.errorMsg?upState.errorMsg:'Upload fail'} status={upState.status} />
             }
             {
               upState.status === 'cancel' &&

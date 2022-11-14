@@ -20,9 +20,10 @@ import { useNavigate } from "react-router-dom";
 import { useAsync } from "react-use";
 import { useAccount } from "wagmi";
 import { MainLayout } from "./MainLayout";
+import classnames from "classnames";
 
-const BucketCard = React.memo((p: { data: BucketDTO }) => {
-  const { data } = p;
+const BucketCard = React.memo((p: { data: BucketDTO,className?:string }) => {
+  const { data,className } = p;
   const push = useNavigate();
   const capacityInGb = useMemo(
     () => data.maxStorageSize / 1024 / 1024 / 1024,
@@ -44,12 +45,12 @@ const BucketCard = React.memo((p: { data: BucketDTO }) => {
     push(`/bucket/${bucketId}/${data.ipnsId}`);
   };
   return (
-    <div className=" h-min p-5 border border-solid border-black-1">
+    <div className={classnames('h-min p-5 md:p-2 border border-solid border-black-1',className)}>
       <img
         className="w-full aspect-[360/531] object-contain"
         src={ipfsUrl(data.metadata.image.replace("ipfs://", ""))}
       />
-      <div className=" text-lg font-semibold mt-[0.625rem]">{`W3BUCKET(${bucketId})`}</div>
+      <div className=" text-lg font-semibold mt-[0.625rem] truncate">{`W3BUCKET(${bucketId})`}</div>
       <div className="flex text-sm my-[2px] justify-between">
         <div>Current Usage</div>
         <div>
@@ -126,7 +127,7 @@ export const Buckets = React.memo(() => {
             <div className="h-5 border-t-1 border-solid border-black-1" />
           </div>
           {buckets && !loading && (
-            <div className="w-full overflow-y-auto gap-5 grid grid-cols-[repeat(auto-fill,_minmax(350px,_1fr))]">
+            <div className={classnames('w-full overflow-y-auto gap-5 grid grid-cols-[repeat(auto-fill,_minmax(305px,_1fr))]',buckets.length<3?'grid-cols-[repeat(auto-fill,_minmax(310px,310px))]':'')}>
               {buckets.map((b, index) => (
                 <BucketCard data={b} key={`bucket_${index}`} />
               ))}

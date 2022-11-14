@@ -229,7 +229,7 @@ export const SectionTop = React.memo(() => {
             ) : (
                 <span style={{pointerEvents: 'none'}}
                                     ref={waitUploadRef} id="waitUpload" className="text-black text-4xl font-Roboto tracking-wider">
-              Drag&nbsp;&nbsp; and&nbsp; Drop&nbsp; Your&nbsp; File&nbsp; here
+              Drag and drop your file here
             </span>
             )}
           </div>

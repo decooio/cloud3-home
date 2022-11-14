@@ -33,7 +33,7 @@ const TopInfo = () => {
   const push = useNavigate();
   return (
     <>
-      <div className="sticky top-0 bg-white px-8 pt-16 flex items-center pb-5 mb-2 min-w-[68rem]">
+      <div className="sticky top-0 bg-white px-8 pt-16 flex items-center pb-5 mb-2 min-w-[62rem]">
         <Icon icon={BsBucket} className="text-xl mr-2" />
         <span
           className="mr-2 cursor-pointer"
@@ -46,7 +46,7 @@ const TopInfo = () => {
         <Icon icon={FiChevronRight} className="mr-2" />
         <span>{`W3BUCKET(${bucketId})`}</span>
       </div>
-      <div className="px-8 pb-8 text-lg border-b-8 border-solid border-[#eeeeee] min-w-[68rem]">
+      <div className="px-8 pb-8 text-lg border-b-8 border-solid border-[#eeeeee] min-w-[62rem]">
         <div className=" border border-black-1 border-solid px-8 pt-6 pb-5">
           <div className=" text-xl font-medium">Guidance on Storage</div>
           <div className=" my-4">
@@ -314,7 +314,7 @@ export const Bucket = React.memo(() => {
       <div className="flex-1 h-full overflow-y-auto">
         <div className="relative">
           <TopInfo />
-          <div className="p-8 flex-1 text-lg v-full flex flex-col min-w-[68rem]">
+          <div className="p-8 flex-1 text-lg v-full flex flex-col min-w-[62rem]">
             <div className="sticky top-[6.5rem] bg-white w-full flex items-center z-10">
               <DropDownBtn dropData={[{text:'File',icon: FiFile,value: 'file'},{text:'Folder',icon: FiFolder,value: 'folder'}]} text="Upload" onChange={onDropDownChange}/>
               <input ref={inputFileRef} type="file" hidden onChange={onUploadChange} />
@@ -332,8 +332,8 @@ export const Bucket = React.memo(() => {
               </div>
             </div>
             <div className="sticky top-36 bg-white py-4 flex items-center font-medium border-b-1 border-solid border-b-black-1 pt-5">
-              <div className="flex-initial w-[25%] pl-3">File Name</div>
-              <div className="flex-initial w-[20%]">CID</div>
+              <div className="flex-initial w-[25%] md:w-[20%] pl-3">File Name</div>
+              <div className="flex-initial w-[20%] md:w-[25%]">CID</div>
               <div className="flex-initial w-[30%]">Link</div>
               <div className="flex-initial w-[10%]">File Size</div>
               <div className="flex-initial w-[15%]">TimeStamp</div>
@@ -344,7 +344,7 @@ export const Bucket = React.memo(() => {
                   key={`files_${index}`}
                   className={classnames('flex items-center pt-4 pb-8',v.isNew?'text-gray-300':'')}
                 >
-                  <div className="flex-initial w-[25%] pl-3">
+                  <div className="flex-initial w-[25%] md:w-[20%] pl-3">
                     <div className="flex items-center pr-8">
                       <span className="truncate" data-tip={v.name.length>20?v.name:''}>{v.name}</span>
                       {
@@ -354,7 +354,7 @@ export const Bucket = React.memo(() => {
                     </div>
 
                   </div>
-                  <div className="flex-initial w-[20%]">
+                  <div className="flex-initial w-[20%] md:w-[25%]">
                     <span data-tip={v.cid} data-for="cidColumn">{shortStr(v.cid,10,10)}</span>
                   </div>
                   <div className="flex-initial w-[30%] truncate pr-8" data-for="linkColumn" data-tip={`${current.value}/ipfs/${v.cid}`}>{`${current.value}/ipfs/${v.cid}`}</div>

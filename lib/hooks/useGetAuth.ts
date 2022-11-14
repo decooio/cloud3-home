@@ -85,7 +85,7 @@ export function useGetAuthForMint() {
 }
 
 export function useGetAuthForGet() {
-  return useGetAuth("auth", true, 24);
+  return useGetAuth("auth", true, 12);
 }
 
 export function useGetAuthForUp() {

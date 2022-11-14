@@ -91,3 +91,9 @@ export function useGetAuthForGet() {
 export function useGetAuthForUp() {
   return useGetAuth("for_upload", false, 1);
 }
+
+export function clearAuth() {
+  localStorage.removeItem('for_mint')
+  localStorage.removeItem('auth')
+  localStorage.removeItem('for_upload')
+}

@@ -5,8 +5,13 @@ export function useListenerEthereumInit() {
   useEffect(()=>{
     if ((window as Window).ethereum) {
       // alert(1)
+      console.info("uuuusdsddsdsdd")
+      console.info(window)
+      console.info(window?.ethereum)
       setIsInit(true)
     } else {
+      console.info("xia")
+      console.info(window)
       window.addEventListener(
         'ethereum#initialized',
         ()=>{

@@ -126,7 +126,7 @@ export const SectionTop = React.memo(() => {
     await doUpload(file);
   };
   const onOpenUpload = async () => {
-    if (!uploadFileInfo) {
+    if (upState.status === 'stop') {
       inputFileRef.current.click();
     }
   };

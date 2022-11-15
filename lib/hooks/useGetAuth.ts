@@ -3,7 +3,6 @@ import moment from "moment";
 import { useState } from "react";
 import { useSignTypedData, useAccount, useNetwork } from "wagmi";
 import { W3Bucket_Adress } from "../config";
-import {sleep} from "@lib/utils";
 
 export function useGetAuth(
   key: string = "auth",
@@ -20,20 +19,10 @@ export function useGetAuth(
 
   const getToken = useOn(async (tokenID?: string) => {
     const old = localStorage.getItem(key) || "";
-    console.info("old-----"+old)
-    console.info(signTypedDataAsync)
-    console.info(address)
-    console.info(chainId)
-    console.info(unsupported)
     if (!signTypedDataAsync || !address || !chainId || unsupported) throw "not connect wallet";
-    console.info(10)
     const current = moment().unix();
     if (cache && old) {
       const lastAuth = JSON.parse(window.atob(old)).data;
-      console.info(lastAuth)
-      console.info(tokenID)
-      console.info(lastAuth.message.tokenID)
-      console.info(lastAuth.message.expirationTimestamp - current > 300)
       if (
         lastAuth.domain.chainId === `${chainId}` &&
         lastAuth.message.signingAddress === address &&
@@ -45,7 +34,6 @@ export function useGetAuth(
         return old;
       }
     }
-    console.info("1----")
     const expirationTimestamp =
       hours <= 0 ? 0 : moment().add(hours, "hours").unix();
       // hours <= 0 ? 0 : moment().add(hours, "minutes").unix();
@@ -75,28 +63,20 @@ export function useGetAuth(
         ],
       },
     };
-    console.info(2)
 
     if (tokenID) {
-      console.info(3)
-
       typeData.message.tokenID = tokenID;
       typeData.types.W3Bucket.push({ name: "tokenID", type: "string" });
     }
-    console.info(4)
-    await sleep(1000)
     const signature = await signTypedDataAsync({
       domain: typeData.domain,
       types: typeData.types,
       value: typeData.message,
     });
-    console.info(5)
 
     const based = window.btoa(JSON.stringify({ data: typeData, signature }));
     localStorage.setItem(key, based);
     setAuth(based);
-    console.info(6)
-
     return based;
   });
   return [getToken, auth];

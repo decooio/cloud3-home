@@ -20,7 +20,12 @@ export function useGetAuth(
   const getToken = useOn(async (tokenID?: string) => {
     const old = localStorage.getItem(key) || "";
     console.info("old-----"+old)
+    console.info(signTypedDataAsync)
+    console.info(address)
+    console.info(chainId)
+    console.info(unsupported)
     if (!signTypedDataAsync || !address || !chainId || unsupported) throw "not connect wallet";
+    console.info(10)
     const current = moment().unix();
     if (cache && old) {
       const lastAuth = JSON.parse(window.atob(old)).data;
@@ -39,7 +44,7 @@ export function useGetAuth(
         return old;
       }
     }
-    console.info(1)
+    console.info("1----")
     const expirationTimestamp =
       hours <= 0 ? 0 : moment().add(hours, "hours").unix();
       // hours <= 0 ? 0 : moment().add(hours, "minutes").unix();

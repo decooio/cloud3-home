@@ -95,10 +95,10 @@ const BucketCard = React.memo((p: { data: BucketDTO,className?:string }) => {
 });
 
 export const Buckets = React.memo(()=>{
+  const [isInit] = useListenerEthereumInit()
   const isConnected = useConnected();
   const { address } = useAccount();
   const [getAuth] = useGetAuthForGet();
-  const [isInit] = useListenerEthereumInit()
   const { value: buckets, loading } = useAsync(async () => {
     if (!isConnected || !address || !isInit) return [];
     const auth = await getAuth();

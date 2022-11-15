@@ -105,7 +105,7 @@ export const Bucket = React.memo(() => {
   const toast = useToast()
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
   const [getAuth] = useGetAuth('for_upload',false,1)
-  const [getAuthForGetDetail,authForDetail] = useGetAuthForGet();
+  const [getAuthForGetDetail] = useGetAuthForGet();
 
   useEffect(() => {
     ReactTooltip.rebuild();
@@ -135,10 +135,7 @@ export const Bucket = React.memo(() => {
   }, [ipnsId]);
 
   const { value: detail } = useAsync(async () => {
-    let auth = authForDetail
-    if(!auth){
-      auth = await getAuthForGetDetail(tokenId)
-    }
+    const auth = await getAuthForGetDetail(tokenId)
     const res = await axios.request({
       headers: { Authorization: `Bearer ${auth}` },
       method: 'GET',

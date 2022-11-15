@@ -34,7 +34,6 @@ export function useGetAuth(
         return old;
       }
     }
-
     const expirationTimestamp =
       hours <= 0 ? 0 : moment().add(hours, "hours").unix();
       // hours <= 0 ? 0 : moment().add(hours, "minutes").unix();
@@ -64,6 +63,7 @@ export function useGetAuth(
         ],
       },
     };
+
     if (tokenID) {
       typeData.message.tokenID = tokenID;
       typeData.types.W3Bucket.push({ name: "tokenID", type: "string" });
@@ -73,6 +73,7 @@ export function useGetAuth(
       types: typeData.types,
       value: typeData.message,
     });
+
     const based = window.btoa(JSON.stringify({ data: typeData, signature }));
     localStorage.setItem(key, based);
     setAuth(based);

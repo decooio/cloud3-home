@@ -11,7 +11,6 @@ export function useGetAuth(
   hours: number = 0
 ): [(tokenId?: string) => Promise<string>, string] {
   const [auth, setAuth] = useState(localStorage.getItem(key) || "");
-  console.log('wahtacc')
   const { signTypedDataAsync } = useSignTypedData();
   const { chain } = useNetwork();
   const chainId = chain && chain.id;
@@ -70,7 +69,7 @@ export function useGetAuth(
       typeData.types.W3Bucket.push({ name: "tokenID", type: "string" });
     }
     await sleep(800)
-    console.log('090d0sakdjksadjasjda')
+    console.log('sign-----')
     const signature = await signTypedDataAsync({
       domain: typeData.domain,
       types: typeData.types,

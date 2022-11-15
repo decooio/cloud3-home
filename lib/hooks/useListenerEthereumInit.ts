@@ -3,28 +3,29 @@ import {useEffect, useState} from "react";
 export function useListenerEthereumInit() {
   const [isInit,setIsInit] = useState(false)
   useEffect(()=>{
-    if ((window as Window).ethereum) {
-      // alert(1)
-      console.info("uuuusdsddsdsdd")
-      console.info(window)
-      console.info(window?.ethereum)
-      setIsInit(true)
-    } else {
-      console.info("xia")
-      console.info(window)
-      window.addEventListener(
-        'ethereum#initialized',
-        ()=>{
-          console.info('ethereum---xxxxx')
-          setIsInit(true)
-        },
-        { once: true },
-      );
-      setTimeout(() => {
-        // handleEthereum();
+    // if ((window as Window).ethereum) {
+    //   // alert(1)
+    //   console.info("uuuusdsddsdsdd")
+    //   console.info(window)
+    //   console.info(window?.ethereum)
+    //   setIsInit(true)
+    // } else {
+    //
+    // }
+    console.info("xia")
+    console.info(window)
+    window.addEventListener(
+      'ethereum#initialized',
+      ()=>{
+        console.info('ethereum---xxxxx')
         setIsInit(true)
-      }, 3000);
-    }
+      },
+      { once: true },
+    );
+    setTimeout(() => {
+      // handleEthereum();
+      setIsInit(true)
+    }, 3000);
   },[])
   return [isInit,setIsInit]
 }

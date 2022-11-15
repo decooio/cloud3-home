@@ -99,8 +99,6 @@ export const Buckets = React.memo(()=>{
   const { address } = useAccount();
   const [getAuth] = useGetAuthForGet();
   const { value: buckets, loading } = useAsync(async () => {
-    console.info(isConnected)
-    console.info(address)
     if (!isConnected || !address) return [];
     const auth = await getAuth();
     const res = await axios.get<Res<BucketDTO[]>>(genUrl("/auth/bucket/list"), {

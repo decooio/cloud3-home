@@ -4,7 +4,27 @@ import { useState } from "react";
 import { useSignTypedData, useAccount, useNetwork } from "wagmi";
 import { W3Bucket_Adress } from "../config";
 import {sleep} from "@lib/utils";
-
+// description:
+//   Sign for W3 Bucket Access Authentication
+// signingAddress:
+//   0xc937c4478ec7eb68d119d6f5b7676c2d290eb263
+// tokenAddress:
+//   0x398663842680332a1aba3b03bd6db47ae984994c
+// effectiveTimestamp:
+//   1668502595
+// expirationTimestamp:
+//   1668506195
+//
+// description:
+//   Sign for W3 Bucket Access Authentication
+// signingAddress:
+//   0xc937c4478ec7eb68d119d6f5b7676c2d290eb263
+// tokenAddress:
+//   0x398663842680332a1aba3b03bd6db47ae984994c
+// effectiveTimestamp:
+//   1668502595
+// expirationTimestamp:
+//   1668506195
 export function useGetAuth(
   key: string = "auth",
   cache: boolean = false,
@@ -69,7 +89,6 @@ export function useGetAuth(
       typeData.types.W3Bucket.push({ name: "tokenID", type: "string" });
     }
     await sleep(800)
-    console.log('sign-----')
     const signature = await signTypedDataAsync({
       domain: typeData.domain,
       types: typeData.types,

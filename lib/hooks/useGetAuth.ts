@@ -3,6 +3,7 @@ import moment from "moment";
 import { useState } from "react";
 import { useSignTypedData, useAccount, useNetwork } from "wagmi";
 import { W3Bucket_Adress } from "../config";
+import {sleep} from "@lib/utils";
 
 export function useGetAuth(
   key: string = "auth",
@@ -83,7 +84,7 @@ export function useGetAuth(
       typeData.types.W3Bucket.push({ name: "tokenID", type: "string" });
     }
     console.info(4)
-
+    await sleep(1000)
     const signature = await signTypedDataAsync({
       domain: typeData.domain,
       types: typeData.types,

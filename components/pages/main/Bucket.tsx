@@ -135,7 +135,7 @@ export const Bucket = React.memo(() => {
   }, [ipnsId]);
 
   const { value: detail } = useAsync(async () => {
-    const auth = await getAuthForGetDetail(tokenId)
+    const auth = await getAuthForGetDetail()
     const res = await axios.request({
       headers: { Authorization: `Bearer ${auth}` },
       method: 'GET',

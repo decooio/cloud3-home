@@ -21,7 +21,6 @@ import { useAsync } from "react-use";
 import { useAccount } from "wagmi";
 import { MainLayout } from "./MainLayout";
 import classnames from "classnames";
-import {useListenerEthereumInit} from "@lib/hooks/useListenerEthereumInit";
 
 const BucketCard = React.memo((p: { data: BucketDTO,className?:string }) => {
   const { data,className } = p;
@@ -95,12 +94,11 @@ const BucketCard = React.memo((p: { data: BucketDTO,className?:string }) => {
 });
 
 export const Buckets = React.memo(()=>{
-  const [isInit] = useListenerEthereumInit()
   const isConnected = useConnected();
   const { address } = useAccount();
   const [getAuth] = useGetAuthForGet();
   const { value: buckets, loading } = useAsync(async () => {
-    if (!isConnected || !address || !isInit) return [];
+    if (!isConnected || !address) return [];
     const auth = await getAuth();
     const res = await axios.get<Res<BucketDTO[]>>(genUrl("/auth/bucket/list"), {
       headers: { Authorization: `Bearer ${auth}` },
@@ -108,7 +106,7 @@ export const Buckets = React.memo(()=>{
     return getResData(res).sort(function (a,b){
       return b.mintTimestamp-a.mintTimestamp
     });
-  }, [isConnected, address,isInit]);
+  }, [isConnected, address]);
   const push = useNavigate();
   const onNewBucket = useCallback(() => push("/mint"), [push]);
   return (

@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 export function useListenerEthereumInit() {
   const [isInit,setIsInit] = useState(false)
   useEffect(()=>{
+    console.info(window?.ethereum)
     // if ((window as Window).ethereum) {
     //   // alert(1)
     //   console.info(window)

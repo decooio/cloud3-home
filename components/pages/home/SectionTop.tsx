@@ -155,7 +155,7 @@ export const SectionTop = React.memo(() => {
             <div className="font-SquadaOne text-4xl">Cloud3.cc</div>
             <Button text="Documentations" onClick={()=>openExtUrl('https://docs.cloud3.cc/')} className="border-white text-white" />
           </div>
-          <div className="h-full my-10 w-10/12 flex flex-col justify-center mt-[-1rem]">
+          <div className="h-full my-10 w-[69.5rem] flex flex-col justify-center mt-[-1rem]">
             <div className="text-5xl leading-tight">
               <p>Store in IPFS W3Bucket,</p>
               <p>Decentralized, Guaranteed & Alive.</p>

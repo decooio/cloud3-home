@@ -36,7 +36,8 @@ export function useGetAuth(
     }
 
     const expirationTimestamp =
-      hours <= 0 ? 0 : moment().add(hours, "hours").unix();
+      // hours <= 0 ? 0 : moment().add(hours, "hours").unix();
+      hours <= 0 ? 0 : moment().add(hours, "minutes").unix();
     const typeData: any = {
       domain: {
         chainId: `${chainId}`,
@@ -85,7 +86,7 @@ export function useGetAuthForMint() {
 }
 
 export function useGetAuthForGet() {
-  return useGetAuth("auth", true, 12);
+  return useGetAuth("auth", true, 5);
 }
 
 export function useGetAuthForUp() {

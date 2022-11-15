@@ -39,7 +39,7 @@ export function useGetAuth(
         return old;
       }
     }
-
+    console.info(1)
     const expirationTimestamp =
       hours <= 0 ? 0 : moment().add(hours, "hours").unix();
       // hours <= 0 ? 0 : moment().add(hours, "minutes").unix();
@@ -69,18 +69,28 @@ export function useGetAuth(
         ],
       },
     };
+    console.info(2)
+
     if (tokenID) {
+      console.info(3)
+
       typeData.message.tokenID = tokenID;
       typeData.types.W3Bucket.push({ name: "tokenID", type: "string" });
     }
+    console.info(4)
+
     const signature = await signTypedDataAsync({
       domain: typeData.domain,
       types: typeData.types,
       value: typeData.message,
     });
+    console.info(5)
+
     const based = window.btoa(JSON.stringify({ data: typeData, signature }));
     localStorage.setItem(key, based);
     setAuth(based);
+    console.info(6)
+
     return based;
   });
   return [getToken, auth];

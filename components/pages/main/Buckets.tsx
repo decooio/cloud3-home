@@ -94,13 +94,13 @@ const BucketCard = React.memo((p: { data: BucketDTO,className?:string }) => {
   );
 });
 
-export const Buckets = React.memo(() => {
+export const Buckets = React.memo(()=>{
   const isConnected = useConnected();
   const { address } = useAccount();
   const [getAuth] = useGetAuthForGet();
   const [isInit] = useListenerEthereumInit()
   const { value: buckets, loading } = useAsync(async () => {
-    if (!isConnected || !address) return [];
+    if (!isConnected || !address || !isInit) return [];
     const auth = await getAuth();
     const res = await axios.get<Res<BucketDTO[]>>(genUrl("/auth/bucket/list"), {
       headers: { Authorization: `Bearer ${auth}` },
@@ -148,4 +148,4 @@ export const Buckets = React.memo(() => {
       </div>
     </MainLayout>
   );
-});
+})

@@ -10,6 +10,7 @@ export function useListenerEthereumInit() {
       window.addEventListener(
         'ethereum#initialized',
         ()=>{
+          console.info('ethereum---xxxxx')
           setIsInit(true)
         },
         { once: true },

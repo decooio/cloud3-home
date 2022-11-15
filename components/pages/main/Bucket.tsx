@@ -278,12 +278,13 @@ export const Bucket = React.memo(() => {
           // setUpState({ progress: 0, status: 'fail' });
           console.error(e);
           throw e;
-        } finally {
-          inputFileRef.current.value = '';
-          inputFolderRef.current.value = '';
         }
       })
-      .catch(console.error)
+      .catch(err=>{
+        console.log(err.toString())
+        inputFileRef.current.value = '';
+        inputFolderRef.current.value = '';
+      })
   }
   const onDropDownChange = (value)=>{
     if(value === 'file'){

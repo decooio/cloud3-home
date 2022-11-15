@@ -278,6 +278,8 @@ export const Bucket = React.memo(() => {
           setUpState({ progress: 100, status: 'success',errorMsg:''});
           setLocalFileList(localFileList.concat([{name,cid,fileSize,fileType,createTime: moment().format('X').valueOf(),isNew: true}]))
         } catch (e) {
+          inputFileRef.current.value = '';
+          inputFolderRef.current.value = '';
           // setUpState({ progress: 0, status: 'fail' });
           console.error(e);
           throw e;

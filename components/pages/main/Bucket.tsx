@@ -187,9 +187,11 @@ export const Bucket = React.memo(() => {
       }
     }
   },[files])
-
+  const clearInputFile = ()=>{
+    inputFileRef.current.value = '';
+    inputFolderRef.current.value = '';
+  }
   const onUploadChange = (file)=>{
-
     const upFile = file.target.files
     let fileSize = 0
     if(!upFile.length) return false
@@ -198,6 +200,7 @@ export const Bucket = React.memo(() => {
       fileSize += upFile[i].size
       if(upFile[i].name.length>64){
         toast.error('The file name cannot exceed 64 characters.')
+        clearInputFile()
         canUp = false
         break
       }
@@ -206,6 +209,7 @@ export const Bucket = React.memo(() => {
       const {maxStorageSize,usedStorageSize} = detail
       if(fileSize>(maxStorageSize-usedStorageSize)){
         toast.error('No enough space for this file/folder!')
+        clearInputFile()
         return false
       }
     }
@@ -220,14 +224,13 @@ export const Bucket = React.memo(() => {
           const form = new FormData();
           if (upFile.length === 1) {
             form.append('file', upFile[0], upFile[0].name);
-            inputFileRef.current.value = '';
           } else if (upFile.length > 1) {
             for (const f of upFile) {
               form.append('file', f, f._webkitRelativePath || f.webkitRelativePath);
             }
             fileType = 1
-            inputFolderRef.current.value = '';
           }
+          clearInputFile()
           const uploadRes = await upload({
             cancelToken: cancel.token,
             data: form,
@@ -278,12 +281,12 @@ export const Bucket = React.memo(() => {
           // setUpState({ progress: 0, status: 'fail' });
           console.error(e);
           throw e;
-        } finally {
-          inputFileRef.current.value = '';
-          inputFolderRef.current.value = '';
         }
       })
-      .catch(console.error)
+      .catch(err=>{
+        console.log(err.toString())
+        clearInputFile()
+      })
   }
   const onDropDownChange = (value)=>{
     if(value === 'file'){

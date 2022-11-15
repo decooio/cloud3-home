@@ -23,10 +23,10 @@ export function useGetAuth(
     const current = moment().unix();
     if (cache && old) {
       const lastAuth = JSON.parse(window.atob(old)).data;
-      console.log(lastAuth)
-      console.log(tokenID)
-      console.log(lastAuth.message.tokenID)
-      console.log(lastAuth.message.expirationTimestamp - current > 300)
+      alert(JSON.stringify(lastAuth))
+      alert(tokenID)
+      alert(lastAuth.message.tokenID)
+      alert(lastAuth.message.expirationTimestamp - current > 300)
       if (
         lastAuth.domain.chainId === `${chainId}` &&
         lastAuth.message.signingAddress === address &&

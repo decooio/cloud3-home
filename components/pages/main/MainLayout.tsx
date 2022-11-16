@@ -20,6 +20,7 @@ import { IoLockClosedOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useHoverDirty } from "react-use";
 import { useAccount, useDisconnect, useNetwork } from "wagmi";
+import {clearAuth} from "@lib/hooks/useGetAuth";
 interface Menu {
   id: number;
   icon: any;
@@ -60,6 +61,7 @@ export const MainLayout = React.memo(
     const { disconnect } = useDisconnect();
     const onDis = useOn(() => {
       disconnect();
+      clearAuth()
       push('/buckets')
     })
     const btnAccount = useRef(null);

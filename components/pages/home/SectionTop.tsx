@@ -12,6 +12,7 @@ import CloseBtnSvg from "../../../public/images/close_btn.svg";
 import {upload} from "@lib/files";
 import {useOnce} from "@react-spring/shared";
 import {useToast} from "@lib/hooks/useToast";
+import {DeCloudLink} from "@lib/config";
 
 export interface UploadRes {
   Hash: string;
@@ -86,6 +87,7 @@ export const SectionTop = React.memo(() => {
       const cancel = axios.CancelToken.source();
       setCancelUp(cancel);
       setUpState({ progress: 0, status: 'upload' });
+      inputFileRef.current.value = '';
       const form = new FormData();
       const upFile = cFile;
       if (upFile && upFile.name) {
@@ -105,7 +107,6 @@ export const SectionTop = React.memo(() => {
       let upRes: UploadRes;
       upRes = upResult;
       setUpState({ progress: 100, status: 'success' });
-      inputFileRef.current.value = '';
       setUploadFileInfo(upRes);
     } catch (e) {
       console.error(e);
@@ -126,7 +127,7 @@ export const SectionTop = React.memo(() => {
     await doUpload(file);
   };
   const onOpenUpload = async () => {
-    if (!uploadFileInfo) {
+    if (upState.status === 'stop') {
       inputFileRef.current.click();
     }
   };
@@ -155,7 +156,7 @@ export const SectionTop = React.memo(() => {
             <div className="font-SquadaOne text-4xl">Cloud3.cc</div>
             <Button text="Documentations" onClick={()=>openExtUrl('https://docs.cloud3.cc/')} className="border-white text-white" />
           </div>
-          <div className="h-full my-10 w-10/12 flex flex-col justify-center mt-[-1rem]">
+          <div className="h-full my-10 w-[69.5rem] flex flex-col justify-center mt-[-1rem]">
             <div className="text-5xl leading-tight">
               <p>Store in IPFS W3Bucket,</p>
               <p>Decentralized, Guaranteed & Alive.</p>
@@ -170,7 +171,7 @@ export const SectionTop = React.memo(() => {
                   text="Launch App"
                   className=" ml-3 border-white text-white"
                   onClick={() =>
-                      IS_LOCAL ? push("/buckets") : openExtUrl("/#/buckets")
+                      IS_LOCAL ? openExtUrl("/#/buckets") : openExtUrl("/#/buckets")
                   }
               />
             </div>
@@ -207,7 +208,7 @@ export const SectionTop = React.memo(() => {
                           You may want to:
                         </label>
                         <div className="flex flex-wrap mt-5">
-                          <div className="mr-5 w-1/2 mb-2 underline" onClick={()=>openExtUrl(`https://crustwebsites.net/ipfs/${uploadFileInfo.Hash}`)}>
+                          <div className="mr-5 w-1/2 mb-2 underline" onClick={()=>openExtUrl(`${DeCloudLink}/ipfs/${uploadFileInfo.Hash}`)}>
                             Get download link for this file
                           </div>
                           <div className="underline" onClick={()=>openExtUrl(`https://ipfs-scan.io/?cid=${uploadFileInfo.Hash}`)}>Verify on IPFS</div>
@@ -229,7 +230,7 @@ export const SectionTop = React.memo(() => {
             ) : (
                 <span style={{pointerEvents: 'none'}}
                                     ref={waitUploadRef} id="waitUpload" className="text-black text-4xl font-Roboto tracking-wider">
-              Drag&nbsp;&nbsp; and&nbsp; Drop&nbsp; Your&nbsp; File&nbsp; here
+              Drag and drop your file here
             </span>
             )}
           </div>

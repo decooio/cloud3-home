@@ -23,3 +23,4 @@ export const GatewayList: AuthIpfsEndpoint[] = [
     value: "https://gw-seattle.cloud3.cc",
   }
 ];
+export const DeCloudLink = 'https://ipfs-gw.decloud.foundation'; // https://crustwebsites.net

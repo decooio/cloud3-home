@@ -26,6 +26,7 @@ import copy from 'copy-to-clipboard';
 import {useOnce} from "@react-spring/shared";
 import {genUrl, pinUrl} from "@lib/http";
 import {useToast} from "@lib/hooks/useToast";
+import {useAccount} from "wagmi";
 
 
 const TopInfo = () => {
@@ -106,10 +107,15 @@ export const Bucket = React.memo(() => {
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
   const [getAuth] = useGetAuth('for_upload',false,1)
   const [getAuthForGetDetail] = useGetAuthForGet();
-
+  const push = useNavigate();
+  const { address } = useAccount();
   useEffect(() => {
     ReactTooltip.rebuild();
   },[localFileList]);
+
+  useMemo(()=>{
+    push("/buckets")
+  },[address])
 
   useOnce(()=>{
     getLocalFileListByBucketId(bucketId).then(res=>{

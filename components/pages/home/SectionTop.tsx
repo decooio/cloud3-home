@@ -80,6 +80,7 @@ export const SectionTop = React.memo(() => {
   }, []);
   const doUpload = async (cFile?: any) => {
     try {
+      inputFileRef.current.value = '';
       const base64Signature =
           "ZXRoLTB4MEVDNzJGNEQ5MWVhN2ZiRjAyZTY2NUQzZDU5QzQ3MmVjY2M0ZWZFZDoweDc3NDdmNDkxMWNhOWY2YWJjODE0MTgxZTkzZmM1YjdlNzQ4MGIwYzM0ZGRmOWFmNGQ4NjQ3OTRiZmYzY2EzMTg2MzQyNWEwZDRjZjAyOTA1Mjc5MTIwNDliYjJlYTRkMTM1OGZlZjQ3ZDU4YzBmMTQxNjI3ZmMzMTIwNzMwODdjMWI=";
       const AuthBasic = `Basic ${base64Signature}`;
@@ -105,7 +106,6 @@ export const SectionTop = React.memo(() => {
       let upRes: UploadRes;
       upRes = upResult;
       setUpState({ progress: 100, status: 'success' });
-      inputFileRef.current.value = '';
       setUploadFileInfo(upRes);
     } catch (e) {
       console.error(e);

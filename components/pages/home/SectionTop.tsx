@@ -12,6 +12,7 @@ import CloseBtnSvg from "../../../public/images/close_btn.svg";
 import {upload} from "@lib/files";
 import {useOnce} from "@react-spring/shared";
 import {useToast} from "@lib/hooks/useToast";
+import {DeCloudLink} from "@lib/config";
 
 export interface UploadRes {
   Hash: string;
@@ -86,6 +87,7 @@ export const SectionTop = React.memo(() => {
       const cancel = axios.CancelToken.source();
       setCancelUp(cancel);
       setUpState({ progress: 0, status: 'upload' });
+      inputFileRef.current.value = '';
       const form = new FormData();
       const upFile = cFile;
       if (upFile && upFile.name) {
@@ -105,7 +107,6 @@ export const SectionTop = React.memo(() => {
       let upRes: UploadRes;
       upRes = upResult;
       setUpState({ progress: 100, status: 'success' });
-      inputFileRef.current.value = '';
       setUploadFileInfo(upRes);
     } catch (e) {
       console.error(e);
@@ -170,7 +171,7 @@ export const SectionTop = React.memo(() => {
                   text="Launch App"
                   className=" ml-3 border-white text-white"
                   onClick={() =>
-                      IS_LOCAL ? openExtUrl("/#/buckets") : openExtUrl("/#/buckets")
+                      IS_LOCAL ? openExtUrl("/#/buckets", '_self') : openExtUrl("/#/buckets")
                   }
               />
             </div>
@@ -207,7 +208,7 @@ export const SectionTop = React.memo(() => {
                           You may want to:
                         </label>
                         <div className="flex flex-wrap mt-5">
-                          <div className="mr-5 w-1/2 mb-2 underline" onClick={()=>openExtUrl(`https://crustwebsites.net/ipfs/${uploadFileInfo.Hash}`)}>
+                          <div className="mr-5 w-1/2 mb-2 underline" onClick={()=>openExtUrl(`${DeCloudLink}/ipfs/${uploadFileInfo.Hash}`)}>
                             Get download link for this file
                           </div>
                           <div className="underline" onClick={()=>openExtUrl(`https://ipfs-scan.io/?cid=${uploadFileInfo.Hash}`)}>Verify on IPFS</div>

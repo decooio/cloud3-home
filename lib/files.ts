@@ -1,4 +1,5 @@
 import axios from "axios";
+import {DeCloudLink} from "@lib/config";
 
 export interface UploadRes {
   Hash: string;
@@ -10,7 +11,7 @@ export interface UploadRes {
 const AuthBasic = "Basic ZXRoLTB4MEVDNzJGNEQ5MWVhN2ZiRjAyZTY2NUQzZDU5QzQ3MmVjY2M0ZWZFZDoweDc3NDdmNDkxMWNhOWY2YWJjODE0MTgxZTkzZmM1YjdlNzQ4MGIwYzM0ZGRmOWFmNGQ4NjQ3OTRiZmYzY2EzMTg2MzQyNWEwZDRjZjAyOTA1Mjc5MTIwNDliYjJlYTRkMTM1OGZlZjQ3ZDU4YzBmMTQxNjI3ZmMzMTIwNzMwODdjMWI";
 export async function upload({
                                data,
-                               endpoint = "https://crustwebsites.net",
+                               endpoint = DeCloudLink,
                                authBasic = AuthBasic,
                                onProgress,
                                cancelToken = axios.CancelToken.source().token,

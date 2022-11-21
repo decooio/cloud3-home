@@ -171,7 +171,7 @@ export const SectionTop = React.memo(() => {
                   text="Launch App"
                   className=" ml-3 border-white text-white"
                   onClick={() =>
-                      IS_LOCAL ? openExtUrl("/#/buckets") : openExtUrl("/#/buckets")
+                      IS_LOCAL ? openExtUrl("/#/buckets", '_self') : openExtUrl("/#/buckets")
                   }
               />
             </div>

@@ -12,6 +12,7 @@ import { genUrl, getResData, MintState, Res } from "@lib/http";
 import axios from "axios";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAccount } from "wagmi";
 import { MainLayout } from "./MainLayout";
 
 export const Mint = React.memo(() => {
@@ -79,20 +80,30 @@ export const Mint = React.memo(() => {
     (tep: number = 1) => setStep((o) => o + tep),
     [setStep]
   );
+
+  const { address } = useAccount()
+  useEffect(() => {
+    if(address){
+      updateMint({}, true)
+      setStep(0)
+    }
+  },[address])
   return (
     <MainLayout menuId={1}>
       <div className=" flex-1 h-full overflow-y-auto">
         <div className=" relative px-8 pb-10">
           <div className=" sticky top-0 z-10 bg-white pt-16 pb-3">
             <div
-              className=" flex items-center cursor-pointer"
+              className="inline-block"
               onClick={() => {
                 updateMint({}, true);
                 push("/buckets");
               }}
             >
-              <Icon icon="cru-fo-chevron-left" className=" mr-3" />
-              <span>Exit Mint Process</span>
+              <div className="flex items-center cursor-pointer">
+                <Icon icon="cru-fo-chevron-left" className=" mr-3" />
+                <span>Exit Mint Process</span>
+              </div>
             </div>
             <div className="h-px bg-black-1 my-7" />
             <Steps data={steps} current={currentStep} />

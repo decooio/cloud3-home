@@ -14,9 +14,6 @@ module.exports = {
       width:{
         container: '1112px'
       },
-      fontSize:{
-        "40px": '2.5rem'
-      },
       fontFamily: {
         WorkSans: 'var(--work-sans)',
         SquadaOne: 'var(--squada-one)',

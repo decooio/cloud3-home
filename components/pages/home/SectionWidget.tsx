@@ -3,12 +3,13 @@ import {Button} from "@components/common/Button";
 import WidgetSvg from 'public/images/widget.svg'
 import RichTextSvg from 'public/images/rich_text.svg'
 import IPFSSvg from 'public/images/ipfs_file.svg'
+import {CommonTitle} from "@components/pages/home/CommonTitle";
 
 export const SectionWidget = React.memo(() => {
   return(
     <div className="w-full pb-20 pt-16 px-12 flex flex-col items-center justify-center text-black bg-[#F5F5F5]">
       <div className="w-container">
-        <h3 className="w-full text-left text-40px pb-14">Web3 Storage Widgets</h3>
+        <CommonTitle className="w-full pb-14" text="Web3 Storage Widgets" />
         <p className="w-full text-left text-2xl mb-20">
           Users should own their contents and take full control of them just like what they do to their assets, but they do not.
         </p>

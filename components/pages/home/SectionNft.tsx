@@ -2,11 +2,12 @@ import React from "react";
 import ContainerSvg from "public/images/container.svg";
 import NFTSvg from "public/images/nft.svg";
 import {Button} from "@components/common/Button";
+import {CommonTitle} from "@components/pages/home/CommonTitle";
 export const SectionNft = React.memo(() => {
     return (
         <div className="w-full py-6 px-12 flex justify-center pb-20 text-lg mt-3 text-slate-700 text-lg">
-            <div className="w-container flex flex-col">
-                <h3 className="text-black text-40px my-14 font-medium">Web3 Storage Buckets & Web3 IPFS Gateways</h3>
+            <div className="w-container flex flex-col text-black">
+                <CommonTitle className="my-14 font-medium" text="Web3 Storage Buckets & Web3 IPFS Gateways" />
                 <p className="pb-20">
                     Cloud3 defines what cloud storage middlewares should look like in Web3 - every storage bucket is a NFT, and every IPFS gateway is a NFT.
                 </p>

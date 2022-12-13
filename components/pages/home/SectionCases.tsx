@@ -5,6 +5,7 @@ import ArrowSvg from '../../../public/images/arrow.svg'
 import AaveSvg from '../../../public/images/aave_logo.svg'
 import {randomNum} from "@lib/utils";
 import classnames from "classnames";
+import {CommonTitle} from "@components/pages/home/CommonTitle";
 
 const getRedDoc = ()=>{
     let arr = []
@@ -114,8 +115,8 @@ export const SectionCases = React.memo(() => {
     }
     return(
         <div className="w-full py-6 px-12 flex flex-col items-center">
-            <div className="my-10 mt-20">
-                <h3 className="w-full text-black text-left text-40px ml-24">Discover some real use cases</h3>
+            <div className="my-10 mt-20 text-black">
+                <CommonTitle className="w-full ml-24" text="Discover some real use cases" />
                 {
                     monitorProject.map((v,i)=>{
                         return(

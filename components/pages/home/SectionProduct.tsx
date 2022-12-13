@@ -7,12 +7,13 @@ import CRUSTLogoSvg from 'public/images/crust_logo.svg'
 import ContainerSmallSvg from "public/images/container_small.svg";
 import UploadSvg from "public/images/upload.svg";
 import WidgetSmallSvg from "public/images/widget_small.svg";
+import {CommonTitle} from "@components/pages/home/CommonTitle";
 
 export const SectionProduct = React.memo(() => {
   return(
     <div className="w-full py-20 px-12 flex flex-col items-center justify-center text-black">
       <div className="w-container">
-        <h3 className="w-full text-left text-40px pb-14">Cloud3 is a Web3 storage cloud</h3>
+        <CommonTitle className="w-full pb-14" text="Cloud3 is a Web3 storage cloud" />
         <div className="w-full flex justify-between text-lg">
           <div className="w-[348px] h-[418px] border-2 border-black-1 mt-12">
             <div className="flex flex-col items-center border-b-2 border-black-1 py-6">

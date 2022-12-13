@@ -11,6 +11,12 @@ module.exports = {
           {'min': '0', 'max': '1280px'},
         ]
       },
+      width:{
+        container: '1112px'
+      },
+      fontSize:{
+        "40px": '2.5rem'
+      },
       fontFamily: {
         WorkSans: 'var(--work-sans)',
         SquadaOne: 'var(--squada-one)',

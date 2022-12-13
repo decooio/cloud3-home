@@ -115,6 +115,7 @@ export const SectionMid = React.memo(() => {
     return(
         <div className="w-full py-6 px-12 flex flex-col items-center">
             <div className="my-10 mt-20">
+                <h3 className="w-full text-black text-left text-40px ml-24">Discover some real use cases</h3>
                 {
                     monitorProject.map((v,i)=>{
                         return(

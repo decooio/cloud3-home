@@ -104,7 +104,7 @@ const monitorProject = [
     uniswap(),
     aave(),
 ]
-export const SectionMid = React.memo(() => {
+export const SectionCases = React.memo(() => {
     const [selectedMonitorProjectIndex,setSelectedMonitorProjectIndex] = useState(0)
     const onMonitorMapChangePrev = ()=>{
         setSelectedMonitorProjectIndex((selectedMonitorProjectIndex-1>=0)?selectedMonitorProjectIndex-1:monitorProject.length-1)

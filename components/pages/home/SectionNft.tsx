@@ -2,7 +2,7 @@ import React from "react";
 import ContainerSvg from "public/images/container.svg";
 import NFTSvg from "public/images/nft.svg";
 import {Button} from "@components/common/Button";
-export const SectionBottom = React.memo(() => {
+export const SectionNft = React.memo(() => {
     return (
         <div className="w-full py-6 px-12 flex justify-center pb-20 text-lg mt-3 text-slate-700 text-lg">
             <div className="w-container flex flex-col">

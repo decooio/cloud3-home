@@ -32,6 +32,24 @@ import {useAccount} from "wagmi";
 const TopInfo = () => {
   const { bucketId } = useParams();
   const push = useNavigate();
+  const code = `
+**Upload** file with the standard [IPFS API](https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add) and get the CID:
+
+~~~bash
+curl -X POST 'https://<GATEWAY_HOST>/api/v0/add?pin=true' --header 'Authorization: Bearer <YOUR_W3AUTH_TOKEN>' --form 'path=@"<FILE_PATH>"'
+~~~
+
+**Pin** the CID with the standard [IPFS Pinning Service API](https://ipfs.github.io/pinning-services-api-spec/#operation/addPin):
+
+~~~bash
+curl -X POST '${pinUrl('/psa/pins')}' \
+--header 'Authorization: Bearer <YOUR_W3AUTH_TOKEN>' \
+--data-raw '{
+    "cid": "<FILE_CID>",
+    "name": "<FILE_NAME>"
+}'
+~~~
+`;
   return (
     <>
       <div className="sticky top-0 bg-white px-8 pt-16 flex items-center pb-5 mb-2 min-w-[62rem]">
@@ -54,7 +72,7 @@ const TopInfo = () => {
             Files can be uploaded and decentralized pinned to IPFS by using this
             web interface, or by CLI as shown in the curl sample below.
           </div>
-          <BucketCode />
+          <BucketCode code={code} />
           <div className=" mt-8 text-xl font-medium">Get more references</div>
           <div className=" mt-4 flex flex-wrap">
             <a

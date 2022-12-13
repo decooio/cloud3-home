@@ -36,8 +36,8 @@ export const SectionWidget = React.memo(() => {
             <div className="flex mt-20">
               <IPFSSvg />
               <div className="ml-9">
-                <h5 className="font-semibold text-xl mb-4">Rich-text Content Publisher Widget</h5>
-                <p className="w-[490px]">This widget contains a rich-text editor that can auto upload contents to IPFS alongside the publish process. </p>
+                <h5 className="font-semibold text-xl mb-4">IPFS File Storage Widget</h5>
+                <p className="w-[490px]">This widget helps applications/dapps to upload files of general types to IPFS and manage file storage for their users. </p>
                 <div className="flex mt-5">
                   <Button text="Play Demo" />
                   <Button className="ml-5" text="Show Code" />

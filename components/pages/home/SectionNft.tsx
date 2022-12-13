@@ -1,6 +1,7 @@
 import React from "react";
 import ContainerSvg from "public/images/container.svg";
 import NFTSvg from "public/images/nft.svg";
+import UploadSvg from "public/images/upload.svg";
 import {Button} from "@components/common/Button";
 import {CommonTitle} from "@components/pages/home/CommonTitle";
 export const SectionNft = React.memo(() => {
@@ -15,12 +16,12 @@ export const SectionNft = React.memo(() => {
                     <div>
                         <div className="flex items-center">
                             <ContainerSvg />
-                            <span className="text-6xl">=</span>
+                            <span className="text-6xl px-6">=</span>
                             <NFTSvg />
                         </div>
                         <div className="flex items-center pt-24">
-                            <ContainerSvg />
-                            <span className="text-6xl">=</span>
+                            <UploadSvg />
+                            <span className="text-6xl px-6">=</span>
                             <NFTSvg />
                         </div>
                     </div>
@@ -35,8 +36,8 @@ export const SectionNft = React.memo(() => {
                             Storage service are called by Standard IPFS Remote Pinning Service APIs that make your files always available (alive!) on IPFS with multiple replicas and accessible from everywhere.
                         </p>
                         <div className="flex mt-8">
-                            <Button text="Play Demo" />
-                            <Button className="ml-5" text="Show Code" />
+                            <Button text="Play Quick Demo" />
+                            <Button className="ml-5" text="Launch App" />
                         </div>
                     </div>
                 </div>

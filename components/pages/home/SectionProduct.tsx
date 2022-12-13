@@ -1,11 +1,8 @@
 import React, {useState} from "react";
-import {MonitorMap,basePos} from "@components/common/MonitorMap";
-import {randomNum} from "@lib/utils";
-import classnames from "classnames";
 import IPFSLogoSvg from 'public/images/ipfs_logo.svg'
 import CRUSTLogoSvg from 'public/images/crust_logo.svg'
 import ContainerSmallSvg from "public/images/container_small.svg";
-import UploadSvg from "public/images/upload.svg";
+import UploadSmallSvg from "public/images/upload_small.svg";
 import WidgetSmallSvg from "public/images/widget_small.svg";
 import {CommonTitle} from "@components/pages/home/CommonTitle";
 
@@ -42,16 +39,16 @@ export const SectionProduct = React.memo(() => {
                   <span>Platform-as-a-Service</span>
                 </div>
                 <div className="flex flex-col items-center pt-7 pb-14">
-                  <div className="flex items-center text-40px">
+                  <div className="flex items-center text-[2.5rem]">
                     <span className="mr-2">W3</span>
                     <ContainerSmallSvg/>
                     <span className="px-3">+</span>
                     <span className="mr-2">W3</span>
-                    <UploadSvg/>
+                    <UploadSmallSvg/>
                   </div>
                   <h6 className="text-2xl mt-6 mb-3 underline">W3Buckets</h6>
                   <span>NFT-nized IPFS storage buckets</span>
-                  <h6 className="text-2xl mt-5 mb-3 underline">Crust Network</h6>
+                  <h6 className="text-2xl mt-5 mb-3 underline">W3Gateways</h6>
                   <span>NFT-nized IPFS Gateways</span>
                 </div>
               </div>
@@ -61,7 +58,7 @@ export const SectionProduct = React.memo(() => {
                   <span>Software-as-a-Service</span>
                 </div>
                 <div className="flex flex-col items-center pt-7 pl-6">
-                  <div className="flex items-center text-40px">
+                  <div className="flex items-center text-[2.5rem]">
                     <span className="mr-2">W3</span>
                     <WidgetSmallSvg />
                   </div>

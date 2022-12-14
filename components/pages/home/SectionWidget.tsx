@@ -4,8 +4,12 @@ import WidgetSvg from 'public/images/widget.svg'
 import RichTextSvg from 'public/images/rich_text.svg'
 import IPFSSvg from 'public/images/ipfs_file.svg'
 import {CommonTitle} from "@components/pages/home/CommonTitle";
+import {Modal} from "@components/modals/Modal";
+import {CommonModalClose} from "@components/pages/home/CommonModalClose";
 
 export const SectionWidget = React.memo(() => {
+  const [publisherState,setPublisherState] = useState(0)
+  const [storageState,setStorageState] = useState(0)
   return(
     <div className="w-full pb-20 pt-16 px-12 flex flex-col items-center justify-center text-black bg-[#F5F5F5]">
       <div className="w-container">
@@ -28,7 +32,7 @@ export const SectionWidget = React.memo(() => {
                 <h5 className="font-semibold text-xl mb-4">Rich-text Content Publisher Widget</h5>
                 <p className="w-[490px]">This widget contains a rich-text editor that can auto upload contents to IPFS alongside the publish process. </p>
                 <div className="flex mt-5">
-                  <Button text="Play Demo" />
+                  <Button onClick={()=>setPublisherState(1)} text="Play Demo" />
                   <Button className="ml-5" text="Show Code" />
                 </div>
               </div>
@@ -39,7 +43,7 @@ export const SectionWidget = React.memo(() => {
                 <h5 className="font-semibold text-xl mb-4">IPFS File Storage Widget</h5>
                 <p className="w-[490px]">This widget helps applications/dapps to upload files of general types to IPFS and manage file storage for their users. </p>
                 <div className="flex mt-5">
-                  <Button text="Play Demo" />
+                  <Button onClick={()=>setStorageState(1)} text="Play Demo" />
                   <Button className="ml-5" text="Show Code" />
                 </div>
               </div>
@@ -47,6 +51,60 @@ export const SectionWidget = React.memo(() => {
           </div>
         </div>
       </div>
+      {
+        publisherState != 0 &&
+        <Modal className="p-0">
+          <div
+            className="bg-white flex min-h-[43.75rem] relative"
+          >
+            <CommonModalClose onClose={()=>setPublisherState(0)} />
+            <div className="bg-black w-80 text-white px-8 py-16 text-lg">
+              <h4 className="mb-12 text-2xl font-medium">
+                Rich-text Content Publisher Widget
+              </h4>
+              <div>
+                <h5 className="mb-5 font-medium">Demo Step 1:</h5>
+                <p className="mb-5 font-light">
+                  Type in any text and try to do some simple edit work.
+                </p>
+                <p className="font-light">
+                  When you finish, click on the <span className="font-medium">'Publish'</span> button to continue.
+                </p>
+              </div>
+            </div>
+            <div className="min-w-[57.5rem]">
+
+            </div>
+          </div>
+        </Modal>
+      }
+      {
+        storageState != 0 &&
+        <Modal className="p-0">
+          <div
+            className="bg-white flex min-h-[43.75rem] relative"
+          >
+            <CommonModalClose onClose={()=>setStorageState(0)} />
+            <div className="bg-black w-80 text-white px-8 py-16 text-lg">
+              <h4 className="mb-12 text-2xl font-medium">
+                IPFS File Storage Widget
+              </h4>
+              <div>
+                <h5 className="mb-5 font-medium">Demo Step 1:</h5>
+                <p className="mb-5 font-light">
+                  Drag and drop a file into the box.
+                </p>
+                <p className="font-light">
+                  When you finish, click on the <span className="font-medium">'Upload'</span> button to continue.
+                </p>
+              </div>
+            </div>
+            <div className="min-w-[57.5rem]">
+
+            </div>
+          </div>
+        </Modal>
+      }
     </div>
   )
 });

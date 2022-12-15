@@ -12,21 +12,33 @@ export function StorageCode(p: IProps){
 **React**:
 
 ~~~bash
-import form 'react-storage-demo'
+import from 'react-cloud3-storage-widget'
+
+export function(){
+  return(
+    <ReactStorageWidget />
+  )
+}
 ~~~
 
 **Vue**:
 
 ~~~bash
-import form 'vue-storage-demo'
+import from 'vue-cloud3-storage-widget'
+
+<body>
+  <div id="app">
+    <vue-storage-widget></vue-storage-widget>
+  </div>
+</body>
 ~~~
 `;
   return(
     <Modal className="p-0">
-      <div className="bg-white flex flex-col relative p-5">
+      <div className="bg-white flex flex-col relative p-6">
         <div className="flex justify-between items-center mb-5">
           <h4 className="underline">Dev Guidance</h4>
-          <CommonModalClose className="mt-[-0.5rem]" onClose={()=>onClose && onClose()} />
+          <CommonModalClose className="mt-[-0.3rem]" onClose={()=>onClose && onClose()} />
         </div>
         <div>
           <BucketCode code={code} />

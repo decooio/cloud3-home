@@ -12,21 +12,33 @@ export function PublisherCode(p: IProps){
 **React**:
 
 ~~~bash
-import form 'React-demo'
+import from 'react-cloud3-publisher-widget'
+
+export function(){
+  return(
+    <ReactPublisherWidget />
+  )
+}
 ~~~
 
 **Vue**:
 
 ~~~bash
-import form 'Vue-demo'
+import from 'vue-cloud3-publisher-widget'
+
+<body>
+  <div id="app">
+    <vue-publisher-widget></vue-publisher-widget>
+  </div>
+</body>
 ~~~
 `;
   return(
     <Modal className="p-0">
-      <div className="bg-white flex flex-col relative p-5">
+      <div className="bg-white flex flex-col relative p-6">
         <div className="flex justify-between items-center mb-5">
           <h4 className="underline">Dev Guidance</h4>
-          <CommonModalClose className="mt-[-0.5rem]" onClose={()=>onClose && onClose()} />
+          <CommonModalClose className="mt-[-0.3rem]" onClose={()=>onClose && onClose()} />
         </div>
         <div>
           <BucketCode code={code} />

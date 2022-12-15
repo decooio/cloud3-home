@@ -12,9 +12,11 @@ import {useToast} from "@lib/hooks/useToast";
 interface IProps{
   className?: string,
   onClose?: any
+  uploadRender?: any
+  uploadBorder?: boolean
 }
 export function DragUpload(p:IProps){
-  const {className,onClose} = p
+  const {className,onClose,uploadRender,uploadBorder=true} = p
   const toast = useToast();
   const [upState, setUpState] = useState({ progress: 0, status: 'stop' });
   const uploadRef = useRef(null);
@@ -133,7 +135,7 @@ export function DragUpload(p:IProps){
       <div
         ref={uploadRef}
         onClick={onOpenUpload}
-        className="w-full cursor-pointer relative flex justify-center items-center border-black-1 border-4 border-dashed mt-12"
+        className={classNames("w-full cursor-pointer relative max-w-[70rem] flex justify-center items-center border-4 border-dashed mt-12")}
       >
         {
           onClose &&
@@ -145,7 +147,9 @@ export function DragUpload(p:IProps){
         {upState.status !=='stop'? (
           upState.status ==='upload' ? (
             <div className="w-full px-20">
-              <ProgressBar value={upState.progress} />
+              {
+                uploadRender? uploadRender(upState.progress):<ProgressBar value={upState.progress} />
+              }
             </div>
           ) : (
             <div className="text-slate-700 text-lg flex flex-col px-20">

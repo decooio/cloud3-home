@@ -7,10 +7,19 @@ import {CommonTitle} from "@components/pages/home/CommonTitle";
 import {Modal} from "@components/modals/Modal";
 import {CommonModalClose} from "@components/pages/home/CommonModalClose";
 import {DragUpload} from "@components/common/DragUpload";
+import {ProgressBar} from "@components/common/ProgressBar";
 
 export const SectionWidget = React.memo(() => {
   const [publisherState,setPublisherState] = useState(0)
   const [storageState,setStorageState] = useState(0)
+  const uploadRender = (progress)=>{
+    return(
+      <div className="flex flex-col items-center">
+        <p className="w-[26rem] text-2xl text-center mb-10">Publishing & Uploading to IPFS Please wait...</p>
+        <ProgressBar value={progress} />
+      </div>
+    )
+  }
   return(
     <div id="widget" className="w-full pb-20 pt-16 px-12 flex flex-col items-center justify-center text-black bg-[#F5F5F5]">
       <div className="w-container">
@@ -100,7 +109,7 @@ export const SectionWidget = React.memo(() => {
               </div>
             </div>
             <div className="min-w-[57.5rem] flex justify-center">
-              <DragUpload className="h-[35.937rem] w-[50.5rem] mt-12" />
+              <DragUpload uploadRender={uploadRender} uploadBorder={false} className="h-[35.937rem] w-[50.5rem] mt-12" />
             </div>
           </div>
         </Modal>

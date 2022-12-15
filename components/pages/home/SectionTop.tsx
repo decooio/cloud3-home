@@ -69,7 +69,7 @@ export const SectionTop = React.memo(() => {
         </div>
         {
           visibleDropUpload &&
-          <DragUpload className="h-[28.937rem] w-[69.5rem]" onClose={onCloseDragUpload}/>
+          <DragUpload className="h-[32.937rem]" onClose={onCloseDragUpload}/>
         }
       </div>
   );

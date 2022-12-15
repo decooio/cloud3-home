@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import CloseBtnSvg from "@public/images/close_btn.svg";
 import {ProgressBar} from "@components/common/ProgressBar";
-import {getClientHeight, openExtUrl} from "@lib/utils";
+import {openExtUrl} from "@lib/utils";
 import {DeCloudLink} from "@lib/config";
 import React, {useEffect, useRef, useState} from "react";
 import axios, {CancelTokenSource} from "axios";
@@ -13,10 +13,12 @@ interface IProps{
   className?: string,
   onClose?: any
   uploadRender?: any
-  uploadBorder?: boolean
+  uploadBorder?: boolean,
+  onSuccess?: any,
+  id?: string
 }
 export function DragUpload(p:IProps){
-  const {className,onClose,uploadRender,uploadBorder=true} = p
+  const {className,onClose,uploadRender,uploadBorder=true,onSuccess,id=''} = p
   const toast = useToast();
   const [upState, setUpState] = useState({ progress: 0, status: 'stop' });
   const uploadRef = useRef(null);
@@ -96,6 +98,7 @@ export function DragUpload(p:IProps){
       upRes = upResult;
       setUpState({ progress: 100, status: 'success' });
       setUploadFileInfo(upRes);
+      onSuccess && onSuccess(upRes)
     } catch (e) {
       console.error(e);
     }
@@ -127,6 +130,7 @@ export function DragUpload(p:IProps){
   };
   return(
     <div
+      id={id}
       className={classNames(
         "w-full flex justify-center",
         className
@@ -135,7 +139,8 @@ export function DragUpload(p:IProps){
       <div
         ref={uploadRef}
         onClick={onOpenUpload}
-        className={classNames("w-full cursor-pointer relative max-w-[70rem] flex justify-center items-center border-4 border-dashed mt-12")}
+        className={classNames("w-full h-full cursor-pointer relative max-w-[70rem] flex justify-center items-center border-black-1 border-4 border-dashed")}
+        style={!uploadBorder && upState.status === 'upload'?{border:'none'}:{}}
       >
         {
           onClose &&

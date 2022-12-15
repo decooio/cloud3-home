@@ -4,7 +4,7 @@ import CRUSTLogoSvg from 'public/images/crust_logo.svg'
 import ContainerSmallSvg from "public/images/container_small.svg";
 import UploadSmallSvg from "public/images/upload_small.svg";
 import WidgetSmallSvg from "public/images/widget_small.svg";
-import {CommonTitle} from "@components/pages/home/CommonTitle";
+import {CommonTitle} from "@components/pages/home/component/CommonTitle";
 import {scrollToAnchor} from "@lib/utils";
 
 export const SectionProduct = React.memo(() => {

@@ -5,7 +5,7 @@ import ArrowSvg from '../../../public/images/arrow.svg'
 import AaveSvg from '../../../public/images/aave_logo.svg'
 import {randomNum} from "@lib/utils";
 import classnames from "classnames";
-import {CommonTitle} from "@components/pages/home/CommonTitle";
+import {CommonTitle} from "@components/pages/home/component/CommonTitle";
 
 const getRedDoc = ()=>{
     let arr = []

@@ -1,10 +1,26 @@
-import React from "react";
+import React, {useState} from "react";
 import ContainerSvg from "public/images/container.svg";
 import NFTSvg from "public/images/nft.svg";
 import UploadSvg from "public/images/upload.svg";
 import {Button} from "@components/common/Button";
-import {CommonTitle} from "@components/pages/home/CommonTitle";
+import {CommonTitle} from "@components/pages/home/component/CommonTitle";
+import {DragUpload} from "@components/common/DragUpload";
+import {openExtUrl, scrollToAnchor} from "@lib/utils";
+import {IS_LOCAL} from "@lib/env";
 export const SectionNft = React.memo(() => {
+    const [visibleDropUpload, setVisibleDropUpload] = useState(false);
+    const openDropUpload = ()=>{
+      setVisibleDropUpload(true)
+      setTimeout(() => {
+          scrollToAnchor('nftupload')
+      }, 0);
+    }
+    const onCloseDragUpload = ()=>{
+        setVisibleDropUpload(false)
+        setTimeout(()=>{
+            scrollToAnchor('nft')
+        },0)
+    }
     return (
         <div className="w-full py-6 px-12 flex justify-center pb-20 text-lg mt-3 text-slate-700 text-lg" id="nft">
             <div className="w-container flex flex-col text-black">
@@ -36,11 +52,21 @@ export const SectionNft = React.memo(() => {
                             Storage service are called by Standard IPFS Remote Pinning Service APIs that make your files always available (alive!) on IPFS with multiple replicas and accessible from everywhere.
                         </p>
                         <div className="flex mt-8">
-                            <Button text="Play Quick Demo" />
-                            <Button className="ml-5" text="Launch App" />
+                            <Button onClick={openDropUpload} text="Play Quick Demo" />
+                            <Button
+                              onClick={() =>
+                                IS_LOCAL ? openExtUrl("/#/buckets", '_self') : openExtUrl("/#/buckets")
+                              }
+                              className="ml-5"
+                              text="Launch App"
+                            />
                         </div>
                     </div>
                 </div>
+                {
+                    visibleDropUpload &&
+                    <DragUpload id="nftupload" className="h-[32.937rem] mt-12" onClose={onCloseDragUpload}/>
+                }
             </div>
         </div>
     )

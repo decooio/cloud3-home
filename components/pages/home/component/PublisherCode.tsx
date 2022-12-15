@@ -12,7 +12,7 @@ export function PublisherCode(p: IProps){
 **React**:
 
 ~~~bash
-import from 'react-cloud3-publisher-widget'
+import from '@cloud3/react-publisher-widget'
 
 export function(){
   return(
@@ -24,7 +24,7 @@ export function(){
 **Vue**:
 
 ~~~bash
-import from 'vue-cloud3-publisher-widget'
+import from '@cloud3/vue-publisher-widget'
 
 <body>
   <div id="app">

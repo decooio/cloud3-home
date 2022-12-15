@@ -12,7 +12,7 @@ export function StorageCode(p: IProps){
 **React**:
 
 ~~~bash
-import from 'react-cloud3-storage-widget'
+import from '@cloud3/react-storage-widget'
 
 export function(){
   return(
@@ -24,7 +24,7 @@ export function(){
 **Vue**:
 
 ~~~bash
-import from 'vue-cloud3-storage-widget'
+import from '@cloud3/vue-storage-widget'
 
 <body>
   <div id="app">

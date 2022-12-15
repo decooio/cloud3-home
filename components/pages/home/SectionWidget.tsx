@@ -11,7 +11,7 @@ export const SectionWidget = React.memo(() => {
   const [publisherState,setPublisherState] = useState(0)
   const [storageState,setStorageState] = useState(0)
   return(
-    <div className="w-full pb-20 pt-16 px-12 flex flex-col items-center justify-center text-black bg-[#F5F5F5]">
+    <div id="widget" className="w-full pb-20 pt-16 px-12 flex flex-col items-center justify-center text-black bg-[#F5F5F5]">
       <div className="w-container">
         <CommonTitle className="w-full pb-14" text="Web3 Storage Widgets" />
         <p className="w-full text-left text-2xl mb-20">

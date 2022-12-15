@@ -5,6 +5,7 @@ import ContainerSmallSvg from "public/images/container_small.svg";
 import UploadSmallSvg from "public/images/upload_small.svg";
 import WidgetSmallSvg from "public/images/widget_small.svg";
 import {CommonTitle} from "@components/pages/home/CommonTitle";
+import {scrollToAnchor} from "@lib/utils";
 
 export const SectionProduct = React.memo(() => {
   return(
@@ -46,9 +47,9 @@ export const SectionProduct = React.memo(() => {
                     <span className="mr-2">W3</span>
                     <UploadSmallSvg/>
                   </div>
-                  <h6 className="text-2xl mt-6 mb-3 underline">W3Buckets</h6>
+                  <h6 onClick={()=>scrollToAnchor('nft')} className="text-2xl mt-6 mb-3 underline cursor-pointer">W3Buckets</h6>
                   <span>NFT-nized IPFS storage buckets</span>
-                  <h6 className="text-2xl mt-5 mb-3 underline">W3Gateways</h6>
+                  <h6 onClick={()=>scrollToAnchor('nft')} className="text-2xl mt-5 mb-3 underline cursor-pointer">W3Gateways</h6>
                   <span>NFT-nized IPFS Gateways</span>
                 </div>
               </div>
@@ -62,7 +63,7 @@ export const SectionProduct = React.memo(() => {
                     <span className="mr-2">W3</span>
                     <WidgetSmallSvg />
                   </div>
-                  <h6 className="text-2xl mt-6 mb-3 underline">Web3 Storage Widgets</h6>
+                  <h6 onClick={()=>scrollToAnchor('widget')} className="text-2xl mt-6 mb-3 underline cursor-pointer">Web3 Storage Widgets</h6>
                   <p className="w-[298px] text-center">Rich-text Editor/Publisher Widget
                     IPFS File Storage Widget
                   </p>

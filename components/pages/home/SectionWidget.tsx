@@ -6,6 +6,7 @@ import IPFSSvg from 'public/images/ipfs_file.svg'
 import {CommonTitle} from "@components/pages/home/CommonTitle";
 import {Modal} from "@components/modals/Modal";
 import {CommonModalClose} from "@components/pages/home/CommonModalClose";
+import {DragUpload} from "@components/common/DragUpload";
 
 export const SectionWidget = React.memo(() => {
   const [publisherState,setPublisherState] = useState(0)
@@ -72,8 +73,7 @@ export const SectionWidget = React.memo(() => {
                 </p>
               </div>
             </div>
-            <div className="min-w-[57.5rem]">
-
+            <div className="min-w-[57.5rem] flex justify-center">
             </div>
           </div>
         </Modal>
@@ -99,8 +99,8 @@ export const SectionWidget = React.memo(() => {
                 </p>
               </div>
             </div>
-            <div className="min-w-[57.5rem]">
-
+            <div className="min-w-[57.5rem] flex justify-center">
+              <DragUpload className="h-[35.937rem] w-[50.5rem] mt-12" />
             </div>
           </div>
         </Modal>

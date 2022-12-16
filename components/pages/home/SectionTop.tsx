@@ -18,7 +18,6 @@ export const SectionTop = React.memo(() => {
       window.scroll(0, 0);
     },50)
   })
-
   return (
       <div className="w-full min-h-min">
         {/* Anim BG */}

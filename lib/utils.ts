@@ -1,4 +1,4 @@
-import {DeCloudLink, GatewayList, W3Bucket_Adress} from "@lib/config";
+import { GatewayBase, GatewayList, W3Bucket_Adress} from "@lib/config";
 import BN from "bn.js";
 import classNames, {Argument} from "classnames";
 import isMobile from "ismobilejs";
@@ -160,7 +160,7 @@ export function formatFileSize(
 }
 
 export function ipfsUrl(cid: string) {
-  return `${DeCloudLink}/ipfs/${cid}`;
+  return `${GatewayBase}/ipfs/${cid}`;
 }
 export function ipnsUrl(ipns: string) {
   return `${GatewayList[0].value}/ipns/${ipns}`;

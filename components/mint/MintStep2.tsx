@@ -2,7 +2,7 @@ import { BucketImage, MintColors } from "@components/common/BucketImage";
 import { Button } from "@components/common/Button";
 import { LoadingText } from "@components/common/Loading";
 import { QRCodeStyles } from "@components/common/QRCode";
-import { upload } from "@lib/files";
+import { pinCID, upload } from "@lib/files";
 import { useLock, useOn, useSafe, useSafeState } from "@lib/hooks/tools";
 import { BucketEdition } from "@lib/hooks/useBucketEditions";
 import { useGetAuthForMint } from "@lib/hooks/useGetAuth";
@@ -151,6 +151,7 @@ function PreMetadata(p: { onContinue: OnNext }) {
         const form = new FormData();
         form.append("file", imageblob, "bucket_image.png");
         const image = await upload({ data: form });
+        await pinCID(image.Hash, "bucket_image.png");
         const res = await axios.post<Res<void>>(
           genUrl("/auth/bucket/metadata/generate"),
           { uuid: mintData.uuid, cid: image.Hash },

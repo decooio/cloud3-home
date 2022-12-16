@@ -1,3 +1,4 @@
+import {MdEditor} from "@components/common/MdEditor";
 import {Modal} from "@components/modals/Modal";
 import {CommonModalClose} from "@components/pages/home/component/CommonModalClose";
 import React, {useState} from "react";
@@ -28,7 +29,8 @@ export function PublisherUpload(p: IProps){
             </p>
           </div>
         </div>
-        <div className="min-w-[57.5rem] flex justify-center">
+        <div className="min-w-[57.5rem] flex items-center justify-center">
+          <MdEditor/>
         </div>
       </div>
     </Modal>

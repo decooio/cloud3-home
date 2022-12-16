@@ -2,7 +2,7 @@ import classNames from "classnames";
 import CloseBtnSvg from "@public/images/close_btn.svg";
 import {ProgressBar} from "@components/common/ProgressBar";
 import {openExtUrl} from "@lib/utils";
-import {DeCloudLink} from "@lib/config";
+import {GatewayBase} from "@lib/config";
 import React, {useEffect, useRef, useState} from "react";
 import axios, {CancelTokenSource} from "axios";
 import {upload} from "@lib/files";
@@ -167,7 +167,7 @@ export function DragUpload(p:IProps){
                   You may want to:
                 </label>
                 <div className="flex flex-wrap mt-5">
-                  <div className="mr-5 w-1/2 mb-2 underline" onClick={()=>openExtUrl(`${DeCloudLink}/ipfs/${uploadFileInfo.Hash}`)}>
+                  <div className="mr-5 w-1/2 mb-2 underline" onClick={()=>openExtUrl(`${GatewayBase}/ipfs/${uploadFileInfo.Hash}`)}>
                     Get download link for this file
                   </div>
                   <div className="underline" onClick={()=>openExtUrl(`https://ipfs-scan.io/?cid=${uploadFileInfo.Hash}`)}>Verify on IPFS</div>

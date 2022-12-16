@@ -9,10 +9,10 @@ import React, {useEffect, useMemo, useRef, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
 import CloseBtnSvg from "../../../public/images/close_btn.svg";
-import {upload} from "@lib/files";
+import {pinCID, upload} from "@lib/files";
 import {useOnce} from "@react-spring/shared";
 import {useToast} from "@lib/hooks/useToast";
-import {DeCloudLink} from "@lib/config";
+import {GatewayBase} from "@lib/config";
 
 export interface UploadRes {
   Hash: string;
@@ -81,9 +81,6 @@ export const SectionTop = React.memo(() => {
   }, []);
   const doUpload = async (cFile?: any) => {
     try {
-      const base64Signature =
-          "ZXRoLTB4MEVDNzJGNEQ5MWVhN2ZiRjAyZTY2NUQzZDU5QzQ3MmVjY2M0ZWZFZDoweDc3NDdmNDkxMWNhOWY2YWJjODE0MTgxZTkzZmM1YjdlNzQ4MGIwYzM0ZGRmOWFmNGQ4NjQ3OTRiZmYzY2EzMTg2MzQyNWEwZDRjZjAyOTA1Mjc5MTIwNDliYjJlYTRkMTM1OGZlZjQ3ZDU4YzBmMTQxNjI3ZmMzMTIwNzMwODdjMWI=";
-      const AuthBasic = `Basic ${base64Signature}`;
       const cancel = axios.CancelToken.source();
       setCancelUp(cancel);
       setUpState({ progress: 0, status: 'upload' });
@@ -97,12 +94,12 @@ export const SectionTop = React.memo(() => {
       }
       const upResult = await upload({
         data: form,
-        authBasic: AuthBasic,
         cancelToken: cancel.token,
         onProgress: (num)=>{
           setUpState({ progress: Math.round(num * 99), status: 'upload' });
         }
       })
+      await pinCID(upResult.Hash, upFile.name);
       setCancelUp(null);
       let upRes: UploadRes;
       upRes = upResult;
@@ -208,7 +205,7 @@ export const SectionTop = React.memo(() => {
                           You may want to:
                         </label>
                         <div className="flex flex-wrap mt-5">
-                          <div className="mr-5 w-1/2 mb-2 underline" onClick={()=>openExtUrl(`${DeCloudLink}/ipfs/${uploadFileInfo.Hash}`)}>
+                          <div className="mr-5 w-1/2 mb-2 underline" onClick={()=>openExtUrl(`${GatewayBase}/ipfs/${uploadFileInfo.Hash}`)}>
                             Get download link for this file
                           </div>
                           <div className="underline" onClick={()=>openExtUrl(`https://ipfs-scan.io/?cid=${uploadFileInfo.Hash}`)}>Verify on IPFS</div>

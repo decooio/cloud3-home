@@ -23,9 +23,9 @@ export const SectionProduct = React.memo(() => {
                 <IPFSLogoSvg />
                 <CRUSTLogoSvg className="ml-11" />
               </div>
-              <a href="https://crust.network" target="_blank" className="text-2xl text-black mt-5 mb-2 underline">IPFS</a>
+              <a href="https://ipfs.io" target="_blank" className="text-2xl text-black mt-5 mb-2 underline">IPFS</a>
               <span>the distrbuted file system</span>
-              <a href="https://ipfs.io" target="_blank" className="text-2xl mt-4 mb-2 underline text-black">Crust Network</a>
+              <a href="https://crust.network" target="_blank" className="text-2xl mt-4 mb-2 underline text-black">Crust Network</a>
               <p className="w-[294px] text-center">the decentralized storage protocol & incentive layer of IPFS</p>
             </div>
             <div>

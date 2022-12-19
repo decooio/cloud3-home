@@ -43,6 +43,7 @@ import { AiOutlineCheckCircle } from "react-icons/ai";
 import { Button } from "./Button";
 import { Icon } from "./Icon";
 import { ProgressBar } from "./ProgressBar";
+import { shortStr } from "@lib/utils";
 
 type Language = "zh_hant" | "zh_hans" | "en";
 
@@ -409,8 +410,8 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
             <p className="mb-14">This content has been published and decentralized stored on IPFS.</p>
             <h5 className="mb-2">Your content's IPFS CID:</h5>
             <p className="text-sm text-gray-7 mb-8">{MDCid}</p>
-            {/*<h5 className="mb-2">Storage Manager Tx No:</h5>*/}
-            {/*<p className="text-sm text-gray-7">QmZAtHgtRuaH7smYsllzlbv86GYSajkxwKUL95UAoahEs7S</p>*/}
+            <h5 className="mb-2">Storage Manager Tx No:</h5>
+            <p className="text-sm text-gray-7">{shortStr('0x69b9f8cf491b55c485dbb43a86a7e48f7649aa45c958cd245461d04c3146bd91', 23, 23)}</p>
           </div>
         </>
       )}

@@ -1852,7 +1852,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/react@npm:^11.8.1, @emotion/react@npm:^11.9.0":
+"@emotion/react@npm:^11.10.5, @emotion/react@npm:^11.9.0":
   version: 11.10.5
   resolution: "@emotion/react@npm:11.10.5"
   dependencies:
@@ -1896,7 +1896,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/styled@npm:^11.3.0, @emotion/styled@npm:^11.8.1":
+"@emotion/styled@npm:^11.10.5, @emotion/styled@npm:^11.3.0":
   version: 11.10.5
   resolution: "@emotion/styled@npm:11.10.5"
   dependencies:
@@ -4471,15 +4471,6 @@ __metadata:
     color2k: ^2.0.0
     csstype: ^3.0.7
   checksum: 2d69d6d5bd38452e8b6e751ccc6ab318b599a9f74572a4514575b7fb78c2c6b2b11fa676d801e7b41e306eff596c27d3a9ed17633db2b3e223a923e5a56fd8f1
-  languageName: node
-  linkType: hard
-
-"@remirror/types@npm:0.1.1":
-  version: 0.1.1
-  resolution: "@remirror/types@npm:0.1.1"
-  dependencies:
-    type-fest: ^1.2.2
-  checksum: b6866719babcaea03cc3182e144730cd1d9c77f10eef2cb7ae28c680468ad3c1de56e442d746347e3f9bbe9543ad7bf96b571db1548d635a862ebe6a1d752c22
   languageName: node
   linkType: hard
 
@@ -19461,8 +19452,8 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@decooio/crust-fonts": ^1.1.0
-    "@emotion/react": ^11.8.1
-    "@emotion/styled": ^11.8.1
+    "@emotion/react": ^11.10.5
+    "@emotion/styled": ^11.10.5
     "@metamask/detect-provider": ^1.2.0
     "@next/font": ^13.0.1
     "@react-three/drei": ^9.32.3
@@ -19470,7 +19461,6 @@ __metadata:
     "@remirror/pm": 2.0.2
     "@remirror/react": 2.0.22
     "@remirror/styles": 2.0.2
-    "@remirror/types": 0.1.1
     "@svgr/webpack": ^6.4.0
     "@typechain/ethers-v5": ^10.1.0
     "@types/lodash": ^4.14.186
@@ -21603,7 +21593,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^1.2.0, type-fest@npm:^1.2.2":
+"type-fest@npm:^1.2.0":
   version: 1.4.0
   resolution: "type-fest@npm:1.4.0"
   checksum: b011c3388665b097ae6a109a437a04d6f61d81b7357f74cbcb02246f2f5bd72b888ae33631b99871388122ba0a87f4ff1c94078e7119ff22c70e52c0ff828201

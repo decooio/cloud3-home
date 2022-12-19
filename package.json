@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@decooio/crust-fonts": "^1.1.0",
-    "@emotion/react": "^11.8.1",
-    "@emotion/styled": "^11.8.1",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@metamask/detect-provider": "^1.2.0",
     "@next/font": "^13.0.1",
     "@react-three/drei": "^9.32.3",
@@ -47,7 +47,6 @@
     "wagmi": "^0.7.7"
   },
   "devDependencies": {
-    "@remirror/types": "0.1.1",
     "@svgr/webpack": "^6.4.0",
     "@types/lodash": "^4.14.186",
     "@types/node": "^16.3.3",

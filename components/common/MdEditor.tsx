@@ -1,9 +1,13 @@
-import React, { FC, useCallback, useMemo, useRef, useState } from "react";
-import "@remirror/styles/all.css";
 import { css } from "@emotion/css";
-import { EditorComponent, Remirror, ThemeProvider, MarkdownToolbar, useRemirror, useTheme } from "@remirror/react";
+import {
+  EditorComponent,
+  Remirror,
+  ThemeProvider, ToggleBlockquoteButton, ToggleBoldButton, ToggleBulletListButton, ToggleCodeBlockButton, ToggleHeadingButton, ToggleItalicButton, ToggleOrderedListButton, ToggleStrikeButton, Toolbar, useRemirror
+} from "@remirror/react";
+import "@remirror/styles/all.css";
 import { RemirrorThemeType } from "@remirror/theme";
 import axios from "axios";
+import { FC, useCallback, useMemo, useRef, useState } from "react";
 import jsx from "refractor/lang/jsx";
 import typescript from "refractor/lang/typescript";
 import { Extension, ExtensionPriority, getThemeVar, RemirrorEventListenerProps } from "remirror";
@@ -27,16 +31,16 @@ import {
   PlaceholderExtension,
   StrikeExtension,
   // TableExtension,
-  TrailingNodeExtension,
+  TrailingNodeExtension
 } from "remirror/extensions";
 
 import data from "svgmoji/emoji.json";
 
+import { upload } from "@lib/files";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { ethers } from "ethers";
-import { Button } from "./Button";
-import { upload } from "@lib/files";
 import { AiOutlineCheckCircle } from "react-icons/ai";
+import { Button } from "./Button";
 import { Icon } from "./Icon";
 import { ProgressBar } from "./ProgressBar";
 
@@ -88,7 +92,7 @@ const a = 'asdf';
 3. List
 
 `;
-const mTheme = css`
+const mThemeClass = css`
   width: 100%;
   padding: 80px 24px 24px 24px;
   ol,
@@ -96,26 +100,6 @@ const mTheme = css`
     list-style: revert !important;
     margin: revert !important;
     padding: revert !important;
-  }
-  [class*="MuiStack-root"] {
-    height: 72px;
-    background-color: #f4f5f7;
-    padding: 24px;
-    border: 1px solid #dfe3e7;
-    overflow-x: auto;
-    .MuiBox-root {
-      background: unset;
-    }
-    button {
-      padding: unset;
-      width: 24px;
-      height: 24px;
-      /* font-size: 22px; */
-      margin-right: 18px;
-      outline: unset;
-      border: unset;
-      background-color: transparent !important;
-    }
   }
   .remirror-editor-wrapper {
     padding-top: unset;
@@ -137,7 +121,7 @@ const mTheme = css`
 
 const ThemeDiv = ({ style, className, children }: any) => {
   return (
-    <div style={style} className={`${mTheme} ${className} w-full`}>
+    <div style={style} className={`${mThemeClass} ${className} w-full`}>
       {children}
     </div>
   );
@@ -154,6 +138,44 @@ const theme: RemirrorThemeType = {
       primaryText: "#FC7823",
     },
   },
+};
+/**
+ * Toolbar
+ */
+
+export const MdToolbar = () => {
+  return (
+    <Toolbar
+      className={css`
+        height: 72px;
+        background-color: #f4f5f7;
+        padding: 24px;
+        border: 1px solid #dfe3e7;
+        overflow-x: auto;
+        button {
+          padding: unset;
+          width: 24px !important;
+          height: 24px !important;
+          /* font-size: 22px; */
+          margin-right: 18px !important;
+          outline: unset !important;
+          border: unset !important;
+          background-color: transparent !important;
+        }
+      `}
+    >
+      <ToggleHeadingButton attrs={{ level: 1 }} />
+      <ToggleHeadingButton attrs={{ level: 2 }} />
+      <ToggleHeadingButton attrs={{ level: 3 }} />
+      <ToggleBoldButton />
+      <ToggleItalicButton />
+      <ToggleStrikeButton />
+      <ToggleBlockquoteButton />
+      <ToggleBulletListButton />
+      <ToggleOrderedListButton />
+      <ToggleCodeBlockButton />
+    </Toolbar>
+  );
 };
 
 /**
@@ -358,40 +380,11 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
     setMDText(parameter.helpers.getMarkdown());
   };
 
-  const SaveProgress = () => {
-    const bgcolor = "#ef6c00";
-    const containerStyles: React.CSSProperties = {
-      height: 20,
-      width: "50%",
-      backgroundColor: "#e0e0de",
-      borderRadius: 25,
-      margin: 25,
-    };
-    const fillerStyles: React.CSSProperties = {
-      height: "100%",
-      width: `${progress == -1 ? 0 : progress}%`,
-      backgroundColor: bgcolor,
-      borderRadius: "inherit",
-      textAlign: "center",
-    };
-    const labelStyles: React.CSSProperties = {
-      padding: 5,
-      color: "black",
-      fontWeight: "bold",
-    };
-    return (
-      <div style={containerStyles}>
-        <div style={fillerStyles}>
-          <span style={labelStyles}>{progress == -1 ? "0%" : progress == 0 ? "Loading..." : `${progress}%`}</span>
-        </div>
-      </div>
-    );
-  };
   return (
     <ThemeProvider as={ThemeDiv} theme={theme}>
       {status == "edit" && (
         <Remirror manager={manager} autoFocus state={state} onChange={changeHandler}>
-          <MarkdownToolbar />
+          <MdToolbar />
           <EditorComponent />
           <div className="flex justify-center">
             <Button className="mt-4" text="Publish" onClick={pinMarkdonw} />

@@ -63,6 +63,8 @@ export interface MarkdownEditorProps {
   enableToolbar?: boolean;
   eventName?: string;
   language?: Language;
+
+  onUpFinish?: (res?: any) => void;
 }
 
 const ipfsPinningService = "https://pin.crustcode.com/psa";
@@ -185,6 +187,7 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
   placeholder = "Loading...",
   initialContent = defContent,
   editorUpdate,
+  onUpFinish
 }) => {
   const linkExtension = useMemo(() => {
     const extension = new LinkExtension({ autoLink: true });
@@ -281,6 +284,7 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
       await pin(cid, name);
       setMDCid(cid);
       setProgress(-1);
+      onUpFinish && onUpFinish(upResult)
     } catch (error) {
       console.error(error);
     }

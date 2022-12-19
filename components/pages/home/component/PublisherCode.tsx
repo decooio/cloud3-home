@@ -11,26 +11,28 @@ export function PublisherCode(p: IProps){
   const code = `
 **React**:
 
-~~~bash
-import from '@cloud3/react-publisher-widget'
+~~~jsx
+import { MDEditor } from '@cloud3/react-widgets'
 
-export function(){
+export default function App(){
   return(
-    <ReactPublisherWidget />
+    <MDEditor />
   )
 }
 ~~~
 
 **Vue**:
 
-~~~bash
-import from '@cloud3/vue-publisher-widget'
+~~~jsx
+<script>
+import { MdEditor } from '@cloud3/vue-widgets'
+</script>
 
-<body>
+<template>
   <div id="app">
-    <vue-publisher-widget></vue-publisher-widget>
+    <MdEditor />
   </div>
-</body>
+</template>
 ~~~
 `;
   return(

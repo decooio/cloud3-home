@@ -11,26 +11,28 @@ export function StorageCode(p: IProps){
   const code = `
 **React**:
 
-~~~bash
-import from '@cloud3/react-storage-widget'
+~~~jsx
+import { DragStorage } from '@cloud3/react-widgets'
 
 export function(){
   return(
-    <ReactStorageWidget />
+    <DragStorage />
   )
 }
 ~~~
 
 **Vue**:
 
-~~~bash
-import from '@cloud3/vue-storage-widget'
+~~~jsx
+<script>
+import { DragStorage } from '@cloud3/vue-widgets'
+</script>
 
-<body>
+<template>
   <div id="app">
-    <vue-storage-widget></vue-storage-widget>
+    <DragStorage />
   </div>
-</body>
+</template>
 ~~~
 `;
   return(

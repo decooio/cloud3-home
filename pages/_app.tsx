@@ -5,7 +5,7 @@ import Head from "next/head";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { publicProvider } from "wagmi/providers/public";
-import { Squada_One, Work_Sans, Roboto } from "@next/font/google";
+import { Squada_One, Work_Sans, Roboto, Roboto_Mono } from "@next/font/google";
 const so = Squada_One({
   weight: "400",
   display: "auto",
@@ -24,7 +24,13 @@ const rb = Roboto({
   preload: true,
   variable: "--roboto",
 });
-const fontvarClass = [so, ws, rb].map((item) => item.variable).join(" ");
+const rbm = Roboto_Mono({
+  weight: ["700"],
+  display: "auto",
+  preload: true,
+  variable: "--roboto-mono",
+})
+const fontvarClass = [so, ws, rb, rbm].map((item) => item.variable).join(" ");
 import "../styles/global.css";
 import classNames from "classnames";
 

@@ -22,7 +22,7 @@ export const SectionNft = React.memo(() => {
         },0)
     }
     return (
-        <div className="w-full py-6 px-12 flex justify-center pb-20 text-lg mt-3 text-slate-700 text-lg" id="nft">
+        <div className="w-full py-6 px-12 flex justify-center pb-20 mt-3 text-slate-700 text-lg" id="nft">
             <div className="w-container flex flex-col text-black">
                 <CommonTitle className="my-14 font-medium" text="Web3 Storage Buckets & Web3 IPFS Gateways" />
                 <p className="pb-20">
@@ -43,11 +43,11 @@ export const SectionNft = React.memo(() => {
                     </div>
 
                     <div className="ml-16">
-                        <h4 className="text-2xl font-medium text-black mb-4">Store files in W3Buckets: Decentralized, Guaranteed & Alive.</h4>
+                        <h4 className="text-[1.375rem] font-semibold text-black mb-4">Store files in W3Buckets: Decentralized, Guaranteed & Alive.</h4>
                         <p>
                             All contents in the W3Buckets are immutable, decentralized stored,  guaranteed with up to permanent persistence in the open internet, and most importantly, owned & controlled by the NFT owner.
                         </p>
-                        <h4 className="text-2xl font-medium text-black mb-4 mt-24">Guaranteed Storage</h4>
+                        <h4 className="text-[1.375rem] font-semibold text-black mb-4 mt-24">IPFS Remote Pin</h4>
                         <p>
                             Storage service are called by Standard IPFS Remote Pinning Service APIs that make your files always available (alive!) on IPFS with multiple replicas and accessible from everywhere.
                         </p>

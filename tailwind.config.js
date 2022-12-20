@@ -18,6 +18,7 @@ module.exports = {
         WorkSans: 'var(--work-sans)',
         SquadaOne: 'var(--squada-one)',
         Roboto: 'var(--roboto)',
+        RobotoMono: 'var(--roboto-mono)',
       },
       colors: {
         black: {

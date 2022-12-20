@@ -9,7 +9,7 @@ export const CommonTitle = React.memo(
   ) => {
     const { text = "",className } = p;
     return (
-      <div className={classnames("text-left text-[2.5rem]",className)}>
+      <div className={classnames("text-left font-medium text-[2.5rem]",className)}>
         {text}
       </div>
     );

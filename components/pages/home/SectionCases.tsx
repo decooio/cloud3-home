@@ -115,7 +115,7 @@ export const SectionCases = React.memo(() => {
     }
     return(
         <div className="w-full py-6 px-12 flex flex-col items-center">
-            <div className="my-10 mt-20 text-black">
+            <div className="my-10 text-black">
                 <CommonTitle className="w-full ml-24" text="Discover some real use cases" />
                 {
                     monitorProject.map((v,i)=>{
@@ -134,10 +134,10 @@ export const SectionCases = React.memo(() => {
                     </span>
                                   <div className="text-slate-700 text-lg mt-3">
                                       <p className="mt-5">
-                                          <span className="text-orange-500 text-lg text-2xl">{v.total}</span> IPFS Replicas all around the globe
+                                          <span className="text-orange-500 font-medium text-2xl">{v.total}</span> IPFS Replicas all around the globe
                                       </p>
                                       <p className="mt-5">
-                                          <span className="text-orange-500 text-lg text-2xl">99+</span> Years guaranteed with <span className="text-orange-500 text-lg text-2xl">1.5ETH</span> in payment contract
+                                          <span className="text-orange-500 font-medium text-2xl">99+</span> Years guaranteed with <span className="text-orange-500 font-medium text-2xl">1.5ETH</span> in payment contract
                                       </p>
                                       <p className="mt-5">
                                           Guranteed by <a className="text-slate-700 underline" href="https://crust.network/" target="_blank">decentralized incentive protocol</a> on IPFS

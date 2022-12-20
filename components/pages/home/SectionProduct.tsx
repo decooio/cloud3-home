@@ -15,7 +15,7 @@ export const SectionProduct = React.memo(() => {
         <div className="w-full flex justify-between text-lg">
           <div className="w-[348px] h-[418px] border-2 border-black-1 mt-12">
             <div className="flex flex-col items-center border-b-2 border-black-1 py-6">
-              <h5 className="text-3xl">IasS</h5>
+              <h5 className="text-3xl">IaaS</h5>
               <span>Infrastructure-as-a-Service</span>
             </div>
             <div className="flex flex-col items-center">
@@ -23,9 +23,9 @@ export const SectionProduct = React.memo(() => {
                 <IPFSLogoSvg />
                 <CRUSTLogoSvg className="ml-11" />
               </div>
-              <a href="https://ipfs.io" target="_blank" className="text-2xl text-black mt-5 mb-2 underline">IPFS</a>
+              <a href="https://ipfs.io" target="_blank" className="text-2xl text-black mt-5 mb-3 underline">IPFS</a>
               <span>the distrbuted file system</span>
-              <a href="https://crust.network" target="_blank" className="text-2xl mt-4 mb-2 underline text-black">Crust Network</a>
+              <a href="https://crust.network" target="_blank" className="text-2xl mt-3 mb-2 underline text-black">Crust Network</a>
               <p className="w-[294px] text-center">the decentralized storage protocol & incentive layer of IPFS</p>
             </div>
             <div>
@@ -47,9 +47,9 @@ export const SectionProduct = React.memo(() => {
                     <span className="mr-2">W3</span>
                     <UploadSmallSvg/>
                   </div>
-                  <h6 onClick={()=>scrollToAnchor('nft')} className="text-2xl mt-6 mb-3 underline cursor-pointer">W3Buckets</h6>
+                  <h6 onClick={()=>scrollToAnchor('nft')} className="text-2xl mt-[1.7rem] mb-3 underline cursor-pointer">W3Buckets</h6>
                   <span>NFT-nized IPFS storage buckets</span>
-                  <h6 onClick={()=>scrollToAnchor('nft')} className="text-2xl mt-5 mb-3 underline cursor-pointer">W3Gateways</h6>
+                  <h6 onClick={()=>scrollToAnchor('nft')} className="text-2xl mt-3 mb-3 underline cursor-pointer">W3Gateways</h6>
                   <span>NFT-nized IPFS Gateways</span>
                 </div>
               </div>
@@ -58,12 +58,12 @@ export const SectionProduct = React.memo(() => {
                   <h5 className="text-3xl">SaaS</h5>
                   <span>Software-as-a-Service</span>
                 </div>
-                <div className="flex flex-col items-center pt-7 pl-6">
+                <div className="flex flex-col items-center pt-7">
                   <div className="flex items-center text-[2.5rem]">
                     <span className="mr-2">W3</span>
                     <WidgetSmallSvg />
                   </div>
-                  <h6 onClick={()=>scrollToAnchor('widget')} className="text-2xl mt-6 mb-3 underline cursor-pointer">Web3 Storage Widgets</h6>
+                  <h6 onClick={()=>scrollToAnchor('widget')} className="text-2xl mt-[2rem] mb-3 underline cursor-pointer">Web3 Storage Widgets</h6>
                   <p className="w-[298px] text-center">Rich-text Editor/Publisher Widget
                     IPFS File Storage Widget
                   </p>

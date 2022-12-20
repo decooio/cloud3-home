@@ -33,24 +33,24 @@ export function StorageUpload(p: IProps){
       >
         <CommonModalClose onClose={()=>onClose && onClose()} />
         <div className="bg-black w-80 text-white px-8 py-16 text-lg">
-          <h4 className="mb-12 text-2xl font-medium">
+          <div className="mb-12 text-2xl font-medium">
             IPFS File Storage Widget
-          </h4>
+          </div>
           {
             storageState === 3?
-              <div>
-                <h5 className="mb-5 font-medium">Demo Step 2:</h5>
+              <div className="text-lg">
+                <div className="mb-5 font-medium">Demo Step 2:</div>
                 <p className="font-light text-base">
                   When Upload process is completed, you will get an IPFS CID (unique identifier to your stored content) and a Storage Manager Tx No. (Tx No. for the IPFS storage action of your content).
                 </p>
               </div>:
-              <div>
-                <h5 className="mb-5 font-medium">Demo Step 1:</h5>
+              <div className="text-lg">
+                <div className="mb-5 font-medium">Demo Step 1:</div>
                 <p className="mb-5 font-light">
                   Drag and drop a file into the box.
                 </p>
-                <p className="font-light text-base">
-                  When you finish, click on the <span className="font-medium">'Upload'</span> button to continue.
+                <p className="font-light">
+                  When you finish, click on the <span className="font-semibold">'Upload'</span> button to continue.
                 </p>
               </div>
           }
@@ -59,12 +59,12 @@ export function StorageUpload(p: IProps){
           {
             storageState === 3?
               <div className="text-center text-lg text-black-3 flex flex-col items-center">
-                <Icon className="text-5xl mb-4" icon={AiOutlineCheckCircle} />
-                <h4 className="text-2xl font-semibold mb-4">Publish successfully！</h4>
+                <Icon className="text-[3.125rem] mb-4" icon={AiOutlineCheckCircle} />
+                <div className="text-[1.375rem] font-semibold mb-4">Publish successfully！</div>
                 <p className="mb-14">This content has been published and decentralized stored on IPFS.</p>
-                <h5 className="mb-2">Your content's IPFS CID:</h5>
+                <div className="mb-2 text-lg">Your content's IPFS CID:</div>
                 <p className="text-sm text-gray-7 mb-8">{storageData.Hash}</p>
-                <h5 className="mb-2">Storage Manager Tx No:</h5>
+                <div className="mb-2 text-lg">Storage Manager Tx No:</div>
                 <p className="text-sm text-gray-7">{shortStr('0x69b9f8cf491b55c485dbb43a86a7e48f7649aa45c958cd245461d04c3146bd91', 23, 23)}</p>
               </div>:
               <DragUpload uploadRender={uploadRender} onSuccess={onStorageUploadSuccess} uploadBorder={false} className="h-[32.937rem] w-[50.5rem]" />

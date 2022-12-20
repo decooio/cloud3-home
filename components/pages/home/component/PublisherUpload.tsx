@@ -14,19 +14,19 @@ export function PublisherUpload(p: IProps) {
       <div className="bg-white flex min-h-[43.75rem] relative">
         <CommonModalClose onClose={() => onClose && onClose()} />
         <div className="bg-black w-80 text-white px-8 py-16 text-lg">
-          <h4 className="mb-12 text-2xl font-medium">Rich-text Content Publisher Widget</h4>
+          <div className="mb-12 text-2xl font-medium">Rich-text Content Publisher Widget</div>
           {state === 0 && (
-            <div>
-              <h5 className="mb-5 font-medium">Demo Step 1:</h5>
+            <div className="text-lg">
+              <div className="mb-5 font-medium">Demo Step 1:</div>
               <p className="mb-5 font-light">Type in any text and try to do some simple edit work.</p>
               <p className="font-light">
-                When you finish, click on the <span className="font-medium">'Publish'</span> button to continue.
+                When you finish, click on the <span className="font-semibold">'Publish'</span> button to continue.
               </p>
             </div>
           )}
           {state === 1 && (
-            <div>
-              <h5 className="mb-5 font-medium">Demo Step 2:</h5>
+            <div className="text-lg">
+              <div className="mb-5 font-medium">Demo Step 2:</div>
               <p className="font-light">When Publish and Upload processes are completed, you will get an IPFS CID (unique identifier to your stored content) and a Storage Manager Tx No. (Tx No. for the IPFS storage action of your content).</p>
             </div>
           )}

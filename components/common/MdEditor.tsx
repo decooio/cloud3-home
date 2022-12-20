@@ -2,7 +2,17 @@ import { css } from "@emotion/css";
 import {
   EditorComponent,
   Remirror,
-  ThemeProvider, ToggleBlockquoteButton, ToggleBoldButton, ToggleBulletListButton, ToggleCodeBlockButton, ToggleHeadingButton, ToggleItalicButton, ToggleOrderedListButton, ToggleStrikeButton, Toolbar, useRemirror
+  ThemeProvider,
+  ToggleBlockquoteButton,
+  ToggleBoldButton,
+  ToggleBulletListButton,
+  ToggleCodeBlockButton,
+  ToggleHeadingButton,
+  ToggleItalicButton,
+  ToggleOrderedListButton,
+  ToggleStrikeButton,
+  Toolbar,
+  useRemirror,
 } from "@remirror/react";
 import "@remirror/styles/all.css";
 import { RemirrorThemeType } from "@remirror/theme";
@@ -31,7 +41,7 @@ import {
   PlaceholderExtension,
   StrikeExtension,
   // TableExtension,
-  TrailingNodeExtension
+  TrailingNodeExtension,
 } from "remirror/extensions";
 
 import data from "svgmoji/emoji.json";
@@ -72,29 +82,7 @@ const ipfsPinningService = "https://pin.crustcode.com/psa";
 const gateway = "https://crustipfs.live";
 const fileMap = new Map();
 
-const defContent = `
-**Markdown** content is the _best_
-<br>
-
-# Heading 1
-<br>
-
-## Code support
-\`\`\`ts
-const a = 'asdf';
-\`\`\`
-
-## List support
-
-- an unordered
-  - list is a thing
-    - of beauty
-
-1. As is
-2. An ordered
-3. List
-
-`;
+const defContent = ``;
 const mThemeClass = css`
   width: 100%;
   height: 100%;
@@ -114,8 +102,10 @@ const mThemeClass = css`
     border: 1px solid #dfe3e7 !important;
     outline: unset !important;
     overflow-y: auto;
+    height: 527px;
     max-height: 527px;
     .ProseMirror {
+      min-height: 100%;
       padding: "1rem";
       box-shadow: unset !important;
       pre {
@@ -154,13 +144,13 @@ export const MdToolbar = () => {
   return (
     <Toolbar
       className={css`
-        height: 72px;
-        background-color: #f4f5f7;
-        padding: 24px;
-        border: 1px solid #dfe3e7;
-        overflow: hidden;
+        height: 72px !important;
+        background-color: #f4f5f7 !important;
+        padding: 24px !important;
+        border: 1px solid #dfe3e7 !important;
+        overflow: hidden !important;
         button {
-          padding: unset;
+          padding: unset !important;
           width: 24px !important;
           height: 24px !important;
           /* font-size: 22px; */
@@ -189,10 +179,10 @@ export const MdToolbar = () => {
  * The editor which is used to create the annotation. Supports formatting.
  */
 export const MdEditor: FC<MarkdownEditorProps> = ({
-  placeholder = "Loading...",
+  placeholder = "Please input text...",
   initialContent = defContent,
   editorUpdate,
-  onUpFinish
+  onUpFinish,
 }) => {
   const linkExtension = useMemo(() => {
     const extension = new LinkExtension({ autoLink: true });
@@ -205,7 +195,7 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
 
   const authHeaderRef = useRef("");
   const [MDCid, setMDCid] = useState("");
-  const [MDText, setMDText] = useState(initialContent);
+  const [MDText, setMDText] = useState("");
   const [showWarning, setShowWarning] = useState(false);
   const [warningInfo, setWarningInfo] = useState("");
   const [progress, setProgress] = useState(-1);
@@ -289,7 +279,7 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
       await pin(cid, name);
       setMDCid(cid);
       setProgress(-1);
-      onUpFinish && onUpFinish(upResult)
+      onUpFinish && onUpFinish(upResult);
     } catch (error) {
       console.error(error);
     }
@@ -396,26 +386,28 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
           <MdToolbar />
           <EditorComponent />
           <div className="flex justify-center">
-            <Button className="mt-4" text="Publish" onClick={pinMarkdonw} />
+            <Button disabled={!MDText} className="w-[10.8125rem] h-[3.375rem] mt-4" text="Publish" onClick={pinMarkdonw} />
           </div>
         </Remirror>
       )}
       {status == "uping" && (
-        <div className="mb-[3.5rem] flex flex-col items-center">
-          <p className="w-[26rem] text-2xl text-center mb-10">Publishing & Uploading to IPFS Please wait...</p>
+        <div className="mb-[3.5rem] px-14 flex flex-col items-center">
+          <p className="w-[24rem] text-2xl text-center mb-10">Publishing & Uploading to IPFS Please wait...</p>
           <ProgressBar value={progress} />
         </div>
       )}
       {status == "finish" && (
         <>
           <div className="mb-[3.5rem] text-center text-lg text-black-3 flex flex-col items-center">
-            <Icon className="text-5xl mb-4" icon={AiOutlineCheckCircle} />
-            <h4 className="text-2xl font-semibold mb-4">Publish successfully！</h4>
+            <Icon className="text-[3.125rem] mb-4" icon={AiOutlineCheckCircle} />
+            <h4 className="text-[1.375rem] font-semibold mb-4">Publish successfully！</h4>
             <p className="mb-14">This content has been published and decentralized stored on IPFS.</p>
-            <h5 className="mb-2">Your content's IPFS CID:</h5>
+            <h5 className="mb-2 text-lg">Your content's IPFS CID:</h5>
             <p className="text-sm text-gray-7 mb-8">{MDCid}</p>
-            <h5 className="mb-2">Storage Manager Tx No:</h5>
-            <p className="text-sm text-gray-7">{shortStr('0x69b9f8cf491b55c485dbb43a86a7e48f7649aa45c958cd245461d04c3146bd91', 23, 23)}</p>
+            <h5 className="mb-2 text-lg">Storage Manager Tx No:</h5>
+            <p className="text-sm text-gray-7">
+              {shortStr("0x69b9f8cf491b55c485dbb43a86a7e48f7649aa45c958cd245461d04c3146bd91", 23, 23)}
+            </p>
           </div>
         </>
       )}

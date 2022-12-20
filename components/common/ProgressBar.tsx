@@ -11,7 +11,7 @@ function ProgressBar_(props: IProps & ButtonHTMLAttributes<HTMLButtonElement>) {
                 <div className={'h-5 bg-black-1'} style={{width: value+'%', transition: 'width 200ms ease-in-out'}}>
                 </div>
             </div>
-            <span className="text-right w-14">{value}%</span>
+            <span className="text-right text-2xl font-medium w-20">{value}%</span>
         </div>
 
     );

@@ -28,22 +28,22 @@ export const SectionTop = React.memo(() => {
         {/* Content */}
         <div className="z-1 h-[100vh] relative w-full py-6 px-12 flex flex-col items-center">
           <div className="h-14 w-[69.5rem] flex justify-between items-center font-WorkSans">
-            <div className="text-[88px] mt-5"><IconCloud3 /></div>
+            <div className="text-[88px] ml-3 mt-5"><IconCloud3 /></div>
           </div>
           <div className="h-full my-10 w-[69.5rem] flex flex-col justify-center mt-[-1rem]">
             <div className="font-RobotoMono font-bold text-[2.5rem] leading-tight">
               <p>Cloud 3</p>
               <p>Redefining Web3 Storage</p>
             </div>
-            <div className="flex mt-12 pl-1">
+            <div className="flex mt-12 pl-1 mb-20">
               <Button
                   text="Documentations"
-                  className="border-white text-white"
+                  className="w-[10.8125rem] h-[3.375rem] text-lg border-white text-white"
                   onClick={()=>openExtUrl('https://docs.cloud3.cc/')}
               />
               <Button
                   text="Launch App"
-                  className=" ml-3 border-white text-white"
+                  className="w-[10.8125rem] h-[3.375rem] text-lg ml-3 border-white text-white"
                   onClick={() =>
                       IS_LOCAL ? openExtUrl("/#/buckets", '_self') : openExtUrl("/#/buckets")
                   }

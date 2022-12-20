@@ -117,7 +117,7 @@ export const MainLayout = React.memo(
             </div>
             <Button
               ref={btnAccount}
-              className={classNames(" self-end mx-auto mb-10", {
+              className={classNames("w-[12.8125rem] h-[3.375rem] text-lg self-end mx-auto mb-10", {
                 " hidden": !isConnected,
               })}
               // disHover={true}
@@ -132,7 +132,7 @@ export const MainLayout = React.memo(
               <div className=" text-xl text-black text-center">{net_text}</div>
               <Button
                 text="Connect Wallet"
-                className=" mt-8"
+                className="mt-8"
                 onClick={() => setShowConnect(true)}
               />
             </div>

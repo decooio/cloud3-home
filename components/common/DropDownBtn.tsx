@@ -21,7 +21,7 @@ function DropDownBtn_(props: IProps & ButtonHTMLAttributes<HTMLButtonElement>) {
     }
     return (
         <div className="text-black relative" ref={ref}>
-            <Button text={text} onClick={()=>onToggle(!open)} />
+            <Button className="btn-173" text={text} onClick={()=>onToggle(!open)} />
             {
                 open &&
                 <ul className="text-black absolute w-full bg-white mt-3 border-1 border-gray-300 top-10 left-0 p-2 text-sm">

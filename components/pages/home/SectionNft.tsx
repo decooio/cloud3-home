@@ -24,7 +24,7 @@ export const SectionNft = React.memo(() => {
     return (
         <div className="w-full py-6 px-12 flex justify-center pb-20 mt-3 text-slate-700 text-lg" id="nft">
             <div className="w-container flex flex-col text-black">
-                <CommonTitle className="my-14 font-medium" text="Web3 Storage Buckets & Web3 IPFS Gateways" />
+                <CommonTitle className="mt-6 mb-8 font-medium" text="Web3 Storage Buckets & Web3 IPFS Gateways" />
                 <p className="pb-20">
                     Cloud3 defines what cloud storage middlewares should look like in Web3 - every storage bucket is a NFT, and every IPFS gateway is a NFT.
                 </p>
@@ -52,12 +52,12 @@ export const SectionNft = React.memo(() => {
                             Storage service are called by Standard IPFS Remote Pinning Service APIs that make your files always available (alive!) on IPFS with multiple replicas and accessible from everywhere.
                         </p>
                         <div className="flex mt-8">
-                            <Button onClick={openDropUpload} text="Play Quick Demo" />
+                            <Button onClick={openDropUpload} className="btn-173" text="Play Quick Demo" />
                             <Button
                               onClick={() =>
                                 IS_LOCAL ? openExtUrl("/#/buckets", '_self') : openExtUrl("/#/buckets")
                               }
-                              className="ml-5"
+                              className="btn-173 ml-5"
                               text="Launch App"
                             />
                         </div>

@@ -38,12 +38,12 @@ export const SectionTop = React.memo(() => {
             <div className="flex mt-12 pl-1 mb-20">
               <Button
                   text="Documentations"
-                  className="w-[10.8125rem] h-[3.375rem] text-lg border-white text-white"
+                  className="btn-173 border-white text-white"
                   onClick={()=>openExtUrl('https://docs.cloud3.cc/')}
               />
               <Button
                   text="Launch App"
-                  className="w-[10.8125rem] h-[3.375rem] text-lg ml-3 border-white text-white"
+                  className="btn-173 ml-3 border-white text-white"
                   onClick={() =>
                       IS_LOCAL ? openExtUrl("/#/buckets", '_self') : openExtUrl("/#/buckets")
                   }

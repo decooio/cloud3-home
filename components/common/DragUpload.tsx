@@ -188,7 +188,7 @@ export function DragUpload(p:IProps){
           )
         ) : (
           <span style={{pointerEvents: 'none'}}
-                ref={waitUploadRef} id="waitUpload" className="text-black text-4xl font-Roboto tracking-wider">
+                ref={waitUploadRef} id="waitUpload" className="text-black font-medium text-[2rem] tracking-wider">
               Drag and drop your file here
             </span>
         )}

@@ -17,7 +17,7 @@ import {
 import "@remirror/styles/all.css";
 import { RemirrorThemeType } from "@remirror/theme";
 import axios from "axios";
-import { FC, useCallback, useMemo, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import jsx from "refractor/lang/jsx";
 import typescript from "refractor/lang/typescript";
 import { Extension, ExtensionPriority, getThemeVar, RemirrorEventListenerProps } from "remirror";
@@ -365,24 +365,31 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
 
   const { manager, state, setState } = useRemirror({
     extensions,
-    stringHandler: "markdown",
+    stringHandler: "html",
     content: initialContent,
   });
 
   const changeHandler = (parameter: RemirrorEventListenerProps<Extension>) => {
     // Update the state to the latest value.
     if (parameter.tr?.docChanged) {
-      console.log("before onChange:", parameter);
+      // console.log("before onChange:", parameter);
       editorUpdate?.(parameter);
     }
+    console.info('p:', parameter.helpers.getMarkdown())
     setState(parameter.state);
-    setMDText(parameter.helpers.getMarkdown());
+    // setMDText(parameter.helpers.getMarkdown());
   };
 
+  useEffect(() => {
+    const task = setInterval(() => {
+      setMDText(manager.extensionStore.helpers.getMarkdown())
+    },500)
+    return () => clearInterval(task)
+  },[manager])
   return (
     <ThemeProvider as={ThemeDiv} theme={theme}>
       {status == "edit" && (
-        <Remirror manager={manager} autoFocus state={state} onChange={changeHandler}>
+        <Remirror manager={manager} autoFocus state={state} onBlur={changeHandler} onChange={changeHandler}>
           <MdToolbar />
           <EditorComponent />
           <div className="flex justify-center">

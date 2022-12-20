@@ -17,7 +17,7 @@ export const SectionWidget = React.memo(() => {
   return(
     <div id="widget" className="w-full pb-20 pt-16 px-12 flex flex-col items-center justify-center text-black bg-[#F5F5F5]">
       <div className="w-container">
-        <CommonTitle className="w-full pb-14" text="Web3 Storage Widgets" />
+        <CommonTitle className="w-full mb-8" text="Web3 Storage Widgets" />
         <p className="w-full text-left text-2xl mb-20">
           Users should own their contents and take full control of them just like what they do to their assets, but they do not.
         </p>
@@ -36,8 +36,8 @@ export const SectionWidget = React.memo(() => {
                 <h5 className="font-semibold text-xl mb-4">Rich-text Content Publisher Widget</h5>
                 <p className="w-[490px]">This widget contains a rich-text editor that can auto upload contents to IPFS alongside the publish process. </p>
                 <div className="flex mt-5">
-                  <Button onClick={()=>setPublisherVisible(true)} text="Play Demo" />
-                  <Button onClick={()=>setPublisherCodeVisible(true)} className="ml-5" text="Show Code" />
+                  <Button onClick={()=>setPublisherVisible(true)} className="btn-173" text="Play Demo" />
+                  <Button onClick={()=>setPublisherCodeVisible(true)} className="btn-173 ml-5" text="Show Code" />
                 </div>
               </div>
             </div>
@@ -47,8 +47,8 @@ export const SectionWidget = React.memo(() => {
                 <h5 className="font-semibold text-xl mb-4">IPFS File Storage Widget</h5>
                 <p className="w-[490px]">This widget helps applications/dapps to upload files of general types to IPFS and manage file storage for their users. </p>
                 <div className="flex mt-5">
-                  <Button onClick={()=>setStorageVisible(true)} text="Play Demo" />
-                  <Button onClick={()=>setStorageCodeVisible(true)} className="ml-5" text="Show Code" />
+                  <Button onClick={()=>setStorageVisible(true)} className="btn-173" text="Play Demo" />
+                  <Button onClick={()=>setStorageCodeVisible(true)} className="btn-173 ml-5" text="Show Code" />
                 </div>
               </div>
             </div>

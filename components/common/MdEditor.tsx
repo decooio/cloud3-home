@@ -97,6 +97,7 @@ const a = 'asdf';
 `;
 const mThemeClass = css`
   width: 100%;
+  height: 100%;
   padding: 80px 24px 24px 24px;
   ol,
   ul {
@@ -111,7 +112,6 @@ const mThemeClass = css`
     outline: unset !important;
     .ProseMirror {
       padding: "1rem";
-      height: calc(80vh - 300px);
       overflow-y: auto;
       box-shadow: unset !important;
       pre {
@@ -154,7 +154,7 @@ export const MdToolbar = () => {
         background-color: #f4f5f7;
         padding: 24px;
         border: 1px solid #dfe3e7;
-        overflow-x: auto;
+        overflow: hidden;
         button {
           padding: unset;
           width: 24px !important;

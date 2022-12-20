@@ -20,7 +20,7 @@ export const SectionTop = React.memo(() => {
     },50)
   })
   return (
-      <div className="w-full min-h-min">
+      <div className="w-full min-h-min relative">
         {/* Anim BG */}
         <div className="w-full bg-black h-screen absolute left-0 top-0 z-0">
           <HomeBg />

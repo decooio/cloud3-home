@@ -99,6 +99,9 @@ const mThemeClass = css`
   width: 100%;
   height: 100%;
   padding: 80px 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   ol,
   ul {
     list-style: revert !important;
@@ -110,9 +113,10 @@ const mThemeClass = css`
     border-radius: 0;
     border: 1px solid #dfe3e7 !important;
     outline: unset !important;
+    overflow-y: auto;
+    max-height: 527px;
     .ProseMirror {
       padding: "1rem";
-      overflow-y: auto;
       box-shadow: unset !important;
       pre {
         padding: ${getThemeVar("space", 3)};
@@ -397,14 +401,14 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
         </Remirror>
       )}
       {status == "uping" && (
-        <div className="flex flex-col items-center">
+        <div className="mb-[3.5rem] flex flex-col items-center">
           <p className="w-[26rem] text-2xl text-center mb-10">Publishing & Uploading to IPFS Please wait...</p>
           <ProgressBar value={progress} />
         </div>
       )}
       {status == "finish" && (
         <>
-          <div className="text-center text-lg text-black-3 flex flex-col items-center">
+          <div className="mb-[3.5rem] text-center text-lg text-black-3 flex flex-col items-center">
             <Icon className="text-5xl mb-4" icon={AiOutlineCheckCircle} />
             <h4 className="text-2xl font-semibold mb-4">Publish successfully！</h4>
             <p className="mb-14">This content has been published and decentralized stored on IPFS.</p>

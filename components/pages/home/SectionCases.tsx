@@ -114,7 +114,7 @@ export const SectionCases = React.memo(() => {
         setSelectedMonitorProjectIndex((selectedMonitorProjectIndex+1>monitorProject.length-1)?0:selectedMonitorProjectIndex+1)
     }
     return(
-        <div className="w-full py-6 px-12 flex flex-col items-center">
+        <div className="w-full pt-6 pb-80 px-12 flex flex-col items-center">
             <div className="my-10 text-black">
                 <CommonTitle className="w-full ml-24" text="Discover some real use cases" />
                 {
@@ -132,7 +132,7 @@ export const SectionCases = React.memo(() => {
                                   <span className="text-black text-lg mt-12 font-medium">
                       Check this real-time monitor to see how we help {v.name} decentralized host their Dapp frontend:
                     </span>
-                                  <div className="text-slate-700 text-lg mt-3">
+                                  <div className="text-black-3 text-lg mt-3">
                                       <p className="mt-5">
                                           <span className="text-orange-500 font-medium text-2xl">{v.total}</span> IPFS Replicas all around the globe
                                       </p>
@@ -140,10 +140,10 @@ export const SectionCases = React.memo(() => {
                                           <span className="text-orange-500 font-medium text-2xl">99+</span> Years guaranteed with <span className="text-orange-500 font-medium text-2xl">1.5ETH</span> in payment contract
                                       </p>
                                       <p className="mt-5">
-                                          Guranteed by <a className="text-slate-700 underline" href="https://crust.network/" target="_blank">decentralized incentive protocol</a> on IPFS
+                                          Guranteed by <a className="text-black-3 underline" href="https://crust.network/" target="_blank">decentralized incentive protocol</a> on IPFS
                                       </p>
                                       <p className="mt-5">
-                                          Verifiable on <a className="text-slate-700 underline" href="https://ipfs-scan.io/" target="_blank">IPFS Scan</a>
+                                          Verifiable on <a className="text-black-3 underline" href="https://ipfs-scan.io/" target="_blank">IPFS Scan</a>
                                       </p>
                                   </div>
                               </div>

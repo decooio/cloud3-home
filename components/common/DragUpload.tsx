@@ -151,13 +151,13 @@ export function DragUpload(p:IProps){
         }
         {upState.status !=='stop'? (
           upState.status ==='upload' ? (
-            <div className="w-full px-20">
+            <div className={classNames("w-full", { "px-5": !!uploadRender, 'px-20': !uploadRender })}>
               {
                 uploadRender? uploadRender(upState.progress):<ProgressBar value={upState.progress} />
               }
             </div>
           ) : (
-            <div className="text-slate-700 text-lg flex flex-col px-20">
+            <div className="text-black-3 text-lg flex flex-col px-20">
               <label className="text-xl font-medium text-black">
                 IPFS CID:
               </label>

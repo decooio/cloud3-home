@@ -102,8 +102,8 @@ const mThemeClass = css`
     border: 1px solid #dfe3e7 !important;
     outline: unset !important;
     overflow-y: auto;
-    height: 527px;
-    max-height: 527px;
+    height: 447px;
+    max-height: 447px;
     .ProseMirror {
       min-height: 100%;
       padding: "1rem";
@@ -365,7 +365,7 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
 
   const { manager, state, setState } = useRemirror({
     extensions,
-    stringHandler: "html",
+    stringHandler: "markdown",
     content: initialContent,
   });
 
@@ -393,25 +393,25 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
           <MdToolbar />
           <EditorComponent />
           <div className="flex justify-center">
-            <Button disabled={!MDText} className="w-[10.8125rem] h-[3.375rem] mt-4" text="Publish" onClick={pinMarkdonw} />
+            <Button disabled={!MDText} className="btn-173 mt-4" text="Publish" onClick={pinMarkdonw} />
           </div>
         </Remirror>
       )}
       {status == "uping" && (
-        <div className="mb-[3.5rem] px-14 flex flex-col items-center">
-          <p className="w-[24rem] text-2xl text-center mb-10">Publishing & Uploading to IPFS Please wait...</p>
+        <div className="mb-[3.5rem] font-WorkSans px-14 flex flex-col items-center">
+          <p className="w-[24rem] text-black-3 text-2xl text-center mb-10">Publishing & Uploading to IPFS Please wait...</p>
           <ProgressBar value={progress} />
         </div>
       )}
       {status == "finish" && (
         <>
-          <div className="mb-[3.5rem] text-center text-lg text-black-3 flex flex-col items-center">
-            <Icon className="text-[3.125rem] mb-4" icon={AiOutlineCheckCircle} />
-            <h4 className="text-[1.375rem] font-semibold mb-4">Publish successfully！</h4>
-            <p className="mb-14">This content has been published and decentralized stored on IPFS.</p>
-            <h5 className="mb-2 text-lg">Your content's IPFS CID:</h5>
-            <p className="text-sm text-gray-7 mb-8">{MDCid}</p>
-            <h5 className="mb-2 text-lg">Storage Manager Tx No:</h5>
+          <div className="mb-[3.5rem] text-center font-WorkSans text-black-3 flex flex-col items-center">
+            <Icon className="text-[3.125rem] text-black mb-4" icon={AiOutlineCheckCircle} />
+            <div className="text-[1.375rem] text-black font-semibold mb-4">Publish successfully！</div>
+            <p className="mb-14 text-lg">This content has been published and decentralized stored on IPFS.</p>
+            <div className="mb-2 text-lg">Your content's IPFS CID:</div>
+            <div className="text-sm text-gray-7 mb-8">{MDCid}</div>
+            <div className="mb-2 text-lg">Storage Manager Tx No:</div>
             <p className="text-sm text-gray-7">
               {shortStr("0x69b9f8cf491b55c485dbb43a86a7e48f7649aa45c958cd245461d04c3146bd91", 23, 23)}
             </p>

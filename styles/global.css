@@ -43,3 +43,7 @@ img {
   display: block;
 }
 
+
+.no-skip-ink {
+  text-decoration-skip-ink: none;
+}

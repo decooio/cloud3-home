@@ -37,9 +37,9 @@ import { MdEditor } from '@cloud3/vue-widgets'
 `;
   return(
     <Modal className="p-0">
-      <div className="bg-white flex flex-col relative p-6">
+      <div className="bg-white min-w-[56rem] flex flex-col relative p-6">
         <div className="flex justify-between items-center mb-5">
-          <h4 className="underline">Dev Guidance</h4>
+          <h4 className="text-2xl">Dev Guidance</h4>
           <CommonModalClose className="mt-[-0.3rem]" onClose={()=>onClose && onClose()} />
         </div>
         <div>

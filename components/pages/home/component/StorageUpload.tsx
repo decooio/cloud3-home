@@ -21,7 +21,7 @@ export function StorageUpload(p: IProps){
   const uploadRender = (progress)=>{
     return(
       <div className="flex flex-col items-center">
-        <p className="w-[26rem] text-2xl text-center mb-10">Publishing & Uploading to IPFS Please wait...</p>
+        <p className="w-[24rem] text-black-3 text-2xl text-center mb-10">Publishing & Uploading to IPFS Please wait...</p>
         <ProgressBar value={progress} />
       </div>
     )
@@ -58,10 +58,10 @@ export function StorageUpload(p: IProps){
         <div className="min-w-[57.5rem] flex justify-center items-center">
           {
             storageState === 3?
-              <div className="text-center text-lg text-black-3 flex flex-col items-center">
-                <Icon className="text-[3.125rem] mb-4" icon={AiOutlineCheckCircle} />
-                <div className="text-[1.375rem] font-semibold mb-4">Publish successfully！</div>
-                <p className="mb-14">This content has been published and decentralized stored on IPFS.</p>
+              <div className="text-center text-black-3 flex flex-col items-center">
+                <Icon className="text-[3.125rem] text-black mb-4" icon={AiOutlineCheckCircle} />
+                <div className="text-[1.375rem] text-black font-semibold mb-4">Publish successfully！</div>
+                <p className="mb-14 text-lg">This content has been published and decentralized stored on IPFS.</p>
                 <div className="mb-2 text-lg">Your content's IPFS CID:</div>
                 <p className="text-sm text-gray-7 mb-8">{storageData.Hash}</p>
                 <div className="mb-2 text-lg">Storage Manager Tx No:</div>

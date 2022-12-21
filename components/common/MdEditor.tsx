@@ -12,19 +12,12 @@ import {
   ToggleOrderedListButton,
   ToggleStrikeButton,
   Toolbar,
-  useRemirror
+  useRemirror,
 } from "@remirror/react";
 import "@remirror/styles/all.css";
 import { RemirrorThemeType } from "@remirror/theme";
 import axios from "axios";
-import {
-  FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import jsx from "refractor/lang/jsx";
 import typescript from "refractor/lang/typescript";
 import { Extension, ExtensionPriority, getThemeVar, RemirrorEventListenerProps } from "remirror";
@@ -48,7 +41,7 @@ import {
   PlaceholderExtension,
   StrikeExtension,
   // TableExtension,
-  TrailingNodeExtension
+  TrailingNodeExtension,
 } from "remirror/extensions";
 
 import data from "svgmoji/emoji.json";
@@ -85,7 +78,7 @@ export interface MarkdownEditorProps {
   onUpFinish?: (res?: any) => void;
 }
 
-const gateway = "https://ipfs.io" ;// GatewayBase;
+const gateway = "https://ipfs.io"; // GatewayBase;
 const fileMap = new Map();
 
 const defContent = ``;
@@ -107,8 +100,9 @@ const mThemeClass = css`
     border-radius: 0;
     border: 1px solid #dfe3e7 !important;
     outline: unset !important;
-    overflow-y: auto;
+    overflow: auto;
     height: 447px;
+    max-width: 872px;
     max-height: 447px;
     .ProseMirror {
       overflow: hidden;
@@ -219,16 +213,13 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
       const web3Provider = new ethers.providers.Web3Provider(provider);
       const signer = web3Provider.getSigner();
       const addr = await signer.getAddress();
-      console.info("pro:", provider);
-      const msg = `You are signing thie message for DEMO purpose only.
-      Sign this message to prove you own this account and you will be able to publish your Web3 content.`;
-      const signature = await signer._signTypedData(
-        { name: "Cloud3.cc" },
-        { Message: [{ name: "Message", type: "string" }] },
-        { Message: msg }
-      );
-      console.info("sig", signature);
-      // const signature = await signer.signMessage(addr);
+      const msg = `You are signing this message for DEMO purpose only. Sign this message to prove you own this account and you will be able to publish your Web3 content.`;
+      // const signature = await signer._signTypedData(
+      //   { name: "Cloud3.cc" },
+      //   { Message: [{ name: "Message", type: "string" }] },
+      //   { Message: msg }
+      // );
+      const signature = await signer.signMessage(msg);
       return Buffer.from(`eth-${addr}:${signature}`).toString("base64");
     }
     return "";

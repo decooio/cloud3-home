@@ -23,7 +23,7 @@ export function DragUpload(p:IProps){
   const [upState, setUpState] = useState({ progress: 0, status: 'stop' });
   const uploadRef = useRef(null);
   const inputFileRef = useRef(null);
-  const waitUploadRef = useRef(null);
+  // const waitUploadRef = useRef(null);
   const [cancelUp, setCancelUp] = useState<CancelTokenSource | null>(null);
   const [uploadFileInfo, setUploadFileInfo] = useState(null);
   const onOpenUpload = async () => {
@@ -188,7 +188,7 @@ export function DragUpload(p:IProps){
           )
         ) : (
           <span style={{pointerEvents: 'none'}}
-                ref={waitUploadRef} id="waitUpload" className="text-black font-medium text-[2rem] tracking-wider">
+                id="waitUpload" className="text-black-1 font-medium text-[2rem] leading-normal">
               Drag and drop your file here
             </span>
         )}

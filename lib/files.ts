@@ -1,5 +1,6 @@
 import axios from "axios";
 import { DeCloudLink } from "@lib/config";
+import { sleep } from "./utils";
 
 export interface UploadRes {
   Hash: string;
@@ -60,4 +61,29 @@ export async function pinCID(cid: string, name: string = "file", auth: string = 
   } catch (error) {
     return null
   }
+}
+
+export async function checkCID(cid: string) : Promise<boolean>{
+  try {
+    const res = await axios.get<any>(`https://graph.crustnetwork.io/api/file/${cid}/detail`, { timeout: 5000 });
+    if(
+      res.data &&
+      res.data.data &&
+      res.data.data.order &&
+      res.data.data.order.length){
+        return true
+      }
+  } catch (error) {
+    return false;
+  }
+}
+
+export async function loopCheckCID(cid: string, interval: number = 5000, maxCount: number = 10) {
+  while(maxCount > 0){
+    maxCount--
+    await sleep(interval);
+    const success = await checkCID(cid);
+    if(success) return true;
+  }
+  return false;
 }

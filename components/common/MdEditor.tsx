@@ -12,12 +12,19 @@ import {
   ToggleOrderedListButton,
   ToggleStrikeButton,
   Toolbar,
-  useRemirror,
+  useRemirror
 } from "@remirror/react";
 import "@remirror/styles/all.css";
 import { RemirrorThemeType } from "@remirror/theme";
 import axios from "axios";
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from "react";
 import jsx from "refractor/lang/jsx";
 import typescript from "refractor/lang/typescript";
 import { Extension, ExtensionPriority, getThemeVar, RemirrorEventListenerProps } from "remirror";
@@ -41,19 +48,19 @@ import {
   PlaceholderExtension,
   StrikeExtension,
   // TableExtension,
-  TrailingNodeExtension,
+  TrailingNodeExtension
 } from "remirror/extensions";
 
 import data from "svgmoji/emoji.json";
 
-import { upload } from "@lib/files";
+import { pinCID, upload } from "@lib/files";
+import { shortStr } from "@lib/utils";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { ethers } from "ethers";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { Button } from "./Button";
 import { Icon } from "./Icon";
 import { ProgressBar } from "./ProgressBar";
-import { shortStr } from "@lib/utils";
 
 type Language = "zh_hant" | "zh_hans" | "en";
 
@@ -78,8 +85,7 @@ export interface MarkdownEditorProps {
   onUpFinish?: (res?: any) => void;
 }
 
-const ipfsPinningService = "https://pin.crustcode.com/psa";
-const gateway = "https://crustipfs.live";
+const gateway = "https://ipfs.io" ;// GatewayBase;
 const fileMap = new Map();
 
 const defContent = ``;
@@ -105,6 +111,7 @@ const mThemeClass = css`
     height: 447px;
     max-height: 447px;
     .ProseMirror {
+      overflow: hidden;
       min-height: 100%;
       padding: "1rem";
       box-shadow: unset !important;
@@ -212,47 +219,28 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
       const web3Provider = new ethers.providers.Web3Provider(provider);
       const signer = web3Provider.getSigner();
       const addr = await signer.getAddress();
-      const signature = await signer.signMessage(addr);
+      console.info("pro:", provider);
+      const msg = `You are signing thie message for DEMO purpose only.
+      Sign this message to prove you own this account and you will be able to publish your Web3 content.`;
+      const signature = await signer._signTypedData(
+        { name: "Cloud3.cc" },
+        { Message: [{ name: "Message", type: "string" }] },
+        { Message: msg }
+      );
+      console.info("sig", signature);
+      // const signature = await signer.signMessage(addr);
       return Buffer.from(`eth-${addr}:${signature}`).toString("base64");
     }
     return "";
   };
-  const pin = async (cid: string, name: string) => {
-    //if (cid.length !== 46) {
-    if (cid.length === 0) {
-      throw new Error("CID len err");
-    }
-    //const { body } = await axios.post(
-    const res = await axios.post(
-      `${ipfsPinningService}/pins`,
-      JSON.stringify({
-        cid: cid,
-        name,
-      }),
-      {
-        headers: {
-          authorization: "Bearer " + authHeaderRef.current,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    console.log(res);
-  };
 
   const up2Gateway = async (form: FormData, onProgress?: (p: number) => void) => {
-    if (!authHeaderRef.current || authHeaderRef.current === "") {
-      authHeaderRef.current = await getAuth();
-    }
-    if (authHeaderRef.current === "") {
-      return null;
-    }
     try {
       const cancel = axios.CancelToken.source();
       onProgress && onProgress(0);
       const upResult = await upload({
         data: form,
         cancelToken: cancel.token,
-        authBasic: `Basic ${authHeaderRef.current}`,
         onProgress,
       });
       console.log(upResult);
@@ -265,6 +253,8 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
 
   const pinMarkdonw = async () => {
     try {
+      const auth = await getAuth();
+      if (!auth) return;
       const form = new FormData();
       const name = "text.md";
       form.append("file", MDText);
@@ -276,7 +266,7 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
         return;
       }
       const cid = upResult.Hash;
-      await pin(cid, name);
+      await pinCID(cid, name);
       setMDCid(cid);
       setProgress(-1);
       onUpFinish && onUpFinish(upResult);
@@ -293,21 +283,32 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
         () =>
           new Promise((resolve, reject) => {
             const reader = new FileReader();
-
             reader.addEventListener(
               "load",
               async (readerEvent) => {
                 console.log(file);
                 completed += 1;
                 progress(completed / files.length);
-                // Upload data to IPFS gateway
-                //let imgSrc = readerEvent.target?.result as string;
                 let imgCid = fileMap.get(file.name);
-                if (!fileMap.has(file.name)) {
+                if (!imgCid) {
                   const form = new FormData();
                   form.append("file", file, file.name);
                   const upResult = await up2Gateway(form);
                   if (upResult !== null) {
+                    // try {
+                    //   await pinCID(upResult.Hash, file.name);
+                    //   const success = await loopCheckCID(upResult.Hash, 10000, 15);
+                    //   if (success) {
+                    //     imgCid = upResult.Hash;
+                    //     fileMap.set(file.name, upResult.Hash);
+                    //   } else {
+                    //     throw 'timeout'
+                    //   }
+                    // } catch (error) {
+                    //   console.error(error);
+                    //   // resolve({ src: `https://ipfs.io/ipfs/${upResult.Hash}`, fileName: file.name });
+                    // }
+                    await pinCID(upResult.Hash, file.name);
                     imgCid = upResult.Hash;
                     fileMap.set(file.name, upResult.Hash);
                   }
@@ -333,16 +334,29 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
         plainText: true,
         // moji: 'noto'
       }),
-      // new LinkExtension({ autoLink: true }),
+      linkExtension,
       new BoldExtension({}),
       new StrikeExtension(),
-      new ImageExtension({ uploadHandler: uploadHandler, enableResizing: true }),
+      new ImageExtension({
+        uploadHandler,
+        createPlaceholder: () => {
+          const place = document.createElement("div");
+          place.style.height = "100px";
+          place.style.padding = "30px";
+          const anim = document.createElement("div");
+          anim.className = "animate-spin transition-all";
+          anim.style.width = "40px";
+          anim.style.height = "40px";
+          anim.style.borderRadius = "20px";
+          anim.style.border = "dashed 4px black";
+          place.appendChild(anim);
+          return place;
+        },
+        enableResizing: true,
+      }),
       new ItalicExtension(),
       new HeadingExtension({}),
       new HorizontalRuleExtension(),
-
-      // new LinkExtension(),
-      linkExtension,
       new BlockquoteExtension(),
       new BulletListExtension({ enableSpine: true }),
       new OrderedListExtension(),
@@ -350,20 +364,13 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
       new CodeExtension(),
       new CodeBlockExtension({ supportedLanguages: [jsx, typescript] }),
       new TrailingNodeExtension(),
-
-      // new TableExtension(),
-
       new MarkdownExtension({ copyAsMarkdown: false }),
-      /**
-       * `HardBreakExtension` allows us to create a newline inside paragraphs.
-       * e.g. in a list item
-       */
       new HardBreakExtension(),
     ],
     [placeholder]
   );
 
-  const { manager, state, setState } = useRemirror({
+  const { manager } = useRemirror({
     extensions,
     stringHandler: "markdown",
     content: initialContent,
@@ -375,23 +382,24 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
       // console.log("before onChange:", parameter);
       editorUpdate?.(parameter);
     }
-    console.info('p:', parameter.helpers.getMarkdown())
-    setState(parameter.state);
+    console.info("p:", parameter.helpers.getMarkdown());
+    // setState(parameter.state);
     // setMDText(parameter.helpers.getMarkdown());
   };
 
   useEffect(() => {
     const task = setInterval(() => {
-      setMDText(manager.extensionStore.helpers.getMarkdown())
-    },500)
-    return () => clearInterval(task)
-  },[manager])
+      setMDText(manager.extensionStore.helpers.getMarkdown());
+    }, 500);
+    return () => clearInterval(task);
+  }, [manager]);
   return (
     <ThemeProvider as={ThemeDiv} theme={theme}>
       {status == "edit" && (
-        <Remirror manager={manager} autoFocus state={state} onBlur={changeHandler} onChange={changeHandler}>
+        <Remirror manager={manager} autoFocus onBlur={changeHandler} onChange={changeHandler}>
           <MdToolbar />
           <EditorComponent />
+
           <div className="flex justify-center">
             <Button disabled={!MDText} className="btn-173 mt-4" text="Publish" onClick={pinMarkdonw} />
           </div>
@@ -399,7 +407,9 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
       )}
       {status == "uping" && (
         <div className="mb-[3.5rem] font-WorkSans px-14 flex flex-col items-center">
-          <p className="w-[24rem] text-black-3 text-2xl text-center mb-10">Publishing & Uploading to IPFS Please wait...</p>
+          <p className="w-[24rem] text-black-3 text-2xl text-center mb-10">
+            Publishing & Uploading to IPFS Please wait...
+          </p>
           <ProgressBar value={progress} />
         </div>
       )}

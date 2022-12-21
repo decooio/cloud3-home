@@ -26,7 +26,7 @@ export const SectionProduct = React.memo(() => {
               <a
                 href="https://ipfs.io"
                 target="_blank"
-                className="text-2xl font-medium leading-7 text-black mt-5 mb-3 underline no-skip-ink"
+                className="text-2xl text-black-1 font-medium leading-7 mt-5 mb-3 underline no-skip-ink"
               >
                 IPFS
               </a>
@@ -34,7 +34,7 @@ export const SectionProduct = React.memo(() => {
               <a
                 href="https://crust.network"
                 target="_blank"
-                className="text-2xl font-medium leading-7 mt-5 mb-3 underline no-skip-ink text-black"
+                className="text-2xl text-black-1 font-medium leading-7 mt-5 mb-3 underline no-skip-ink"
               >
                 Crust Network
               </a>

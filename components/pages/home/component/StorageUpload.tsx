@@ -40,7 +40,7 @@ export function StorageUpload(p: IProps){
             storageState === 3?
               <div className="text-lg">
                 <div className="mb-5 font-medium">Demo Step 2:</div>
-                <p className="font-light text-base">
+                <p className="font-light">
                   When Upload process is completed, you will get an IPFS CID (unique identifier to your stored content) and a Storage Manager Tx No. (Tx No. for the IPFS storage action of your content).
                 </p>
               </div>:

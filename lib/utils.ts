@@ -177,3 +177,13 @@ export function getErrorMsg(error: any): string {
   if (typeof error === "string") return error as string;
   return _.get(error, "message", "Unkown Error");
 }
+
+export function preloadIMG(src: string){
+  return new Promise<boolean>((reslove) => {
+    const img = new Image()
+    img.onload = () => reslove(true);
+    img.onerror = () => reslove(false);
+    img.src = src;
+    img.loading = 'eager';
+  })
+}

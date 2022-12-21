@@ -46,14 +46,22 @@ import {
 
 import data from "svgmoji/emoji.json";
 
-import { pinCID, upload } from "@lib/files";
-import { shortStr } from "@lib/utils";
+import { loopCheckCID, pinCID, upload } from "@lib/files";
+import { preloadIMG, shortStr } from "@lib/utils";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { ethers } from "ethers";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { Button } from "./Button";
 import { Icon } from "./Icon";
 import { ProgressBar } from "./ProgressBar";
+import { CID } from "multiformats";
+import { sha256 } from "multiformats/hashes/sha2";
+import { GatewayBase } from "@lib/config";
+
+async function getCID0(data: any) {
+  const hash = await sha256.digest(data);
+  return CID.createV0(hash).toString();
+}
 
 type Language = "zh_hant" | "zh_hans" | "en";
 
@@ -78,7 +86,8 @@ export interface MarkdownEditorProps {
   onUpFinish?: (res?: any) => void;
 }
 
-const gateway = "https://ipfs.io"; // GatewayBase;
+// "https://ipfs.io";
+const gateway = GatewayBase;
 const fileMap = new Map();
 
 const defContent = ``;
@@ -269,6 +278,7 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
   const uploadHandler: ImageOptions["uploadHandler"] = (files) => {
     let completed = 0;
     const promises = [];
+    console.info("files:", files);
     for (const { file, progress } of files) {
       promises.push(
         () =>
@@ -279,43 +289,62 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
               async (readerEvent) => {
                 console.log(file);
                 completed += 1;
-                progress(completed / files.length);
-                let imgCid = fileMap.get(file.name);
+                // progress(completed / files.length);
+                console.info("readed:", reader.result);
+                const imgKey = await getCID0(new Uint8Array(reader.result as ArrayBuffer));
+                console.info("imgKey:", imgKey);
+                let imgCid = fileMap.get(imgKey);
                 if (!imgCid) {
                   const form = new FormData();
                   form.append("file", file, file.name);
                   const upResult = await up2Gateway(form);
                   if (upResult !== null) {
-                    // try {
-                    //   await pinCID(upResult.Hash, file.name);
-                    //   const success = await loopCheckCID(upResult.Hash, 10000, 15);
-                    //   if (success) {
-                    //     imgCid = upResult.Hash;
-                    //     fileMap.set(file.name, upResult.Hash);
-                    //   } else {
-                    //     throw 'timeout'
-                    //   }
-                    // } catch (error) {
-                    //   console.error(error);
-                    //   // resolve({ src: `https://ipfs.io/ipfs/${upResult.Hash}`, fileName: file.name });
-                    // }
-                    await pinCID(upResult.Hash, file.name);
-                    imgCid = upResult.Hash;
-                    fileMap.set(file.name, upResult.Hash);
+                    try {
+                      const pined = await pinCID(upResult.Hash, file.name);
+                      if (!pined) throw "pin eerror";
+                      const success = await loopCheckCID(upResult.Hash, 10000, 20);
+                      if (!success) {
+                        throw "timeout";
+                      }
+                      const loaded = await preloadIMG(`${gateway}/ipfs/${upResult.Hash}`);
+                      if (!loaded) throw "pre load error";
+                      imgCid = upResult.Hash;
+                      fileMap.set(imgKey, upResult.Hash);
+                    } catch (error) {
+                      console.error(error);
+                      // resolve({ src: `https://ipfs.io/ipfs/${upResult.Hash}`, fileName: file.name });
+                    }
+                    // await pinCID(upResult.Hash, file.name);
+                    // await preloadIMG(`${gateway}/ipfs/${upResult.Hash}`);
+                    // imgCid = upResult.Hash
+                    // fileMap.set(imgKey, imgCid);
                   }
                 }
                 imgCid ? resolve({ src: `${gateway}/ipfs/${imgCid}`, fileName: file.name }) : reject();
               },
               { once: true }
             );
-
-            reader.readAsDataURL(file);
+            reader.readAsArrayBuffer(file);
           })
       );
     }
 
     return promises as any;
   };
+
+  const createPlaceholder = useCallback<ImageOptions["createPlaceholder"]>(() => {
+    const place = document.createElement("div");
+    place.style.height = "100px";
+    place.style.padding = "30px";
+    const anim = document.createElement("div");
+    anim.className = "animate-spin transition-all";
+    anim.style.width = "40px";
+    anim.style.height = "40px";
+    anim.style.borderRadius = "20px";
+    anim.style.border = "dashed 4px black";
+    place.appendChild(anim);
+    return place;
+  }, []);
 
   const extensions = useCallback(
     () => [
@@ -330,19 +359,7 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
       new StrikeExtension(),
       new ImageExtension({
         uploadHandler,
-        createPlaceholder: () => {
-          const place = document.createElement("div");
-          place.style.height = "100px";
-          place.style.padding = "30px";
-          const anim = document.createElement("div");
-          anim.className = "animate-spin transition-all";
-          anim.style.width = "40px";
-          anim.style.height = "40px";
-          anim.style.borderRadius = "20px";
-          anim.style.border = "dashed 4px black";
-          place.appendChild(anim);
-          return place;
-        },
+        createPlaceholder,
         enableResizing: true,
       }),
       new ItalicExtension(),
@@ -390,7 +407,6 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
         <Remirror manager={manager} autoFocus onBlur={changeHandler} onChange={changeHandler}>
           <MdToolbar />
           <EditorComponent />
-
           <div className="flex justify-center">
             <Button disabled={!MDText} className="btn-173 mt-4" text="Publish" onClick={pinMarkdonw} />
           </div>

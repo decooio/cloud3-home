@@ -15437,6 +15437,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"multiformats@npm:^10.0.3":
+  version: 10.0.3
+  resolution: "multiformats@npm:10.0.3"
+  checksum: 9551f25142e8ba711bbbee3d4155c5fa3f487e390e6b2e9816f3077853e469e7523da58570372dd2bc8cdfa0fd8f4d378faa18df224847832c9c31f9ecdf40c0
+  languageName: node
+  linkType: hard
+
 "multishift@npm:^2.0.4":
   version: 2.0.4
   resolution: "multishift@npm:2.0.4"
@@ -19477,6 +19484,7 @@ __metadata:
     ismobilejs: ^1.1.1
     lodash: ^4.17.21
     moment: ^2.29.4
+    multiformats: ^10.0.3
     next: ^13.0.1
     numbro: ^2.3.6
     postcss: ^8.4.16

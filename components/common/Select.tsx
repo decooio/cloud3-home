@@ -33,12 +33,12 @@ export const Select = React.memo(
           {text} <span className="cru-fo-chevron-down ml-3" />
         </div>
         {open && (
-          <div className=" absolute top-full right-0 border-solid border-black-1 border bg-white z-10">
+          <div className=" absolute top-full right-0 shadow-md bg-white z-10">
             {options.map((op, index) => (
               <div
                 key={`options_${index}`}
                 className={classNames(
-                  " py-2 px-4 whitespace-nowrap cursor-pointer",
+                  " py-[8px] px-4 whitespace-nowrap cursor-pointer",
                   {
                     "bg-black-1 text-white": op === current,
                   }

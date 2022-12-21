@@ -10,7 +10,7 @@ import { scrollToAnchor } from "@lib/utils";
 export const SectionProduct = React.memo(() => {
   return (
     <div className="w-full py-20 px-12 flex flex-col items-center justify-center text-black-1">
-      <div className="w-container">
+      <div className="w-full max-w-[1112px]">
         <CommonTitle className="w-full pb-14" text="Cloud3 is a Web3 storage cloud" />
         <div className="w-full flex justify-between items-end text-lg">
           <div className="w-[348px] h-[418px] border-2 border-black-1 mt-12">

@@ -16,7 +16,7 @@ export const SectionWidget = React.memo(() => {
   const [storageCodeVisible,setStorageCodeVisible] = useState(false)
   return(
     <div id="widget" className="w-full pb-20 pt-16 px-12 flex flex-col items-center justify-center text-black bg-[#F5F5F5]">
-      <div className="w-container text-lg">
+      <div className="w-full max-w-[1112px] text-lg">
         <CommonTitle className="w-full mb-8" text="Web3 Storage Widgets" />
         <p className="w-full text-left text-2xl text-black-3 mb-20">
           Users should own their contents and take full control of them just like what they do to their assets, but they do not.
@@ -42,7 +42,7 @@ export const SectionWidget = React.memo(() => {
               </div>
             </div>
             <div className="flex mt-20">
-              <IPFSSvg />
+              <IPFSSvg className="mt-2"/>
               <div className="ml-9">
                 <h5 className="font-semibold text-[1.375rem] mb-4">IPFS File Storage Widget</h5>
                 <p className="w-[490px] text-black-3">This widget helps applications/dapps to upload files of general types to IPFS and manage file storage for their users. </p>

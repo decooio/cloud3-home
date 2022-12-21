@@ -114,17 +114,17 @@ export const SectionCases = React.memo(() => {
         setSelectedMonitorProjectIndex((selectedMonitorProjectIndex+1>monitorProject.length-1)?0:selectedMonitorProjectIndex+1)
     }
     return(
-        <div className="w-full pt-6 pb-80 px-12 flex flex-col items-center">
-            <div className="my-10 text-black">
-                <CommonTitle className="w-full ml-24" text="Discover some real use cases" />
+        <div className="w-full pt-6 pb-[min(12vmin,18.75rem)] px-12 flex flex-col items-center">
+            <div className="my-10 text-black w-full max-w-[1310px]">
+                <CommonTitle className="mx-auto max-w-[1120px] " text="Discover some real use cases" />
                 {
                     monitorProject.map((v,i)=>{
                         return(
                           i === selectedMonitorProjectIndex &&
-                          <div key={`monitorProject${i}`} className={classnames("flex justify-center")}>
-                              <MonitorMap activePos={v.activePos} className="mt-10" />
-                              <div className="flex flex-col items-center w-[20.6rem] md:w-[18rem] ml-10 md:ml-6">
-                                  <div className="h-10 w-full flex justify-between items-center">
+                          <div key={`monitorProject${i}`} className={classnames("flex justify-center pt-5")}>
+                              <MonitorMap activePos={v.activePos} className="flex-1 pt-16" />
+                              <div className="flex flex-shrink-0 flex-col items-center w-[22.625rem] ml-10 ">
+                                  <div className="h-[4.625rem] w-full flex justify-between items-center">
                                       <ArrowSvg className="cursor-pointer" onClick={onMonitorMapChangePrev} />
                                       {v.logo}
                                       <ArrowSvg className="rotate-180 cursor-pointer" onClick={onMonitorMapNext} />

@@ -122,6 +122,9 @@ const mThemeClass = css`
         padding: ${getThemeVar("space", 3)};
         margin: 0;
       }
+      .remirror-is-empty:first-of-type::before{
+        font-style: normal !important;
+      }
     }
   }
 `;
@@ -145,6 +148,9 @@ const theme: RemirrorThemeType = {
       primaryText: "#FC7823",
     },
   },
+  fontFamily: {
+    default: 'var(--work-sans)'
+  }
 };
 /**
  * Toolbar

@@ -58,6 +58,9 @@ import { CID } from "multiformats";
 import { sha256 } from "multiformats/hashes/sha2";
 import { GatewayBase } from "@lib/config";
 
+import ReactDOM from 'react-dom';
+import { Loading } from "./Loading";
+
 async function getCID0(data: any) {
   const hash = await sha256.digest(data);
   return CID.createV0(hash).toString();
@@ -341,15 +344,8 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
 
   const createPlaceholder = useCallback<ImageOptions["createPlaceholder"]>(() => {
     const place = document.createElement("div");
-    place.style.height = "100px";
-    place.style.padding = "30px";
-    const anim = document.createElement("div");
-    anim.className = "animate-spin transition-all";
-    anim.style.width = "40px";
-    anim.style.height = "40px";
-    anim.style.borderRadius = "20px";
-    anim.style.border = "dashed 4px black";
-    place.appendChild(anim);
+    place.className = "w-[100px] h-[100px] p-[30px]"
+    ReactDOM.render(<Loading/>, place)
     return place;
   }, []);
 

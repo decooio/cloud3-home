@@ -300,12 +300,13 @@ export const MdEditor: FC<MarkdownEditorProps> = ({
                   const upResult = await up2Gateway(form);
                   if (upResult !== null) {
                     try {
-                      const pined = await pinCID(upResult.Hash, file.name);
-                      if (!pined) throw "pin eerror";
-                      const success = await loopCheckCID(upResult.Hash, 10000, 20);
-                      if (!success) {
-                        throw "timeout";
-                      }
+                      await pinCID(upResult.Hash, file.name);
+                      // const pined = await pinCID(upResult.Hash, file.name);
+                      // if (!pined) throw "pin eerror";
+                      // const success = await loopCheckCID(upResult.Hash, 10000, 20);
+                      // if (!success) {
+                      //   throw "timeout";
+                      // }
                       const loaded = await preloadIMG(`${gateway}/ipfs/${upResult.Hash}`);
                       if (!loaded) throw "pre load error";
                       imgCid = upResult.Hash;

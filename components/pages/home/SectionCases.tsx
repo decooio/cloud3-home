@@ -5,6 +5,7 @@ import ArrowSvg from '../../../public/images/arrow.svg'
 import AaveSvg from '../../../public/images/aave_logo.svg'
 import {randomNum} from "@lib/utils";
 import classnames from "classnames";
+import {CommonTitle} from "@components/pages/home/component/CommonTitle";
 
 const getRedDoc = ()=>{
     let arr = []
@@ -104,7 +105,7 @@ const monitorProject = [
     uniswap(),
     aave(),
 ]
-export const SectionMid = React.memo(() => {
+export const SectionCases = React.memo(() => {
     const [selectedMonitorProjectIndex,setSelectedMonitorProjectIndex] = useState(0)
     const onMonitorMapChangePrev = ()=>{
         setSelectedMonitorProjectIndex((selectedMonitorProjectIndex-1>=0)?selectedMonitorProjectIndex-1:monitorProject.length-1)
@@ -113,16 +114,17 @@ export const SectionMid = React.memo(() => {
         setSelectedMonitorProjectIndex((selectedMonitorProjectIndex+1>monitorProject.length-1)?0:selectedMonitorProjectIndex+1)
     }
     return(
-        <div className="w-full py-6 px-12 flex flex-col items-center">
-            <div className="my-10 mt-20">
+        <div className="w-full pt-6 pb-[min(12vmin,18.75rem)] px-12 flex flex-col items-center">
+            <div className="my-10 text-black w-full max-w-[1310px]">
+                <CommonTitle className="mx-auto max-w-[1120px] " text="Discover some real use cases" />
                 {
                     monitorProject.map((v,i)=>{
                         return(
                           i === selectedMonitorProjectIndex &&
-                          <div key={`monitorProject${i}`} className={classnames("flex justify-center")}>
-                              <MonitorMap activePos={v.activePos} className="mt-10" />
-                              <div className="flex flex-col items-center w-[20.6rem] md:w-[18rem] ml-10 md:ml-6">
-                                  <div className="h-10 w-full flex justify-between items-center">
+                          <div key={`monitorProject${i}`} className={classnames("flex justify-center pt-5")}>
+                              <MonitorMap activePos={v.activePos} className="flex-1 pt-16" />
+                              <div className="flex flex-shrink-0 flex-col items-center w-[22.625rem] ml-10 ">
+                                  <div className="h-[4.625rem] w-full flex justify-between items-center">
                                       <ArrowSvg className="cursor-pointer" onClick={onMonitorMapChangePrev} />
                                       {v.logo}
                                       <ArrowSvg className="rotate-180 cursor-pointer" onClick={onMonitorMapNext} />
@@ -130,18 +132,18 @@ export const SectionMid = React.memo(() => {
                                   <span className="text-black text-lg mt-12 font-medium">
                       Check this real-time monitor to see how we help {v.name} decentralized host their Dapp frontend:
                     </span>
-                                  <div className="text-slate-700 text-lg mt-3">
+                                  <div className="text-black-3 text-lg mt-3">
                                       <p className="mt-5">
-                                          <span className="text-orange-500 text-lg text-2xl">{v.total}</span> IPFS Replicas all around the globe
+                                          <span className="text-orange-500 font-medium text-2xl">{v.total}</span> IPFS Replicas all around the globe
                                       </p>
                                       <p className="mt-5">
-                                          <span className="text-orange-500 text-lg text-2xl">99+</span> Years guaranteed with <span className="text-orange-500 text-lg text-2xl">1.5ETH</span> in payment contract
+                                          <span className="text-orange-500 font-medium text-2xl">99+</span> Years guaranteed with <span className="text-orange-500 font-medium text-2xl">1.5ETH</span> in payment contract
                                       </p>
                                       <p className="mt-5">
-                                          Guranteed by <a className="text-slate-700 underline" href="https://crust.network/" target="_blank">decentralized incentive protocol</a> on IPFS
+                                          Guranteed by <a className="text-black-3 underline" href="https://crust.network/" target="_blank">decentralized incentive protocol</a> on IPFS
                                       </p>
                                       <p className="mt-5">
-                                          Verifiable on <a className="text-slate-700 underline" href="https://ipfs-scan.io/" target="_blank">IPFS Scan</a>
+                                          Verifiable on <a className="text-black-3 underline" href="https://ipfs-scan.io/" target="_blank">IPFS Scan</a>
                                       </p>
                                   </div>
                               </div>

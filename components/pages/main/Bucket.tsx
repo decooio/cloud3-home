@@ -27,11 +27,30 @@ import {useOnce} from "@react-spring/shared";
 import {genUrl, pinUrl} from "@lib/http";
 import {useToast} from "@lib/hooks/useToast";
 import {useAccount} from "wagmi";
+import { GatewayBaseBucket } from "@lib/config";
 
 
 const TopInfo = () => {
   const { bucketId } = useParams();
   const push = useNavigate();
+  const code = `
+**Upload** file with the standard [IPFS API](https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add) and get the CID:
+
+~~~bash
+curl -X POST 'https://<GATEWAY_HOST>/api/v0/add?pin=true' --header 'Authorization: Bearer <YOUR_W3AUTH_TOKEN>' --form 'path=@"<FILE_PATH>"'
+~~~
+
+**Pin** the CID with the standard [IPFS Pinning Service API](https://ipfs.github.io/pinning-services-api-spec/#operation/addPin):
+
+~~~bash
+curl -X POST '${pinUrl('/psa/pins')}' \
+--header 'Authorization: Bearer <YOUR_W3AUTH_TOKEN>' \
+--data-raw '{
+    "cid": "<FILE_CID>",
+    "name": "<FILE_NAME>"
+}'
+~~~
+`;
   return (
     <>
       <div className="sticky top-0 bg-white px-8 pt-16 flex items-center pb-5 mb-2 min-w-[62rem]">
@@ -54,7 +73,7 @@ const TopInfo = () => {
             Files can be uploaded and decentralized pinned to IPFS by using this
             web interface, or by CLI as shown in the curl sample below.
           </div>
-          <BucketCode />
+          <BucketCode code={code} />
           <div className=" mt-8 text-xl font-medium">Get more references</div>
           <div className=" mt-4 flex flex-wrap">
             <a
@@ -366,7 +385,7 @@ export const Bucket = React.memo(() => {
                   <div className="flex-initial w-[20%] md:w-[25%]">
                     <span data-tip={v.cid} data-for="cidColumn">{shortStr(v.cid,10,10)}</span>
                   </div>
-                  <div className="flex-initial w-[30%] truncate pr-8" data-for="linkColumn" data-tip={`${current.value}/ipfs/${v.cid}`}>{`${current.value}/ipfs/${v.cid}`}</div>
+                  <div className="flex-initial w-[30%] truncate pr-8" data-for="linkColumn" data-tip={`${GatewayBaseBucket}/ipfs/${v.cid}`}>{`${GatewayBaseBucket}/ipfs/${v.cid}`}</div>
                   <div className="flex-initial w-[10%]">{formatFileSize(v.fileSize)}</div>
                   <div className="flex-initial w-[15%] text-gray-6">{v.isNew?<span data-tip={`The ${v.fileType === 0?'file':'folder'} has been successfully uploaded to your bucket. It takes several minutes to finalize the decentralized storage and IPNS update processes.`}><Icon icon={BsQuestionCircle} /></span>:moment(v.createTime*1000).format('YYYY-MM-DD HH:mm:ss')}</div>
                 </div>

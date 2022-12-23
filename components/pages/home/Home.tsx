@@ -1,14 +1,18 @@
 import type { NextPage } from "next";
-import { SectionBottom } from "./SectionBottom";
-import { SectionMid } from "./SectionMid";
+import { SectionNft } from "./SectionNft";
+import { SectionCases } from "./SectionCases";
 import { SectionTop } from "./SectionTop";
+import { SectionProduct } from "./SectionProduct";
+import { SectionWidget } from "./SectionWidget";
 
 const Home: NextPage = () => {
   return (
     <div className="w-full">
       <SectionTop />
-      <SectionMid />
-      <SectionBottom />
+      <SectionProduct />
+      <SectionWidget />
+      <SectionNft />
+      <SectionCases />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 // export const IS_DEV = true
-export const IS_DEV = false
+export const IS_DEV = true
 
 // export const IS_TEST = false
 export const IS_TEST = true

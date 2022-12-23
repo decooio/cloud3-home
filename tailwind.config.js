@@ -11,10 +11,14 @@ module.exports = {
           {'min': '0', 'max': '1280px'},
         ]
       },
+      width:{
+        container: '1112px'
+      },
       fontFamily: {
         WorkSans: 'var(--work-sans)',
         SquadaOne: 'var(--squada-one)',
         Roboto: 'var(--roboto)',
+        RobotoMono: 'var(--roboto-mono)',
       },
       colors: {
         black: {

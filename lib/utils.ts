@@ -46,6 +46,15 @@ export function isNumber(num: any): boolean {
   if (num === null || num === undefined) return false;
   return /^-?[0-9]+\.?[0-9]*$/.test(num.toString());
 }
+
+export function scrollToAnchor (anchorId) {
+  if (anchorId) {   // 找到锚点 id
+    let anchorElement = document.getElementById(anchorId);
+    if(anchorElement) {        // 如果对应id的锚点存在，就跳转到锚点
+      anchorElement.scrollIntoView({block: 'start', behavior: 'smooth'});
+    }
+  }
+}
 export function toThousand(num: string): string {
   if (num === null || num === undefined) return "-";
   return num.toString().replace(/(\d)(?=(\d{3})+\.)/g, "$1,");
@@ -167,4 +176,14 @@ export function getErrorMsg(error: any): string {
   if (!error) return "Unkown Error";
   if (typeof error === "string") return error as string;
   return _.get(error, "message", "Unkown Error");
+}
+
+export function preloadIMG(src: string){
+  return new Promise<boolean>((reslove) => {
+    const img = new Image()
+    img.onload = () => reslove(true);
+    img.onerror = () => reslove(false);
+    img.src = src;
+    img.loading = 'eager';
+  })
 }

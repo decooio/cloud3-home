@@ -20,9 +20,10 @@ export function(){
   )
 }
 ~~~
+&nbsp;
+&nbsp;
 
 ##### Vue:
-
 ~~~jsx
 <script>
 import { DragStorage } from '@cloud3/vue-widgets'
@@ -38,7 +39,7 @@ import { DragStorage } from '@cloud3/vue-widgets'
   return(
     <Modal className="p-0">
       <div className="bg-white min-w-[56rem] flex flex-col relative p-6">
-        <div className="flex justify-between items-center mb-5">
+        <div className="flex justify-between items-center mb-6">
         <a className="text-2xl underline text-black-1" href="https://docs.cloud3.cc" target="_blank">Dev Guidance</a>
           <CommonModalClose className="mt-[-0.3rem]" onClose={()=>onClose && onClose()} />
         </div>

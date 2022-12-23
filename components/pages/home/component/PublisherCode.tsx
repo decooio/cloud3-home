@@ -9,7 +9,7 @@ interface IProps{
 export function PublisherCode(p: IProps){
   const {onClose} = p
   const code = `
-**React**:
+##### React:
 
 ~~~jsx
 import { MDEditor } from '@cloud3/react-widgets'
@@ -21,7 +21,7 @@ export default function App(){
 }
 ~~~
 
-**Vue**:
+##### Vue:
 
 ~~~jsx
 <script>

@@ -11,6 +11,7 @@ export const BucketCode = React.memo((props:{code: string}) => {
       children={props.code}
       linkTarget="_blank"
       components={{
+        h5: ({node, ...props}) => <h5 style={{fontSize: '18px',fontStyle:'normal'}} {...props} />,
         code({ node, inline, className, children, ...props }) {
           const match = /language-(\w+)/.exec(className || "");
           return !inline && match ? (

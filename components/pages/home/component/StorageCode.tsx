@@ -9,7 +9,7 @@ interface IProps{
 export function StorageCode(p: IProps){
   const {onClose} = p
   const code = `
-**React**:
+##### React:
 
 ~~~jsx
 import { DragStorage } from '@cloud3/react-widgets'
@@ -21,7 +21,7 @@ export function(){
 }
 ~~~
 
-**Vue**:
+##### Vue:
 
 ~~~jsx
 <script>

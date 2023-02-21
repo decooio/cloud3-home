@@ -31,7 +31,7 @@ interface Menu {
 
 const net_text =
   IS_DEV || IS_TEST
-    ? "Claim your test version W3Bucket NFT and start your decentralized cloud storage experience on Cloud3 testnet. To continue, please connect your Ethereum wallet and switch to Goerli testnet."
+    ? "Claim your test version W3Bucket NFT and start your decentralized cloud storage experience on Crust Cloud testnet. To continue, please connect your Ethereum wallet and switch to Goerli testnet."
     : "W3Bucket runs on Ethereum mainnet. To start your decentralized cloud storage experience, please connect your Ethereum wallet.";
 
 export const MainLayout = React.memo(

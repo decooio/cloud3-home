@@ -213,7 +213,7 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
           />
           <TulpeText target="_self" data={["W3Bucket Identifier", bucketId, `/#/bucket/${bucketId}/${mintData.ipns}`]} />
           <div className=" text-2xl font-medium mt-8">
-            Return to the W3Bucket Home Page and start your Cloud3 journey. Bon
+            Return to the W3Bucket Home Page and start your Crust Cloud journey. Bon
             Voyage!
           </div>
           <Button

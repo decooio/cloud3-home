@@ -172,7 +172,7 @@ export function DragUpload(p:IProps){
                   </div>
                   <div className="underline" onClick={()=>openExtUrl(`https://ipfs-scan.io/?cid=${uploadFileInfo.Hash}`)}>Verify on IPFS</div>
                   <div className="mr-5 w-1/2 underline" onClick={()=>openExtUrl(`https://docs.cloud3.cc`)}>
-                    Learn more about Cloud3's storage solution
+                    Learn more about Crust Cloud's storage solution
                   </div>
                   <div
                     onClick={() =>

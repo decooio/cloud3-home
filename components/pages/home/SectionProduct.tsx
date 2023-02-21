@@ -11,7 +11,7 @@ export const SectionProduct = React.memo(() => {
   return (
     <div className="w-full py-20 px-12 flex flex-col items-center justify-center text-black-1">
       <div className="w-full max-w-[1112px]">
-        <CommonTitle className="w-full pb-14" text="Cloud3 is a Web3 storage cloud" />
+        <CommonTitle className="w-full pb-14" text="Crust Cloud is a Web3 storage cloud" />
         <div className="w-full flex justify-between items-end text-lg">
           <div className="w-[348px] h-[418px] border-2 border-black-1 mt-12">
             <div className="flex flex-col items-center border-b-2 border-black-1 py-6">
@@ -45,7 +45,7 @@ export const SectionProduct = React.memo(() => {
             <div></div>
           </div>
           <div className="flex flex-col items-center">
-            <h4 className="text-orange-15 font-medium text-[2rem] leading-[2.375rem] mb-4">Cloud3 Products</h4>
+            <h4 className="text-orange-15 font-medium text-[2rem] leading-[2.375rem] mb-4">Crust Cloud Products</h4>
             <div className="flex">
               <div className="w-[348px] h-[418px] border-2 border-orange-15">
                 <div className="flex flex-col items-center border-b-2 border-orange-15 py-6">

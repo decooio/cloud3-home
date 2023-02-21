@@ -32,7 +32,7 @@ export const SectionTop = React.memo(() => {
           </div>
           <div className="h-full my-10 w-full max-w-[1112px] flex flex-col justify-center mt-[-1rem]">
             <div className="font-RobotoMono font-bold text-[2.5rem] leading-tight">
-              <p>Cloud 3</p>
+              <p>Crust Cloud</p>
               <p>Redefining Web3 Storage</p>
             </div>
             <div className="flex mt-12 pl-1 mb-20">

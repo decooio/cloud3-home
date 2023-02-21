@@ -26,7 +26,7 @@ export const SectionNft = React.memo(() => {
             <div className="w-full max-w-[1112px] flex flex-col text-black">
                 <CommonTitle className="mt-6 mb-8 font-medium" text="Web3 Storage Buckets & Web3 IPFS Gateways" />
                 <p className="pb-20 text-2xl text-black-3">
-                    Cloud3 defines what cloud storage middlewares should look like in Web3 - every storage bucket is a NFT, and every IPFS gateway is a NFT.
+                    Crust Cloud defines what cloud storage middlewares should look like in Web3 - every storage bucket is a NFT, and every IPFS gateway is a NFT.
                 </p>
                 <div className="flex justify-center">
                     <div className="flex flex-col justify-between">

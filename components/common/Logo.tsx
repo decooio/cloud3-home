@@ -8,7 +8,7 @@ export const Logo = React.memo((p: HTMLAttributes<HTMLSpanElement>) => {
       {...props}
       className={classNames(className, " text-white font-SquadaOne text-[2.5rem]")}
     >
-      Cloud3.cc
+      Crust Cloud
     </span>
   );
 });

@@ -37,7 +37,7 @@ export function useGetAuth(
   const unsupported = (chain && chain.unsupported) || !chain;
   const { address } = useAccount();
 
-  const getToken = useOn(async (tokenID?: string) => {
+  const getToken = useOn(async (tokenId?: string) => {
     const old = localStorage.getItem(key) || "";
     if (!signTypedDataAsync || !address || !chainId || unsupported) throw "not connect wallet";
     const current = moment().unix();
@@ -46,7 +46,7 @@ export function useGetAuth(
       if (
         lastAuth.domain.chainId === `${chainId}` &&
         lastAuth.message.signingAddress === address &&
-        lastAuth.message.tokenID === tokenID &&
+        lastAuth.message.tokenId === tokenId &&
         (lastAuth.message.expirationTimestamp === 0 ||
           lastAuth.message.expirationTimestamp - current > 300)
       ) {
@@ -84,9 +84,9 @@ export function useGetAuth(
       },
     };
 
-    if (tokenID) {
-      typeData.message.tokenID = tokenID;
-      typeData.types.W3Bucket.push({ name: "tokenID", type: "string" });
+    if (tokenId) {
+      typeData.message.tokenId = tokenId;
+      typeData.types.W3Bucket.push({ name: "tokenId", type: "string" });
     }
     await sleep(800)
     const signature = await signTypedDataAsync({

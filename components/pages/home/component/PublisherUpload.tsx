@@ -11,7 +11,7 @@ export function PublisherUpload(p: IProps) {
   const [state, setState] = useState(0);
   return (
     <Modal className="p-0">
-      <div className="bg-white flex min-h-[43.75rem] relative">
+      <div className="bg-white flex h-full max-h-[40.75rem] relative">
         <CommonModalClose onClose={() => onClose && onClose()} />
         <div className="bg-black w-80 text-white px-8 py-16 text-lg">
           <div className="mb-12 text-2xl font-medium">Rich-text Content Publisher Widget</div>
@@ -31,7 +31,7 @@ export function PublisherUpload(p: IProps) {
             </div>
           )}
         </div>
-        <div className="min-w-[57.5rem] flex items-center justify-center">
+        <div className="min-w-[50rem] flex items-center justify-center">
           <MdEditor onUpFinish={(res) => res && setState(1)}/>
         </div>
       </div>

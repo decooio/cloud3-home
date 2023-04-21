@@ -128,9 +128,7 @@ export const Bucket = React.memo(() => {
   const [getAuthForGetDetail] = useGetAuthForGet();
   const push = useNavigate();
   const { address } = useAccount();
-  useEffect(() => {
-    ReactTooltip.rebuild();
-  },[localFileList]);
+
 
   useMemo(()=>{
     push("/buckets")
@@ -186,7 +184,9 @@ export const Bucket = React.memo(() => {
     return {fFiles,total}
   },[confirmFilterText,localFileList])
 
-
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  },[localFileList,fFiles]);
   useMemo(()=>{
     if(localFileList && localFileList.length>0){
       setLocalFileListByBucketId(bucketId,localFileList)

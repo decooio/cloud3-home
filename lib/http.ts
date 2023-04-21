@@ -3,16 +3,16 @@ import { IS_DEV, IS_TEST } from "./env";
 import { W3BucketMetadata } from "./type";
 
 export function genUrl(path: `/${string}`) {
-  let base = "https://api.cloud3.cc";
-  if (IS_DEV) base = "https://beta-api.cloud3.cc";
-  if (IS_TEST) base = "https://test-api.cloud3.cc";
+  let base = "https://api.crustcloud.io";
+  if (IS_DEV) base = "https://beta-api.crustcloud.io";
+  if (IS_TEST) base = "https://test-api.crustcloud.io";
   return `${base}${path}`;
 }
 
 export function pinUrl(path: `/${string}`){
-  let base = "https://pin.cloud3.cc";
-  if (IS_DEV) base = "https://beta-pin.cloud3.cc";
-  if (IS_TEST) base = "https://test-pin.cloud3.cc";
+  let base = "https://pin.crustcloud.io";
+  if (IS_DEV) base = "https://beta-pin.crustcloud.io";
+  if (IS_TEST) base = "https://test-pin.crustcloud.io";
   return `${base}${path}`;
 }
 

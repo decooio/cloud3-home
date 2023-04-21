@@ -171,12 +171,12 @@ export function DragUpload(p:IProps){
                     Get download link for this file
                   </div>
                   <div className="underline" onClick={()=>openExtUrl(`https://ipfs-scan.io/?cid=${uploadFileInfo.Hash}`)}>Verify on IPFS</div>
-                  <div className="mr-5 w-1/2 underline" onClick={()=>openExtUrl(`https://docs.cloud3.cc`)}>
+                  <div className="mr-5 w-1/2 underline" onClick={()=>openExtUrl(`https://docs.crustcloud.io`)}>
                     Learn more about Crust Cloud's storage solution
                   </div>
                   <div
                     onClick={() =>
-                      openExtUrl("http://test.cloud3.cc/#/buckets")
+                      openExtUrl("http://test.crustcloud.io/#/buckets")
                     }
                     className="underline"
                   >

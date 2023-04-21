@@ -17,7 +17,7 @@ export async function getFileHistory(ipns: string) {
       )
     ).data;
     const fileList = (
-      await axios.get<any[]>(`https://gw-seattle.cloud3.cc${cid.Path}`)
+      await axios.get<any[]>(`https://gw-seattle.crustcloud.io${cid.Path}`)
     ).data;
     return fileList;
   } catch (error) {

@@ -67,7 +67,7 @@ export function StorageUpload(p: IProps){
                 <div className="mb-2 text-lg">Storage Manager Tx No:</div>
                 <p className="text-sm text-gray-7">{shortStr('0x69b9f8cf491b55c485dbb43a86a7e48f7649aa45c958cd245461d04c3146bd91', 23, 23)}</p>
               </div>:
-              <DragUpload uploadRender={uploadRender} onSuccess={onStorageUploadSuccess} uploadBorder={false} className="h-[28.937rem] w-[42.5rem]" />
+              <DragUpload uploadRender={uploadRender} onSuccess={onStorageUploadSuccess} uploadBorder={false} className="h-[29.937rem] w-[42.5rem]" />
           }
         </div>
       </div>

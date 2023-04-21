@@ -29,7 +29,7 @@ export function StorageUpload(p: IProps){
   return(
     <Modal className="p-0">
       <div
-        className="bg-white flex min-h-[43.75rem] relative"
+        className="bg-white flex min-h-[40.75rem] relative"
       >
         <CommonModalClose onClose={()=>onClose && onClose()} />
         <div className="bg-black w-80 text-white px-8 py-16 text-lg">
@@ -55,7 +55,7 @@ export function StorageUpload(p: IProps){
               </div>
           }
         </div>
-        <div className="min-w-[57.5rem] flex justify-center items-center">
+        <div className="min-w-[50rem] flex justify-center items-center">
           {
             storageState === 3?
               <div className="text-center text-black-3 flex flex-col items-center">
@@ -67,7 +67,7 @@ export function StorageUpload(p: IProps){
                 <div className="mb-2 text-lg">Storage Manager Tx No:</div>
                 <p className="text-sm text-gray-7">{shortStr('0x69b9f8cf491b55c485dbb43a86a7e48f7649aa45c958cd245461d04c3146bd91', 23, 23)}</p>
               </div>:
-              <DragUpload uploadRender={uploadRender} onSuccess={onStorageUploadSuccess} uploadBorder={false} className="h-[32.937rem] w-[50.5rem]" />
+              <DragUpload uploadRender={uploadRender} onSuccess={onStorageUploadSuccess} uploadBorder={false} className="h-[28.937rem] w-[42.5rem]" />
           }
         </div>
       </div>

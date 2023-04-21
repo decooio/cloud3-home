@@ -13,7 +13,6 @@ export function StorageCode(p: IProps){
 
 ~~~jsx
 import { DragStorage } from '@cloud3/react-widgets'
-
 export function(){
   return(
     <DragStorage />
@@ -28,7 +27,6 @@ export function(){
 <script>
 import { DragStorage } from '@cloud3/vue-widgets'
 </script>
-
 <template>
   <div id="app">
     <DragStorage />

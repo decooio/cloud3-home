@@ -13,7 +13,6 @@ export function PublisherCode(p: IProps){
 
 ~~~jsx
 import { MDEditor } from '@cloud3/react-widgets'
-
 export default function App(){
   return(
     <MDEditor />
@@ -29,7 +28,6 @@ export default function App(){
 <script>
 import { MdEditor } from '@cloud3/vue-widgets'
 </script>
-
 <template>
   <div id="app">
     <MdEditor />

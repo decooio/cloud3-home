@@ -11,7 +11,7 @@ export function PublisherUpload(p: IProps) {
   const [state, setState] = useState(0);
   return (
     <Modal className="p-0">
-      <div className="bg-white flex h-full max-h-[40.75rem] relative">
+      <div className="bg-white flex min-h-[40.75rem] relative">
         <CommonModalClose onClose={() => onClose && onClose()} />
         <div className="bg-black w-80 text-white px-8 py-16 text-lg">
           <div className="mb-12 text-2xl font-medium">Rich-text Content Publisher Widget</div>

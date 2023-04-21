@@ -79,14 +79,14 @@ curl -X POST '${pinUrl('/psa/pins')}' \
             <a
               className=" underline text-black-1 mr-5"
               target="_blank"
-              href="https://docs.cloud3.cc/w3bucket/aboutnft"
+              href="https://docs.crustcloud.io/w3bucket/aboutnft"
             >
               General Guidance on W3Bucket
             </a>
             <a
               className=" underline text-black-1 mr-5"
               target="_blank"
-              href="https://docs.cloud3.cc/w3bucket/uploadfile"
+              href="https://docs.crustcloud.io/w3bucket/uploadfile"
             >
               Using APIs and W3Auth
             </a>

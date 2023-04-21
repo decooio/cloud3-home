@@ -49,7 +49,7 @@ export const MainLayout = React.memo(
           id: 3,
           icon: "cru-fo-homework",
           text: "Docs",
-          url: "https://docs.cloud3.cc",
+          url: "https://docs.crustcloud.io",
         },
       ];
     }, []);

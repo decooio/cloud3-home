@@ -39,7 +39,7 @@ export const SectionTop = React.memo(() => {
               <Button
                   text="Documentations"
                   className="btn-173 border-white text-white"
-                  onClick={()=>openExtUrl('https://docs.cloud3.cc/')}
+                  onClick={()=>openExtUrl('https://docs.crustcloud.io/')}
               />
               <Button
                   text="Launch App"

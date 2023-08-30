@@ -1,9 +1,12 @@
 import { IconMetaMask } from "@components/common/icons";
-import { SupportChain } from "@lib/config";
+import { SupportChain, SupportId2Chain } from "@lib/config";
 import { useOn } from "@lib/hooks/tools";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useConnect, useSwitchNetwork } from "wagmi";
+import { ethers } from "ethers";
+import detectEthereumProvider from "@metamask/detect-provider";
+import { MetaMaskConnector } from "@wagmi/core/connectors/metaMask";
 import { Modal, ModalHead } from "./Modal";
 
 export const ConnectWallet = React.memo((p: { onClose: () => void }) => {
@@ -13,14 +16,29 @@ export const ConnectWallet = React.memo((p: { onClose: () => void }) => {
   const push = useNavigate()
   const onConnect = useOn(async () => {
     try {
+      const chainId = await (async () => {
+        const provider: any = await detectEthereumProvider();
+        if (provider && provider.isMetaMask) {
+          await provider.request({ method: "eth_requestAccounts" });
+          const web3Provider = new ethers.providers.Web3Provider(provider);
+          const signer = web3Provider.getSigner();
+          const id = await signer.getChainId();
+          if (SupportId2Chain.has(id)) return id;
+        }
+        console.warn(`Cannot get chainId from provider or unsupported chain, use ${SupportChain[0].id}`);
+        return SupportChain[0].id;
+      })();
+      const connector = new MetaMaskConnector({
+        chains: [SupportId2Chain.get(chainId)]
+      })
       console.info("data:", data);
       console.info("cts:", connectors);
       if ((!data || data.chain.unsupported) && switchNetworkAsync) {
-        await switchNetworkAsync(SupportChain[0].id);
+        await switchNetworkAsync(chainId);
       } else {
         await connectAsync({
-          chainId: SupportChain[0].id,
-          connector: connectors[0],
+          chainId: chainId,
+          connector: connector,
         });
       }
       push('/buckets')

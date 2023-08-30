@@ -82,6 +82,7 @@ export interface CrustOrder {
 export interface MintData {
   color: MintColorType;
   qrcode: QRCODE_STYLE;
+  chainId?: number;
   editionId?: number;
   price?: Price;
   ipns?: string;

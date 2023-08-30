@@ -298,7 +298,12 @@ export const MintStep2 = React.memo((p: MintStep2Props) => {
             axios
               .post<Res<GenIPNS>>(
                 genUrl("/auth/ipns/gen"),
-                { editionId: "" + mintData.editionId },
+                {
+                  bucketInfo: JSON.stringify({
+                    chainId: mintData.chainId,
+                    editionId: mintData.editionId 
+                  })
+                },
                 {
                   headers: { Authorization: `Bearer ${auth}` },
                 }

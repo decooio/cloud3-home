@@ -5,6 +5,7 @@ import { formatW3BucketCapacity } from "@lib/utils";
 import classNames from "classnames";
 import React, { useEffect, useMemo } from "react";
 import { OnNext } from "./type";
+import { useNetwork } from "wagmi";
 
 export interface MintStep1Props {
   editions: BucketEdition[];
@@ -17,10 +18,12 @@ function fmtPrices(prices: BucketEdition["prices"]) {
 
 export const MintStep1 = React.memo((p: MintStep1Props) => {
   const { editions, onNext } = p;
+  const { chain } = useNetwork();
+  const chainId = chain && chain.id;
   const [mintData, updateMint] = useMintData();
   useEffect(() => {
     if (mintData.editionId === undefined && editions.length) {
-      updateMint({ editionId: editions[0].id, price: editions[0].prices[0] });
+      updateMint({ chainId: chainId, editionId: editions[0].id, price: editions[0].prices[0] });
     }
   }, [mintData, updateMint, editions]);
   const currentEditionId = mintData.editionId;
@@ -58,7 +61,7 @@ export const MintStep1 = React.memo((p: MintStep1Props) => {
                 }
               )}
               onClick={() => {
-                updateMint({ editionId: item.id, price: item.prices[0] });
+                updateMint({ chainId: chainId, editionId: item.id, price: item.prices[0] });
               }}
             />
             <span className=" whitespace-nowrap text-sm mt-2 font-light">{`${fmtPrices(

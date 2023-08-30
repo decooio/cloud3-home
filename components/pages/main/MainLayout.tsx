@@ -39,7 +39,6 @@ export const MainLayout = React.memo(
     const { menuId, children, ...props } = p;
     const { address: account } = useAccount();
     const { chain } = useNetwork();
-    const chainId = chain && chain.id;
     const isConnected = useConnected();
     const menus: Menu[] = useMemo(() => {
       return [
@@ -82,10 +81,10 @@ export const MainLayout = React.memo(
                 <div
                   className={classNames(
                     " ml-4 text-xs px-[0.39rem] py-[0.13rem] mb-[-0.42rem] text-white",
-                    chainId === 1 ? "bg-blue-2" : "bg-gray-11"
+                    IS_DEV || IS_TEST ? "bg-gray-11" : "bg-blue-2"
                   )}
                 >
-                  {chainId === 1 ? "Mainnet" : "Goerli"}
+                  {chain.name.replace(' ', '')}
                 </div>
               )}
             </div>

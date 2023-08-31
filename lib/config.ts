@@ -8,7 +8,7 @@ export let W3Bucket_Adress: `0x${string}` = "0x";
 const chainId2ContractAddress = new Map<number, `0x${string}`>([
   [chain.mainnet.id, "0x587ad7a26C5acae69D683fE923fD3f5B0700f3Ef"],
   [chain.goerli.id, "0x398663842680332A1AbA3B03bd6dB47aE984994C"],
-  [chain.arbitrum.id, "0x"],
+  [chain.arbitrum.id, "0xe42719cDA4CCa7Abd2243e18604372C6B1c5790c"],
   [chain.arbitrumGoerli.id, "0x1f0C5b696da48f5E93B1c3b3220E42b11b9a9E96"],
 ]);
 
@@ -41,7 +41,7 @@ export const GatewayList: AuthIpfsEndpoint[] = [
   },
 ];
 // 'https://ipfs-gw.decloud.foundation'
-export const DeCloudLink = "https://gw-seattle.crustcloud.io";
+export const DeCloudLink = "https://gw.crustfiles.app";
 export const GatewayBase = "https://ipfs.io";
 
 // for BucketGatewayBase

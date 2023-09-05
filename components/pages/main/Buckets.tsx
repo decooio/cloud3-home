@@ -18,12 +18,13 @@ import moment from "moment";
 import React, { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAsync } from "react-use";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { MainLayout } from "./MainLayout";
 import classnames from "classnames";
 
 const BucketCard = React.memo((p: { data: BucketDTO,className?:string }) => {
   const { data,className } = p;
+  const { chain } = useNetwork();
   const push = useNavigate();
   const capacityInGb = useMemo(
     () => data.maxStorageSize / 1024 / 1024 / 1024,
@@ -72,7 +73,7 @@ const BucketCard = React.memo((p: { data: BucketDTO,className?:string }) => {
         <a
           className=" text-blue-3"
           target="_blank"
-          href={etherscanAddress(W3Bucket_Adress)}
+          href={etherscanAddress(chain.id, W3Bucket_Adress)}
         >
           View NFT Contract
         </a>

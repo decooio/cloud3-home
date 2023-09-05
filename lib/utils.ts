@@ -5,7 +5,8 @@ import isMobile from "ismobilejs";
 import _ from "lodash";
 import {utc} from "moment";
 import numbro from "numbro";
-import {IS_DEV, IS_LOCAL, IS_TEST} from "./env";
+import { IS_LOCAL } from "./env";
+import { chain as chains } from "wagmi";
 
 export const IS_MOBILE = isMobile(window.navigator).phone;
 
@@ -117,21 +118,32 @@ export function sleep(t: number) {
   return new Promise((resolve) => setTimeout(resolve, t));
 }
 
-export function etherscanBase() {
-  const base =
-    IS_DEV || IS_TEST ? "https://goerli.etherscan.io" : "https://etherscan.io";
-  return base;
-}
-export function bucketEtherscanUrl(tokenId: string | number) {
-  return `${etherscanBase()}/token/${W3Bucket_Adress}?a=${tokenId}`;
+export function etherscanBase(chainId: number) {
+  switch (chainId) {
+    case chains.mainnet.id:
+      return "https://etherscan.io";
+    case chains.goerli.id:
+      return "https://goerli.etherscan.io";
+    case chains.arbitrum.id:
+      return "https://arbiscan.io";
+    case chains.arbitrumGoerli.id:
+      return "https://goerli.arbiscan.io";
+    default:
+      console.warn(`chainId:${chainId} not supported.`)
+  }
+  return "https://etherscan.io";
 }
 
-export function etherscanTx(tx: string) {
-  return `${etherscanBase()}/tx/${tx}`;
+export function bucketEtherscanUrl(chainId: number, tokenId: string | number) {
+  return `${etherscanBase(chainId)}/token/${W3Bucket_Adress}?a=${tokenId}`;
 }
 
-export function etherscanAddress(address: string) {
-  return `${etherscanBase()}/address/${address}`;
+export function etherscanTx(chainId: number, tx: string) {
+  return `${etherscanBase(chainId)}/tx/${tx}`;
+}
+
+export function etherscanAddress(chainId: number, address: string) {
+  return `${etherscanBase(chainId)}/address/${address}`;
 }
 
 export function formatW3BucketCapacity(

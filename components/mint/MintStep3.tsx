@@ -20,7 +20,7 @@ import classNames from "classnames";
 import { ContractTransaction, ethers } from "ethers";
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { erc20ABI, useAccount, useSigner } from "wagmi";
+import { erc20ABI, useAccount, useNetwork, useSigner } from "wagmi";
 import { getContract } from "wagmi/actions";
 import { OnNext } from "./type";
 
@@ -53,6 +53,8 @@ export interface MintStep3Props {
 
 export const MintStep3 = React.memo((p: MintStep3Props) => {
   const { editions, onNext } = p;
+  const { chain } = useNetwork();
+  const chainId = chain && chain.id;
   const [mintData, updateMint] = useMintData();
   const currentEditionId = mintData.editionId;
   const currentEdition = useMemo(
@@ -201,14 +203,14 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
             data={[
               "W3Bucket NFT Token ID",
               mintData.tokenId,
-              bucketEtherscanUrl(mintData.tokenId),
+              bucketEtherscanUrl(chainId, mintData.tokenId),
             ]}
           />
           <TulpeText
             data={[
               "Mint TX ID",
               shortStr(mintData.mintTx, 9, 5),
-              etherscanTx(mintData.mintTx),
+              etherscanTx(chainId, mintData.mintTx),
             ]}
           />
           <TulpeText target="_self" data={["W3Bucket Identifier", bucketId, `/#/bucket/${bucketId}/${mintData.ipns}`]} />

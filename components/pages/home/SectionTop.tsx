@@ -35,19 +35,28 @@ export const SectionTop = React.memo(() => {
               <p>Crust Cloud</p>
               <p>Redefining Web3 Storage</p>
             </div>
-            <div className="flex mt-12 pl-1 mb-20">
-              <Button
+            <div className="flex flex-col mt-12 pl-1 mb-20">
+              <div className="flex mb-3">
+                <Button
                   text="Documentations"
                   className="btn-173 border-white text-white"
                   onClick={()=>openExtUrl('https://docs.crustcloud.io/')}
-              />
-              <Button
+                />
+                <Button
                   text="Launch App"
                   className="btn-173 ml-3 border-white text-white"
                   onClick={() =>
                       IS_LOCAL ? openExtUrl("/#/buckets", '_self') : openExtUrl("/#/buckets")
                   }
-              />
+                />
+              </div>
+              <div className="flex">
+                <Button
+                  text="Subscribe"
+                  className="btn-173 border-white text-white"
+                  onClick={()=>openExtUrl('https://forms.gle/7pbhXXmjPgzuPRLy5')}
+                />
+              </div>
             </div>
           </div>
         </div>

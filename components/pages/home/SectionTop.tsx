@@ -52,9 +52,9 @@ export const SectionTop = React.memo(() => {
               </div>
               <div className="flex">
                 <Button
-                  text="Subscribe"
+                  text="Contact the team"
                   className="btn-173 border-white text-white"
-                  onClick={()=>openExtUrl('https://forms.gle/7pbhXXmjPgzuPRLy5')}
+                  onClick={()=>openExtUrl('https://forms.gle/NUSvEDDR4AmP8wbV6')}
                 />
               </div>
             </div>

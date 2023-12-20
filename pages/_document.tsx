@@ -8,7 +8,7 @@ export default class MyDocument extends Document {
         <Head>
           <meta
             name="description"
-            content="One-Stop Land Platform For The Metaverse"
+            content="Redefining Web3 Storage"
           />
           {/* <script
             async

@@ -207,7 +207,7 @@ function PreMetadata(p: { onContinue: OnNext }) {
       {uping && (
         <LoadingText
           className="px-12 flex-1 justify-center"
-          text="The NFT metadata is being decentralized stored and it will be the very first file stored in this W3Bukcet! Please wait..."
+          text="The NFT metadata is being decentralized stored and it will be the very first file stored in this W3Bucket! Please wait..."
         />
       )}
       {mintData.metadata && !uping && (

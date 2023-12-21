@@ -149,7 +149,7 @@ export const Bucket = React.memo(() => {
     if (isAlgoConnected) {
       try {
         const res = await algodClient.accountAssetInformation(algoWallet.account, parseInt(tokenId)).do();
-        if (!res || res['asset-holding']['amount'] === 0) push("/buckets");
+        if (!res || !res['asset-holding'] || res['asset-holding']['amount'] === 0) push("/buckets");
       } catch (error) {
         console.error(error);
       }

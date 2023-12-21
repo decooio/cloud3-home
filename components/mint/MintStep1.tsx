@@ -6,6 +6,8 @@ import classNames from "classnames";
 import React, { useEffect, useMemo } from "react";
 import { OnNext } from "./type";
 import { useNetwork } from "wagmi";
+import algoWallet from "@lib/algorand/algoWallet";
+import { AlgorandChainId } from "@lib/config";
 
 export interface MintStep1Props {
   editions: BucketEdition[];
@@ -19,7 +21,8 @@ function fmtPrices(prices: BucketEdition["prices"]) {
 export const MintStep1 = React.memo((p: MintStep1Props) => {
   const { editions, onNext } = p;
   const { chain } = useNetwork();
-  const chainId = chain && chain.id;
+  let chainId = chain && chain.id;
+  if (algoWallet.isConnected()) chainId = AlgorandChainId;
   const [mintData, updateMint] = useMintData();
   useEffect(() => {
     if (mintData.editionId === undefined && editions.length) {

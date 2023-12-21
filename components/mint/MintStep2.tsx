@@ -8,7 +8,7 @@ import { BucketEdition } from "@lib/hooks/useBucketEditions";
 import { useGetAuthForMint } from "@lib/hooks/useGetAuth";
 import { useMintData } from "@lib/hooks/useMintData";
 import { GenIPNS, genUrl, getResData, MintState, Res } from "@lib/http";
-import { shortStr, sleep } from "@lib/utils";
+import { getSHA256Digest, shortStr, sleep } from "@lib/utils";
 import axios from "axios";
 import classNames from "classnames";
 import { toBlob } from "html-to-image";
@@ -151,10 +151,13 @@ function PreMetadata(p: { onContinue: OnNext }) {
         const form = new FormData();
         form.append("file", imageblob, "bucket_image.png");
         const image = await upload({ data: form });
+        const imageArrayBuffer = await imageblob.arrayBuffer();
+        const imageBuffer = Buffer.from(imageArrayBuffer);
+        const imageIntegrity = getSHA256Digest(imageBuffer);
         await pinCID(image.Hash, "bucket_image.png");
         const res = await axios.post<Res<void>>(
           genUrl("/auth/bucket/metadata/generate"),
-          { uuid: mintData.uuid, cid: image.Hash },
+          { uuid: mintData.uuid, cid: image.Hash, imageIntegrity },
           {
             headers: { Authorization: `Bearer ${auth}` },
           }

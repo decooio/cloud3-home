@@ -27,6 +27,20 @@ export const SupportId2Chain = (() => {
   return res;
 })()
 
+export const AlgorandAlgodToken = 'a'.repeat(64);
+// For testnet
+// export const AlgorandChainId = 416002;
+// export const AlgorandW3BucketAppId = 535674828;
+// export const AlgorandW3BucketAddress = "MP3MQ6LKG3AXVSKDDFXICZLWHOXL7OUTUBFXHU5BOM4NIK4LFQNV5QEAVM";
+// export const AlgorandAlgodUrl = "https://testnet-api.algonode.cloud";
+// export const AlgorandExplorerUrl = "https://testnet.algoexplorer.io/";
+// For mainnet
+export const AlgorandChainId = 416001;
+export const AlgorandW3BucketAppId = 1279692951;
+export const AlgorandW3BucketAddress = "MWUNSC7QGZS6Y7KROX544EJD7ME6H6XLM5VX3TSIY6JZQW24FMPXWOM7T4";
+export const AlgorandAlgodUrl = "https://mainnet-api.algonode.cloud";
+export const AlgorandExplorerUrl = "https://algoexplorer.io/";
+
 export interface AuthIpfsEndpoint {
   name?: string;
   location?: string;

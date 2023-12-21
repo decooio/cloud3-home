@@ -4,6 +4,9 @@ import { useAsync } from "react-use";
 import { erc20ABI, useNetwork, useSigner } from "wagmi";
 import { getContract } from "wagmi/actions";
 import { useW3BucketAbi } from "./useW3BucketAbi";
+import algoWallet from "@lib/algorand/algoWallet";
+import w3BucketAlgoClient from "@lib/algorand/w3BucketClient";
+import algodClient from "@lib/algorand/algodClient";
 
 export interface Price {
   price: string;
@@ -26,6 +29,7 @@ export function useBucketEditions() {
   const { chain } = useNetwork();
   const chainId = chain && chain.id;
   const {data: signer} = useSigner();
+  const isAlgoConnected = algoWallet.isConnected();
   const result = useAsync(async () => {
     if (w3b && chainId && signer) {
       const data = await w3b.getBucketEditions(true);
@@ -57,7 +61,6 @@ export function useBucketEditions() {
             fmtPrice: ethers.utils.formatUnits(price.price, decimals),
           });
         }
-        console.info("mprices:", prices);
         if(prices.length >= 1){
           res.push({
             id: item.editionId.toNumber(),
@@ -70,9 +73,55 @@ export function useBucketEditions() {
       }
       console.info("editions:", res);
       return res;
+    } else if (isAlgoConnected) {
+      return getAlgoBucketEditions();
     }
     return null;
-  }, [w3b, chainId, signer]);
+  }, [w3b, chainId, signer, isAlgoConnected]);
 
   return useMemo(() => ({ ...result, loading: result.loading }), [result]);
+}
+
+export async function getAlgoBucketEditions() {
+  const editionNum = await w3BucketAlgoClient.getEditionNum();
+  const editionIds = await w3BucketAlgoClient.getEditionIds();
+  console.info(`edition num:${editionNum},edition ids:${editionIds}`);
+  const res: BucketEdition[] = [];
+  for (let i = 0; i < editionNum; i++) {
+    const editionId = editionIds[i];
+    const edition = await w3BucketAlgoClient.getEditionById(editionId);
+    if (!edition) {
+      console.warn(`edition:${editionId} is inactive`);
+      continue;
+    }
+    if(edition.maxMintableSupply <= edition.currentSupplyMinted) continue;
+    const prices: Price[] = [];
+    for (const {currency, price} of edition.prices) {
+      let decimals = 6;
+      let symbol = 'ALGO';
+      if (parseInt(currency) !== 0) {
+        const asset = await algodClient.getAssetByID(parseInt(currency)).do();
+        decimals = asset['params']['decimals'];
+        symbol = asset['params']['unit-name'];
+      }
+      prices.push({
+        currency: `0x${currency}`,
+        symbol,
+        decimals,
+        price: price,
+        fmtPrice: ethers.utils.formatUnits(price, decimals),
+      });
+    }
+    if(prices.length >= 1){
+      res.push({
+        id: edition.id,
+        capacityInGb: Number(edition.capacityInGigabytes),
+        totalSupply: Number(edition.maxMintableSupply),
+        minted: Number(edition.currentSupplyMinted),
+        prices,
+      });
+    }
+  }
+  console.info("editions:", res);
+  return res;
 }

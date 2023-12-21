@@ -1,11 +1,12 @@
 import { Button } from "@components/common/Button";
 import { EmptyText } from "@components/common/Empty";
 import { LoadingText } from "@components/common/Loading";
-import { W3Bucket_Adress } from "@lib/config";
+import { AlgorandW3BucketAddress, W3Bucket_Adress } from "@lib/config";
 import { useConnected } from "@lib/hooks/useConnected";
 import { useGetAuthForGet } from "@lib/hooks/useGetAuth";
 import { BucketDTO, genUrl, getResData, Res } from "@lib/http";
 import {
+  algoExplorerAddress,
   etherscanAddress,
   formatW3BucketCapacity,
   genBucketId,
@@ -21,11 +22,13 @@ import { useAsync } from "react-use";
 import { useAccount, useNetwork } from "wagmi";
 import { MainLayout } from "./MainLayout";
 import classnames from "classnames";
+import algoWallet from "@lib/algorand/algoWallet";
 
 const BucketCard = React.memo((p: { data: BucketDTO,className?:string }) => {
   const { data,className } = p;
   const { chain } = useNetwork();
   const push = useNavigate();
+  const isAlgoConnected = algoWallet.isConnected();
   const capacityInGb = useMemo(
     () => data.maxStorageSize / 1024 / 1024 / 1024,
     [data]
@@ -73,7 +76,7 @@ const BucketCard = React.memo((p: { data: BucketDTO,className?:string }) => {
         <a
           className=" text-blue-3"
           target="_blank"
-          href={etherscanAddress(chain.id, W3Bucket_Adress)}
+          href={!isAlgoConnected ? etherscanAddress(chain.id, W3Bucket_Adress) : algoExplorerAddress(AlgorandW3BucketAddress)}
         >
           View NFT Contract
         </a>
@@ -97,10 +100,11 @@ const BucketCard = React.memo((p: { data: BucketDTO,className?:string }) => {
 
 export const Buckets = React.memo(()=>{
   const isConnected = useConnected();
+  const isAlgoConnected = algoWallet.isConnected();
   const { address } = useAccount();
   const [getAuth] = useGetAuthForGet();
   const { value: buckets, loading } = useAsync(async () => {
-    if (!isConnected || !address) return [];
+    if ((!isConnected || !address) && !isAlgoConnected) return [];
     const auth = await getAuth();
     const res = await axios.get<Res<BucketDTO[]>>(genUrl("/auth/bucket/list"), {
       headers: { Authorization: `Bearer ${auth}` },
@@ -108,7 +112,7 @@ export const Buckets = React.memo(()=>{
     return getResData(res).sort(function (a,b){
       return b.mintTimestamp-a.mintTimestamp
     });
-  }, [isConnected, address]);
+  }, [isConnected, isAlgoConnected, address]);
   const push = useNavigate();
   const onNewBucket = useCallback(() => push("/mint"), [push]);
   return (

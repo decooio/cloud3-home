@@ -5,8 +5,9 @@ import { chain } from "wagmi";
 export function setABI(chainId: number) {
   if (chainId === chain.arbitrumGoerli.id || chainId === chain.arbitrum.id) {
     abi = arbitrumABI;
+  } else {
+    abi = ethABI;
   }
-  abi = ethABI;
 }
 
 export let abi = []

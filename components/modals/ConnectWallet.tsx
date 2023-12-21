@@ -1,4 +1,4 @@
-import { IconMetaMask } from "@components/common/icons";
+import { IconMetaMask, IconPera } from "@components/common/icons";
 import { SupportChain, SupportId2Chain } from "@lib/config";
 import { useOn } from "@lib/hooks/tools";
 import React from "react";
@@ -8,6 +8,7 @@ import { ethers } from "ethers";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { MetaMaskConnector } from "@wagmi/core/connectors/metaMask";
 import { Modal, ModalHead } from "./Modal";
+import algoWallet from '@lib/algorand/algoWallet';
 
 export const ConnectWallet = React.memo((p: { onClose: () => void }) => {
   const { onClose } = p;
@@ -46,6 +47,14 @@ export const ConnectWallet = React.memo((p: { onClose: () => void }) => {
       console.error(error);
     }
   });
+  const onConnectMyAlgoWallet = useOn(async () => {
+    try {
+      await algoWallet.connect();
+      push('/buckets')
+    } catch (err) {
+      console.error(err);
+    }
+  });
   return (
     <Modal outClick={onClose}>
       <ModalHead title="Connect Wallet" onClose={onClose} />
@@ -55,6 +64,14 @@ export const ConnectWallet = React.memo((p: { onClose: () => void }) => {
       >
         <IconMetaMask className=" text-[1.75rem]" />
         <div className=" text-black-1 text-sm">MetaMask</div>
+        <div className=" w-[1.75rem]" />
+      </div>
+      <div
+        onClick={onConnectMyAlgoWallet}
+        className="bg-[#ececec] hover:bg-[#dfdfdf] h-14 mt-5 flex px-6 py-3 cursor-pointer justify-between items-center"
+      >
+        <IconPera className=" text-[1.75rem]" />
+        <div className=" text-black-1 text-sm">PeraWallet</div>
         <div className=" w-[1.75rem]" />
       </div>
     </Modal>

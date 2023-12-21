@@ -28,6 +28,8 @@ import {genUrl, pinUrl} from "@lib/http";
 import {useToast} from "@lib/hooks/useToast";
 import {useAccount} from "wagmi";
 import { GatewayBaseBucket } from "@lib/config";
+import algoWallet from "@lib/algorand/algoWallet";
+import algodClient from "@lib/algorand/algodClient";
 
 
 const TopInfo = () => {
@@ -128,7 +130,7 @@ export const Bucket = React.memo(() => {
   const [getAuthForGetDetail] = useGetAuthForGet();
   const push = useNavigate();
   const { address } = useAccount();
-
+  const isAlgoConnected = algoWallet.isConnected();
 
   useMemo(()=>{
     push("/buckets")
@@ -142,6 +144,18 @@ export const Bucket = React.memo(() => {
     })
   })
   // const { chain } = useNetwork();
+
+  useAsync(async () => {
+    if (isAlgoConnected) {
+      try {
+        const res = await algodClient.accountAssetInformation(algoWallet.account, parseInt(tokenId)).do();
+        if (!res || res['asset-holding']['amount'] === 0) push("/buckets");
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [tokenId, isAlgoConnected]);
+
   const {current} = useGateway()
   const { value: files } = useAsync(async () => {
     const pathRes = await axios.request({

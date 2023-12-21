@@ -6,6 +6,7 @@ import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { publicProvider } from "wagmi/providers/public";
 import { Squada_One, Work_Sans, Roboto, Roboto_Mono } from "@next/font/google";
+import { Helmet } from "react-helmet";
 const so = Squada_One({
   weight: "400",
   display: "auto",
@@ -67,13 +68,15 @@ export default function App({ Component, pageProps }: AppProps) {
           content={`OneLand provides in-depth market & metaverse project data, a land-NFT marketplace and decentralised land financing.`}
           property="og:description"
         /> */}
-        <script src="../lib/twitter.js" type="text/javascript">
-          {/* !function(e,t,n,s,u,a){e.twq || (s = e.twq = function () {
-            s.exe ? s.exe.apply(s, arguments) : s.queue.push(arguments);
-          }, s.version = '1.1', s.queue = [], u = t.createElement(n), u.async = !0, u.src = 'https://static.ads-twitter.com/uwt.js',
-            a = t.getElementsByTagName(n)[0], a.parentNode.insertBefore(u, a))}(window,document,'script');
-          twq('config','oh0rh'); */}
-        </script>
+        <Helmet>
+          <script src="../lib/twitter.js" type="text/javascript">
+            {/* !function(e,t,n,s,u,a){e.twq || (s = e.twq = function () {
+              s.exe ? s.exe.apply(s, arguments) : s.queue.push(arguments);
+            }, s.version = '1.1', s.queue = [], u = t.createElement(n), u.async = !0, u.src = 'https://static.ads-twitter.com/uwt.js',
+              a = t.getElementsByTagName(n)[0], a.parentNode.insertBefore(u, a))}(window,document,'script');
+            twq('config','oh0rh'); */}
+          </script>
+        </Helmet>
         <title>{"Crust Cloud"}</title>
       </Head>
       <WagmiConfig client={client}>

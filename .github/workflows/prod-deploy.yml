@@ -11,10 +11,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.3.4
 
-      - name: Setup Node v16
+      - name: Setup Node v18
         uses: actions/setup-node@v1
         with:
-          node-version: v16.16.0
+          node-version: v18.16.0
 
       - uses: actions/cache@v3
         with:

@@ -2,8 +2,9 @@ import { useOn } from "@lib/hooks/tools";
 import moment from "moment";
 import { useState } from "react";
 import { useSignTypedData, useAccount, useNetwork } from "wagmi";
-import { W3Bucket_Adress } from "../config";
+import { AlgorandChainId, AlgorandW3BucketAddress, W3Bucket_Adress } from "../config";
 import {sleep} from "@lib/utils";
+import algoWallet from "@lib/algorand/algoWallet";
 // description:
 //   Sign for W3 Bucket Access Authentication
 // signingAddress:
@@ -33,13 +34,18 @@ export function useGetAuth(
   const [auth, setAuth] = useState(localStorage.getItem(key) || "");
   const { signTypedDataAsync } = useSignTypedData();
   const { chain } = useNetwork();
-  const chainId = chain && chain.id;
+  let chainId = chain && chain.id;
   const unsupported = (chain && chain.unsupported) || !chain;
-  const { address } = useAccount();
+  let { address } = useAccount();
+  const isAlgoConnected = algoWallet.isConnected();
 
   const getToken = useOn(async (tokenId?: string) => {
     const old = localStorage.getItem(key) || "";
-    if (!signTypedDataAsync || !address || !chainId) throw "not connect wallet";
+    if ((!signTypedDataAsync || !address || !chainId) && !isAlgoConnected) throw "not connect wallet";
+    if (isAlgoConnected) {
+      chainId = AlgorandChainId;
+      address = `0x${algoWallet.account}`;
+    }
     const current = moment().unix();
     if (cache && old) {
       const lastAuth = JSON.parse(window.atob(old)).data;
@@ -68,7 +74,7 @@ export function useGetAuth(
       message: {
         description: "Sign for W3 Bucket Access Authentication",
         signingAddress: address,
-        tokenAddress: W3Bucket_Adress,
+        tokenAddress: isAlgoConnected ? AlgorandW3BucketAddress : W3Bucket_Adress,
         effectiveTimestamp: current,
         expirationTimestamp,
       },
@@ -89,11 +95,22 @@ export function useGetAuth(
       typeData.types.W3Bucket.push({ name: "tokenId", type: "string" });
     }
     await sleep(800)
-    const signature = await signTypedDataAsync({
-      domain: typeData.domain,
-      types: typeData.types,
-      value: typeData.message,
-    });
+    let signature = ""
+    if (isAlgoConnected) {
+      const unsignedBytes = Buffer.from(JSON.stringify({
+        domain: typeData.domain,
+        types: typeData.types,
+        value: typeData.message,
+      }));
+      const signatureUint8Array = await algoWallet.wallet.signData([{data:unsignedBytes, message:"For authentication"}], algoWallet.account);
+      signature = window.btoa(String.fromCharCode.apply(null, signatureUint8Array[0]));
+    } else {
+      signature = await signTypedDataAsync({
+        domain: typeData.domain,
+        types: typeData.types,
+        value: typeData.message,
+      });
+    }
 
     const based = window.btoa(JSON.stringify({ data: typeData, signature }));
     localStorage.setItem(key, based);

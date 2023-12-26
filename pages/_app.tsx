@@ -68,10 +68,9 @@ export default function App({ Component, pageProps }: AppProps) {
           content={`OneLand provides in-depth market & metaverse project data, a land-NFT marketplace and decentralised land financing.`}
           property="og:description"
         /> */}
-        {/* <Helmet>
-          <script src="../lib/twitter.js" type="text/javascript">
-          </script>
-        </Helmet> */}
+        <Helmet>
+          <script src="../lib/twitter.js" type="text/javascript" />
+        </Helmet>
         <title>{"Crust Cloud"}</title>
       </Head>
       <WagmiConfig client={client}>

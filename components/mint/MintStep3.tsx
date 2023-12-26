@@ -140,33 +140,41 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
         }
         const mintAtc = new algosdk.AtomicTransactionComposer();
         mintAtc.addMethodCall(applicationCallObject);
-        const result = await mintAtc.execute(algodClient, 4);
+        const result = await mintAtc.execute(algodClient, 10);
         let token_id = Number(result.methodResults[0].returnValue);
         console.log(`Minted bucket token_id:${token_id}`);
         // Claim NFT asset
-        const optInTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
-          from: algoWallet.account,
-          to: algoWallet.account,
-          suggestedParams,
-          assetIndex: token_id,
-          amount: 0,
-        });
-        const claimAtc = new algosdk.AtomicTransactionComposer();
-        claimAtc.addTransaction({
-          txn: optInTxn,
-          signer: algoTxnSigner
-        });
-        claimAtc.addMethodCall({
-          appID: AlgorandW3BucketAppId,
-          method: contract.getMethodByName('claim'),
-          methodArgs: [
-            token_id
-          ],
-          sender: algoWallet.account,
-          signer: algoTxnSigner,
-          suggestedParams,
-        });
-        await claimAtc.execute(algodClient, 4);
+        let tryout = 5;
+        while (tryout-- > 0) {
+          try {
+            const optInTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
+              from: algoWallet.account,
+              to: algoWallet.account,
+              suggestedParams,
+              assetIndex: token_id,
+              amount: 0,
+            });
+            const claimAtc = new algosdk.AtomicTransactionComposer();
+            claimAtc.addTransaction({
+              txn: optInTxn,
+              signer: algoTxnSigner
+            });
+            claimAtc.addMethodCall({
+              appID: AlgorandW3BucketAppId,
+              method: contract.getMethodByName('claim'),
+              methodArgs: [
+                token_id
+              ],
+              sender: algoWallet.account,
+              signer: algoTxnSigner,
+              suggestedParams,
+            });
+            await claimAtc.execute(algodClient, 4);
+            break;
+          } catch (error) {
+            console.error(error);
+          }
+        }
       } catch (error) {
         console.log(error);
         return;

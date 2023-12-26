@@ -1,4 +1,4 @@
-import { GatewayBase, GatewayList, W3Bucket_Adress} from "@lib/config";
+import { AlgorandExplorerUrl, GatewayBase, GatewayList, W3Bucket_Adress} from "@lib/config";
 import BN from "bn.js";
 import classNames, {Argument} from "classnames";
 import isMobile from "ismobilejs";
@@ -7,6 +7,8 @@ import {utc} from "moment";
 import numbro from "numbro";
 import { IS_LOCAL } from "./env";
 import { chain as chains } from "wagmi";
+
+const { createHash } = require('crypto');
 
 export const IS_MOBILE = isMobile(window.navigator).phone;
 
@@ -146,6 +148,18 @@ export function etherscanAddress(chainId: number, address: string) {
   return `${etherscanBase(chainId)}/address/${address}`;
 }
 
+export function algoExplorerBucketUrl(tokenId: string | number) {
+  return `${AlgorandExplorerUrl}/asset/${tokenId}`;
+}
+
+export function algoExplorerTx(tx: string) {
+  return `${AlgorandExplorerUrl}/tx/${tx}`;
+}
+
+export function algoExplorerAddress(address: string) {
+  return `${AlgorandExplorerUrl}/address/${address}`;
+}
+
 export function formatW3BucketCapacity(
   capacityInGb: number,
   decimals: number = 0
@@ -198,4 +212,8 @@ export function preloadIMG(src: string){
     img.src = src;
     img.loading = 'eager';
   })
+}
+
+export function getSHA256Digest(data: any) {
+  return createHash('sha256').update(data, 'binary').digest('base64');
 }

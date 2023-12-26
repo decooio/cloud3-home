@@ -1,7 +1,7 @@
 import { BucketImage } from "@components/common/BucketImage";
 import { Button } from "@components/common/Button";
 import { LoadingText } from "@components/common/Loading";
-import { W3Bucket_Adress } from "@lib/config";
+import { AlgorandW3BucketAddress, AlgorandW3BucketAppId, W3Bucket_Adress } from "@lib/config";
 import { useOn, useSafe, useSafeState } from "@lib/hooks/tools";
 import { BucketEdition } from "@lib/hooks/useBucketEditions";
 import { useGetAuthForMint } from "@lib/hooks/useGetAuth";
@@ -9,9 +9,12 @@ import { useMintData } from "@lib/hooks/useMintData";
 import { useW3BucketAbi } from "@lib/hooks/useW3BucketAbi";
 import { genUrl, getResData, MintState, Res } from "@lib/http";
 import {
+  algoExplorerBucketUrl,
+  algoExplorerTx,
   bucketEtherscanUrl,
   etherscanTx,
   genBucketId,
+  getSHA256Digest,
   shortStr,
   sleep,
 } from "@lib/utils";
@@ -23,6 +26,11 @@ import { useNavigate } from "react-router-dom";
 import { erc20ABI, useAccount, useNetwork, useSigner } from "wagmi";
 import { getContract } from "wagmi/actions";
 import { OnNext } from "./type";
+import algoWallet from "@lib/algorand/algoWallet";
+import algosdk, { TransactionWithSigner, BoxReference } from "algosdk";
+import algorandABI from "@lib/abi/w3bucket.algorand.abi.json";
+import algodClient from "@lib/algorand/algodClient";
+import { getAlgoSigner } from "@lib/algorand/utils";
 
 function TulpeText(p: { data: [string, string] | [string, string, string], target?: '_blank'|'_self' }) {
   const {
@@ -67,60 +75,169 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
   const { address } = useAccount();
   const [getAuth] = useGetAuthForMint();
   const refSafe = useSafe();
+  const isAlgoConnected = algoWallet.isConnected();
   const doMint = useOn(async () => {
     if (
-      minting ||
-      !w3b ||
-      !address ||
-      !mintData.price ||
-      !mintData.editionId ||
-      !signer
-    )
-      return;
-
-    setMinting(true);
-    const value = ethers.utils.parseUnits(
-      mintData.price.fmtPrice,
-      mintData.price.decimals
-    );
-    try {
-      const auth = await getAuth();
-      const isEth =
-        mintData.price.currency ===
-        "0x0000000000000000000000000000000000000000";
-      let res: ContractTransaction = null;
-      if (isEth) {
-        res = await w3b.mint(
-          address,
-          ethers.utils.parseUnits(mintData.editionId + "", 0),
-          mintData.price.currency,
-          `ipfs://${mintData.metadataCID}`,
-          { value }
+      !minting &&
+      isAlgoConnected &&
+      mintData.price &&
+      mintData.editionId
+    ) {
+      setMinting(true);
+      try {
+        const contract = new algosdk.ABIContract(algorandABI);
+        const suggestedParams = await algodClient.getTransactionParams().do();
+        suggestedParams.flatFee = true;
+        suggestedParams.fee = 2000;
+        const algoTxnSigner = getAlgoSigner(algoWallet.wallet);
+        const value = ethers.utils.parseUnits(
+          mintData.price.fmtPrice,
+          mintData.price.decimals
         );
-      } else {
-        const erc20 = getContract({
-          address: mintData.price.currency,
-          abi: erc20ABI,
-          signerOrProvider: signer,
+        const paymentTxn = (() => {
+          if (mintData.price.currency === "0x0") {
+            return algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+              from: algoWallet.account,
+              to: AlgorandW3BucketAddress,
+              amount: BigInt(value.toString()),
+              suggestedParams,
+            });
+          } else {
+            return algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
+              from: algoWallet.account,
+              to: AlgorandW3BucketAddress,
+              suggestedParams,
+              assetIndex: Number(mintData.price.currency.slice(2)),
+              amount: BigInt(value.toString()),
+            });
+          }
+        })();
+        const paymentTxnWithSigner: TransactionWithSigner = {
+          txn: paymentTxn,
+          signer: algoTxnSigner,
+        };
+        const boxes: BoxReference[] = [];
+        boxes.push({
+          appIndex: AlgorandW3BucketAppId, 
+          name: algosdk.encodeUint64(mintData.editionId)
         });
-        const gas = await w3b.estimateGas
-          .mint(
+        const applicationCallObject = {
+          appID: AlgorandW3BucketAppId,
+          method: contract.getMethodByName('mint'),
+          methodArgs: [
+            paymentTxnWithSigner,
+            mintData.editionId,
+            getSHA256Digest(mintData.metadata),
+            `ipfs://${mintData.metadataCID}#arc3`,
+          ],
+          sender: algoWallet.account,
+          signer: algoTxnSigner,
+          boxes,
+          suggestedParams,
+        };
+        if (mintData.price.currency !== '0x0') {
+          Object.assign(applicationCallObject, { assets: [parseInt(mintData.price.currency.slice(2))] });
+        }
+        const mintAtc = new algosdk.AtomicTransactionComposer();
+        mintAtc.addMethodCall(applicationCallObject);
+        const result = await mintAtc.execute(algodClient, 10);
+        let token_id = Number(result.methodResults[0].returnValue);
+        console.log(`Minted bucket token_id:${token_id}`);
+        // Claim NFT asset
+        let tryout = 5;
+        while (tryout-- > 0) {
+          try {
+            const optInTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
+              from: algoWallet.account,
+              to: algoWallet.account,
+              suggestedParams,
+              assetIndex: token_id,
+              amount: 0,
+            });
+            const claimAtc = new algosdk.AtomicTransactionComposer();
+            claimAtc.addTransaction({
+              txn: optInTxn,
+              signer: algoTxnSigner
+            });
+            claimAtc.addMethodCall({
+              appID: AlgorandW3BucketAppId,
+              method: contract.getMethodByName('claim'),
+              methodArgs: [
+                token_id
+              ],
+              sender: algoWallet.account,
+              signer: algoTxnSigner,
+              suggestedParams,
+            });
+            await claimAtc.execute(algodClient, 4);
+            break;
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+    } else if (
+      !minting &&
+      w3b &&
+      address &&
+      mintData.price &&
+      mintData.editionId &&
+      signer
+    ) {
+      setMinting(true);
+      const value = ethers.utils.parseUnits(
+        mintData.price.fmtPrice,
+        mintData.price.decimals
+      );
+      try {
+        const isEth =
+          mintData.price.currency ===
+          "0x0000000000000000000000000000000000000000";
+        let res: ContractTransaction = null;
+        if (isEth) {
+          res = await w3b.mint(
             address,
             ethers.utils.parseUnits(mintData.editionId + "", 0),
             mintData.price.currency,
-            `ipfs://${mintData.metadataCID}`
-          )
-          .catch(() => ethers.utils.parseUnits("396277", 0));
-        await erc20.approve(W3Bucket_Adress, value);
-        res = await w3b.mint(
-          address,
-          ethers.utils.parseUnits(mintData.editionId + "", 0),
-          mintData.price.currency,
-          `ipfs://${mintData.metadataCID}`,
-          { gasLimit: gas }
-        );
+            `ipfs://${mintData.metadataCID}`,
+            { value }
+          );
+        } else {
+          const erc20 = getContract({
+            address: mintData.price.currency,
+            abi: erc20ABI,
+            signerOrProvider: signer,
+          });
+          const gas = await w3b.estimateGas
+            .mint(
+              address,
+              ethers.utils.parseUnits(mintData.editionId + "", 0),
+              mintData.price.currency,
+              `ipfs://${mintData.metadataCID}`
+            )
+            .catch(() => ethers.utils.parseUnits("396277", 0));
+          await erc20.approve(W3Bucket_Adress, value);
+          res = await w3b.mint(
+            address,
+            ethers.utils.parseUnits(mintData.editionId + "", 0),
+            mintData.price.currency,
+            `ipfs://${mintData.metadataCID}`,
+            { gasLimit: gas }
+          );
+        }
+        await res.wait(1)
+      } catch (error) {
+        console.error(error);
+        return;
       }
-      await res.wait(1)
+    } else {
+      return;
+    }
+    try {
+      const auth = await getAuth();
       let taskRes: MintState = null;
       while (true) {
         if (!refSafe.safe) return;
@@ -203,14 +320,14 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
             data={[
               "W3Bucket NFT Token ID",
               mintData.tokenId,
-              bucketEtherscanUrl(chainId, mintData.tokenId),
+              !isAlgoConnected ? bucketEtherscanUrl(chainId, mintData.tokenId) : algoExplorerBucketUrl(mintData.tokenId),
             ]}
           />
           <TulpeText
             data={[
               "Mint TX ID",
               shortStr(mintData.mintTx, 9, 5),
-              etherscanTx(chainId, mintData.mintTx),
+              !isAlgoConnected ? etherscanTx(chainId, mintData.mintTx) : algoExplorerTx(mintData.mintTx),
             ]}
           />
           <TulpeText target="_self" data={["W3Bucket Identifier", bucketId, `/#/bucket/${bucketId}/${mintData.ipns}`]} />

@@ -7,7 +7,9 @@ import { useAsync } from "react-use";
 import { useAccount, useNetwork } from "wagmi";
 import { useW3BucketAbi } from "./useW3BucketAbi";
 import { W3BucketMetadata } from "@lib/type";
-import { sum, sumBy } from "lodash";
+import { sumBy } from "lodash";
+import algoWallet from "@lib/algorand/algoWallet";
+import algodClient from "@lib/algorand/algodClient";
 
 export async function getFileHistory(ipns: string) {
   try {
@@ -29,48 +31,93 @@ export function useBuckets() {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const w3b = useW3BucketAbi();
+  const isAlgoConnected = algoWallet.isConnected();
   return useAsync(async () => {
-    if (!w3b || !address || !chain || chain.unsupported) return [];
     try {
-      const count = (await w3b.balanceOf(address)).toNumber();
-      const items: BucketDTO[] = [];
-      for (let index = 0; index < count; index++) {
-        const tokenId = await w3b.tokenOfOwnerByIndex(
-          address,
-          BigNumber.from(index)
-        );
-        const tokenUri = await w3b.tokenURI(tokenId);
-        const metadata = (
-          await axios.get<W3BucketMetadata>(
-            tokenUri.replace("ipfs://", `${GatewayList[0].value}/ipfs/`)
-          )
-        ).data;
-        const ipns = metadata.file_history.replace("ipns://", "");
-        const fileList = await getFileHistory(ipns);
+      if (w3b && address && chain && !chain.unsupported) {
+        const count = (await w3b.balanceOf(address)).toNumber();
+        const items: BucketDTO[] = [];
+        for (let index = 0; index < count; index++) {
+          const tokenId = await w3b.tokenOfOwnerByIndex(
+            address,
+            BigNumber.from(index)
+          );
+          const tokenUri = await w3b.tokenURI(tokenId);
+          const metadata = (
+            await axios.get<W3BucketMetadata>(
+              tokenUri.replace("ipfs://", `${GatewayList[0].value}/ipfs/`)
+            )
+          ).data;
+          const ipns = metadata.file_history.replace("ipns://", "");
+          const fileList = await getFileHistory(ipns);
 
-        // const fileList = (
-        //     await axios.get<>(metadata.file_history.)
-        // )
-        const trait = metadata.attributes.find(
-          (item) => item.trait_type === "CapcityInGb"
-        );
-        const used = sumBy(fileList, "size");
-        items.push({
-          ipnsId: metadata.file_history.replace("ipns://", ""),
-          metadata,
-          metadataCid: tokenUri.replace("ipfs://", ""),
-          maxStorageSize: new Number(trait).valueOf() * 1024 * 1024 * 1024,
-          usedStorageSize: used,
-          metadataTxHash: "",
-          mintTxHash: "",
-          tokenId: tokenId.toString(),
-          mintTimestamp: 0,
-          fileCount: fileList.length,
-        });
+          // const fileList = (
+          //     await axios.get<>(metadata.file_history.)
+          // )
+          const trait = metadata.attributes.find(
+            (item) => item.trait_type === "CapcityInGb"
+          );
+          const used = sumBy(fileList, "size");
+          items.push({
+            ipnsId: metadata.file_history.replace("ipns://", ""),
+            metadata,
+            metadataCid: tokenUri.replace("ipfs://", ""),
+            maxStorageSize: new Number(trait).valueOf() * 1024 * 1024 * 1024,
+            usedStorageSize: used,
+            metadataTxHash: "",
+            mintTxHash: "",
+            tokenId: tokenId.toString(),
+            mintTimestamp: 0,
+            fileCount: fileList.length,
+          });
+        }
+        return items;
+      } else if (isAlgoConnected) {
+        return getAlgoBuckets();
+      } else {
+        return [];
       }
-      return items;
     } catch (error) {
       return [];
     }
-  }, [address, chain]);
+  }, [address, chain, isAlgoConnected]);
+}
+
+export async function getAlgoBuckets() {
+  const account = await algodClient.accountInformation(algoWallet.account);
+  const items: BucketDTO[] = [];
+  for (const asset of account['assets']) {
+    if (asset['amount'] === 0) continue;
+    const tokenId = asset['asset-id'];
+    const tokenInfo = await algodClient.getAssetByID(tokenId);
+    const tokenUri = tokenInfo['params']['url'];
+    const metadata = (
+      await axios.get<W3BucketMetadata>(
+        tokenUri.replace("ipfs://", `${GatewayList[0].value}/ipfs/`)
+      )
+    ).data;
+    const ipns = metadata.file_history.replace("ipns://", "");
+    const fileList = await getFileHistory(ipns);
+
+    // const fileList = (
+    //     await axios.get<>(metadata.file_history.)
+    // )
+    const trait = metadata.attributes.find(
+      (item) => item.trait_type === "CapcityInGb"
+    );
+    const used = sumBy(fileList, "size");
+    items.push({
+      ipnsId: metadata.file_history.replace("ipns://", ""),
+      metadata,
+      metadataCid: tokenUri.replace("ipfs://", ""),
+      maxStorageSize: new Number(trait).valueOf() * 1024 * 1024 * 1024,
+      usedStorageSize: used,
+      metadataTxHash: "",
+      mintTxHash: "",
+      tokenId: tokenId.toString(),
+      mintTimestamp: 0,
+      fileCount: fileList.length,
+    });
+  }
+  return items;
 }

@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { useHoverDirty } from "react-use";
 import { useAccount, useDisconnect, useNetwork } from "wagmi";
 import {clearAuth} from "@lib/hooks/useGetAuth";
+import algoWallet from "@lib/algorand/algoWallet";
 interface Menu {
   id: number;
   icon: any;
@@ -37,9 +38,13 @@ const net_text =
 export const MainLayout = React.memo(
   (p: { menuId: number } & HTMLAttributes<HTMLDivElement>) => {
     const { menuId, children, ...props } = p;
-    const { address: account } = useAccount();
+    let { address:account } = useAccount();
     const { chain } = useNetwork();
     const isConnected = useConnected();
+    const isAlgoConnected = algoWallet.isConnected();
+    if (isAlgoConnected) {
+      account = `0x${algoWallet.account}`;
+    }
     const menus: Menu[] = useMemo(() => {
       return [
         { id: 1, icon: BsBucket, text: "W3Buckets", path: "/buckets" },
@@ -60,8 +65,9 @@ export const MainLayout = React.memo(
     const { disconnect } = useDisconnect();
     const onDis = useOn(() => {
       disconnect();
-      clearAuth()
-      push('/buckets')
+      clearAuth();
+      algoWallet.disconnect();
+      push('/buckets');
     })
     const btnAccount = useRef(null);
     const isHoverAccount = useHoverDirty(btnAccount);
@@ -84,7 +90,7 @@ export const MainLayout = React.memo(
                     IS_DEV || IS_TEST ? "bg-gray-11" : "bg-blue-2"
                   )}
                 >
-                  {chain.name.replace(' ', '')}
+                  {isAlgoConnected ? 'Algorand' : chain.name.replace(' ', '')}
                 </div>
               )}
             </div>
@@ -121,7 +127,7 @@ export const MainLayout = React.memo(
               })}
               // disHover={true}
               onClick={onDis}
-              text={isHoverAccount ? "Disconnect" : shortStr(account, 6, 6)}
+              text={isHoverAccount ? "Disconnect" : shortStr(isAlgoConnected ? account.slice(2) : account, 6, 6)}
             />
           </div>
           {isConnected ? (

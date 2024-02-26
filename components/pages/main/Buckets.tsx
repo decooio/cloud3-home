@@ -1,12 +1,12 @@
 import { Button } from "@components/common/Button";
 import { EmptyText } from "@components/common/Empty";
 import { LoadingText } from "@components/common/Loading";
-import { AlgorandW3BucketAddress, W3Bucket_Adress } from "@lib/config";
+import { AlgorandW3BucketAppId, W3Bucket_Adress } from "@lib/config";
 import { useConnected } from "@lib/hooks/useConnected";
 import { useGetAuthForGet } from "@lib/hooks/useGetAuth";
 import { BucketDTO, genUrl, getResData, Res } from "@lib/http";
 import {
-  algoExplorerAddress,
+  algoExplorerApplication,
   etherscanAddress,
   formatW3BucketCapacity,
   genBucketId,
@@ -76,7 +76,7 @@ const BucketCard = React.memo((p: { data: BucketDTO,className?:string }) => {
         <a
           className=" text-blue-3"
           target="_blank"
-          href={!isAlgoConnected ? etherscanAddress(chain.id, W3Bucket_Adress) : algoExplorerAddress(AlgorandW3BucketAddress)}
+          href={!isAlgoConnected ? etherscanAddress(chain.id, W3Bucket_Adress) : algoExplorerApplication(AlgorandW3BucketAppId)}
         >
           View NFT Contract
         </a>

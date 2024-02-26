@@ -149,15 +149,15 @@ export function etherscanAddress(chainId: number, address: string) {
 }
 
 export function algoExplorerBucketUrl(tokenId: string | number) {
-  return `${AlgorandExplorerUrl}/asset/${tokenId}`;
+  return `${AlgorandExplorerUrl}/explorer/asset/${tokenId}`;
 }
 
 export function algoExplorerTx(tx: string) {
-  return `${AlgorandExplorerUrl}/tx/${tx}`;
+  return `${AlgorandExplorerUrl}/explorer/transaction/${tx}`;
 }
 
-export function algoExplorerAddress(address: string) {
-  return `${AlgorandExplorerUrl}/address/${address}`;
+export function algoExplorerApplication(appID: number) {
+  return `${AlgorandExplorerUrl}/explorer/application/${appID}`;
 }
 
 export function formatW3BucketCapacity(

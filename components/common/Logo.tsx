@@ -6,7 +6,7 @@ export const Logo = React.memo((p: HTMLAttributes<HTMLSpanElement>) => {
   return (
     <span
       {...props}
-      className={classNames(className, " font-SquadaOne text-[2.5rem]")}
+      className={classNames(className, " font-SquadaOne text-[2.5rem] text-center leading-tight")}
     >
       Crust Cloud
     </span>

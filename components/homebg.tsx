@@ -72,6 +72,7 @@ function LinePointGroup() {
   const count = useRef<{ count: number }>({ count: 0 });
   const animStart = useRef<any>({});
   useFrame((state, delta, xrFrame) => {
+    // console.info('delta:', delta, xrFrame)
     if (group.current) {
       const pi = Math.PI * 2;
       const nr = group.current.rotation.x + pi * delta * 0.01;

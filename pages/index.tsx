@@ -1,8 +1,10 @@
 import dynamic from "next/dynamic";
-// import Root from "../components/pages/Root";
-const Root = dynamic(() => import("../components/pages/Root"), { ssr: false });
+import React from "react";
+
+const MRoot = dynamic(() => import("@components/pages/Root"), { ssr: false, suspense: false });
 const IndexPage = () => {
-    return <Root />;
+  console.info("IndexPage:", new Date().getTime());
+  return <MRoot />;
 };
 
-export default IndexPage;
+export default React.memo(IndexPage);

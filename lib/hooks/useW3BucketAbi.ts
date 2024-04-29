@@ -49,7 +49,7 @@ export function useW3BucketAbi() {
       getBucketEditionPrices: createRead<[editionId: bigint], { currency: Address; price: bigint }[]>(pc, "getBucketEditionPrices"),
       hasRole: createRead<[role: Address, user: Address], boolean>(pc, "hasRole"),
 
-      mint: createWrite<[to: Address, bigint, Address, string]>(pc, writeContractAsync, "mint"),
+      mint: createWrite<[to: Address, editionId: bigint, currency: Address, uri: string]>(pc, writeContractAsync, "mint"),
 
       // admin
       setBucketEditions: createWrite<
@@ -61,7 +61,7 @@ export function useW3BucketAbi() {
           }[]
         ]
       >(pc, writeContractAsync, "setBucketEditions"),
-      setBucketEditionPrices: createWrite<[editionId: bigint, { currency: Address; price: bigint }[]]>(
+      setBucketEditionPrices: createWrite<[editionId: bigint, prices: { currency: Address; price: bigint }[]]>(
         pc,
         writeContractAsync,
         "setBucketEditionPrices"

@@ -166,12 +166,14 @@ export const MintStep3 = React.memo((p: MintStep3Props) => {
         if (isEth) {
           await w3b.mint([address, parseUnits(mintData.editionId + "", 0), mintData.price.currency, `ipfs://${mintData.metadataCID}`], value);
         } else {
+          // @ts-ignore
           const hash = await writeContractAsync({
             abi: erc20Abi,
             address: mintData.price.currency,
             functionName: "approve",
             args: [W3Bucket_Adress, value],
           });
+          // @ts-ignore
           await pc.waitForTransactionReceipt({ hash, confirmations: 3 });
           await w3b.mint([address, parseUnits(mintData.editionId + "", 0), mintData.price.currency, `ipfs://${mintData.metadataCID}`]);
         }

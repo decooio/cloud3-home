@@ -1,10 +1,7 @@
 import "@decooio/crust-fonts/style.css";
-import { SupportChain } from "@lib/config";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { MetaMaskConnector } from "wagmi/connectors/metaMask";
-import { publicProvider } from "wagmi/providers/public";
+
 import { Squada_One, Work_Sans, Roboto, Roboto_Mono } from "@next/font/google";
 import { Helmet } from "react-helmet";
 const so = Squada_One({
@@ -30,25 +27,15 @@ const rbm = Roboto_Mono({
   display: "auto",
   preload: true,
   variable: "--roboto-mono",
-})
+});
 const fontvarClass = [so, ws, rb, rbm].map((item) => item.variable).join(" ");
 import "../styles/global.css";
+import "@rainbow-me/rainbowkit/styles.css";
 import classNames from "classnames";
-
-const connector = new MetaMaskConnector();
-const { provider, webSocketProvider } = configureChains(SupportChain, [
-  publicProvider(),
-]);
-const client = createClient({
-  autoConnect: true,
-  provider,
-  webSocketProvider,
-  connectors: [connector],
-});
 
 export default function App({ Component, pageProps }: AppProps) {
   // useGaPageView();
-
+  console.info("_App:", new Date().getTime());
   return (
     <div suppressHydrationWarning className={classNames("App font-WorkSans", fontvarClass)}>
       <Head>
@@ -73,9 +60,7 @@ export default function App({ Component, pageProps }: AppProps) {
         </Helmet>
         <title>{"Crust Cloud"}</title>
       </Head>
-      <WagmiConfig client={client}>
-        {typeof window === "undefined" ? null : <Component {...pageProps} />}
-      </WagmiConfig>
+      {typeof window === "undefined" ? null : <Component {...pageProps} />}
     </div>
   );
 }

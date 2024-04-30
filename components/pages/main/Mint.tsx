@@ -19,14 +19,7 @@ export const Mint = React.memo(() => {
   const { value: editions, loading } = useBucketEditions();
   // useAppLoading(loading);
   const push = useNavigate();
-  const steps = useMemo(
-    () => [
-      "1.Select your preferred bucket",
-      "2.Process NFT metadata",
-      "3.Make payment and mint",
-    ],
-    []
-  );
+  const steps = useMemo(() => ["1.Select your preferred bucket", "2.Process NFT metadata", "3.Make payment and mint"], []);
   const [currentStep, setStep] = useSafeState(-1);
   const [mintData, updateMint] = useMintData();
   const [getAuth] = useGetAuthForMint();
@@ -43,9 +36,7 @@ export const Mint = React.memo(() => {
           .then(getResData);
         let editionId = mintData.editionId;
         if (mintstate.metadata) {
-          const trait = mintstate.metadata.attributes.find(
-            (item) => item.trait_type === "Edition"
-          );
+          const trait = mintstate.metadata.attributes.find((item) => item.trait_type === "Edition");
           if (trait) {
             editionId = new Number(trait.value).valueOf();
           }
@@ -76,54 +67,46 @@ export const Mint = React.memo(() => {
     };
   }, []);
 
-  const onNext = useCallback(
-    (tep: number = 1) => setStep((o) => o + tep),
-    [setStep]
-  );
+  const onNext = useCallback((tep: number = 1) => setStep((o) => o + tep), [setStep]);
 
-  const { address } = useAccount()
+  const { address } = useAccount();
   useEffect(() => {
-    if(address){
-      updateMint({}, true)
-      setStep(0)
+    if (address) {
+      updateMint({}, true);
+      setStep(0);
     }
-  },[address])
+  }, [address]);
   return (
-    <MainLayout menuId={1}>
-      <div className=" flex-1 h-full overflow-y-auto">
+    <MainLayout
+      menuId={1}
+      tit={
+        <div
+          className="mr-auto"
+          onClick={() => {
+            updateMint({}, true);
+            push("/buckets");
+          }}
+        >
+          <div className="flex items-center cursor-pointer">
+            <Icon icon="cru-fo-chevron-left" className=" mr-3" />
+            <span>Exit Mint Process</span>
+          </div>
+        </div>
+      }
+    >
+      <div className=" flex-1 w-full h-full overflow-y-auto">
         <div className=" relative px-8 pb-10">
-          <div className=" sticky top-0 z-10 bg-white pt-16 pb-3">
-            <div
-              className="inline-block"
-              onClick={() => {
-                updateMint({}, true);
-                push("/buckets");
-              }}
-            >
-              <div className="flex items-center cursor-pointer">
-                <Icon icon="cru-fo-chevron-left" className=" mr-3" />
-                <span>Exit Mint Process</span>
-              </div>
-            </div>
-            <div className="h-px bg-black-1 my-7" />
+          <div className=" sticky top-0 z-10 bg-white pt-8 pb-3">
             <Steps data={steps} current={currentStep} />
           </div>
           {editions && (
             <>
-              {currentStep === 0 && !loading && (
-                <MintStep1 editions={editions} onNext={onNext} />
-              )}
-              {currentStep === 1 && (
-                <MintStep2 editions={editions} onNext={onNext} />
-              )}
-              {currentStep >= 2 && (
-                <MintStep3 editions={editions} onNext={onNext} />
-              )}
+              {currentStep === 0 && !loading && <MintStep1 editions={editions} onNext={onNext} />}
+              {currentStep === 1 && <MintStep2 editions={editions} onNext={onNext} />}
+              {currentStep >= 2 && <MintStep3 editions={editions} onNext={onNext} />}
             </>
           )}
-          {(loading || currentStep < 0) && (
-            <LoadingText className=" text-black-1 justify-center h-[calc(100vh_-_17.75rem)]" />
-          )}
+          {(loading || currentStep < 0) && <LoadingText className=" text-black-1 justify-center h-[calc(100vh_-_17.75rem)]" />}
         </div>
       </div>
     </MainLayout>

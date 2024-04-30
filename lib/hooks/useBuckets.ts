@@ -1,10 +1,9 @@
 import { BucketDTO } from "@lib/http";
-import { GatewayList } from "./../config";
+import { GatewayList, SupportChain } from "./../config";
 
 import axios from "axios";
-import { BigNumber } from "ethers";
 import { useAsync } from "react-use";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount } from "wagmi";
 import { useW3BucketAbi } from "./useW3BucketAbi";
 import { W3BucketMetadata } from "@lib/type";
 import { sumBy } from "lodash";
@@ -28,19 +27,18 @@ export async function getFileHistory(ipns: string) {
 }
 
 export function useBuckets() {
-  const { address } = useAccount();
-  const { chain } = useNetwork();
+  const { address, chain } = useAccount();
   const w3b = useW3BucketAbi();
   const isAlgoConnected = algoWallet.isConnected();
   return useAsync(async () => {
     try {
-      if (w3b && address && chain && !chain.unsupported) {
-        const count = (await w3b.balanceOf(address)).toNumber();
+      if (w3b && address && chain && SupportChain.find(item => item.id == chain.id)) {
+        const count = parseInt((await w3b.balanceOf(address)).toString());
         const items: BucketDTO[] = [];
         for (let index = 0; index < count; index++) {
           const tokenId = await w3b.tokenOfOwnerByIndex(
             address,
-            BigNumber.from(index)
+            BigInt(index)
           );
           const tokenUri = await w3b.tokenURI(tokenId);
           const metadata = (

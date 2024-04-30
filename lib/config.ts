@@ -1,5 +1,5 @@
 import { IS_TEST } from "@lib/env";
-import { chain } from "wagmi";
+import * as chain from "wagmi/chains";
 import { IS_DEV } from "./env";
 
 export const GA_ID = IS_DEV ? "-" : "-";
@@ -10,14 +10,17 @@ const chainId2ContractAddress = new Map<number, `0x${string}`>([
   [chain.goerli.id, "0x398663842680332A1AbA3B03bd6dB47aE984994C"],
   [chain.arbitrum.id, "0xe42719cDA4CCa7Abd2243e18604372C6B1c5790c"],
   [chain.arbitrumGoerli.id, "0x1f0C5b696da48f5E93B1c3b3220E42b11b9a9E96"],
+  [chain.base.id, "0x7aE8066d7e630f08a7dd60C6f067d93Ef5EA8a39"],
+  [chain.optimism.id, "0x7aE8066d7e630f08a7dd60C6f067d93Ef5EA8a39"],
 ]);
 
 export function setW3BucketAddress(chainId: number) {
   W3Bucket_Adress = chainId2ContractAddress.get(chainId);
 }
 
-export const SupportChain =
-  IS_DEV || IS_TEST ? [chain.goerli, chain.arbitrumGoerli] : [chain.mainnet, chain.arbitrum];
+export const SupportChain = [chain.goerli, chain.arbitrumGoerli, chain.mainnet, chain.arbitrum, chain.base, chain.optimism].filter(
+  (chain) => (IS_DEV || IS_TEST ? true : !chain.testnet)
+);
 
 export const SupportId2Chain = (() => {
   const res = new Map();
@@ -25,9 +28,9 @@ export const SupportId2Chain = (() => {
     res.set(chain.id, chain);
   }
   return res;
-})()
+})();
 
-export const AlgorandAlgodToken = 'a'.repeat(64);
+export const AlgorandAlgodToken = "a".repeat(64);
 // For testnet
 // export const AlgorandChainId = 416002;
 // export const AlgorandW3BucketAppId = 535674828;
@@ -56,7 +59,15 @@ export const GatewayList: AuthIpfsEndpoint[] = [
 ];
 // 'https://ipfs-gw.decloud.foundation'
 export const DeCloudLink = "https://gw.crustfiles.app";
-export const GatewayBase = "https://ipfs.io";
+export const GatewayBase = "https://cf-ipfs.com";
 
 // for BucketGatewayBase
 export const GatewayBaseBucket = "https://ipfsgw.live";
+
+
+export const ChainIcon = {
+  [chain.mainnet.id]: "/images/chain/ethereum.png",
+  [chain.arbitrum.id]: "/images/chain/arbitrum.png",
+  [chain.base.id]: "/images/chain/base.png",
+  [chain.optimism.id]: "/images/chain/optimism.png",
+}

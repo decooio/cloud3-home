@@ -1,4 +1,4 @@
-import { AlgorandExplorerUrl, GatewayBase, GatewayList, W3Bucket_Adress} from "@lib/config";
+import { AlgorandExplorerUrl, GatewayBase, GatewayList, SupportChain, W3Bucket_Adress} from "@lib/config";
 import BN from "bn.js";
 import classNames, {Argument} from "classnames";
 import isMobile from "ismobilejs";
@@ -6,7 +6,7 @@ import _ from "lodash";
 import {utc} from "moment";
 import numbro from "numbro";
 import { IS_LOCAL } from "./env";
-import { chain as chains } from "wagmi";
+import * as chains from "wagmi/chains";
 
 const { createHash } = require('crypto');
 
@@ -121,19 +121,12 @@ export function sleep(t: number) {
 }
 
 export function etherscanBase(chainId: number) {
-  switch (chainId) {
-    case chains.mainnet.id:
-      return "https://etherscan.io";
-    case chains.goerli.id:
-      return "https://goerli.etherscan.io";
-    case chains.arbitrum.id:
-      return "https://arbiscan.io";
-    case chains.arbitrumGoerli.id:
-      return "https://goerli.arbiscan.io";
-    default:
-      console.warn(`chainId:${chainId} not supported.`)
+  const chain = SupportChain.find(item => item.id == chainId)
+  if(!chain){
+    console.warn(`chainId:${chainId} not supported.`)
+    return "https://etherscan.io"
   }
-  return "https://etherscan.io";
+  return chain.blockExplorers.default.url;
 }
 
 export function bucketEtherscanUrl(chainId: number, tokenId: string | number) {

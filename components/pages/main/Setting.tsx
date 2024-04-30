@@ -35,7 +35,7 @@ export const Setting = React.memo(() => {
 
   return (
     <MainLayout menuId={2}>
-      <div className="flex-1 h-full overflow-y-auto">
+      <div className="flex-1 w-full h-full overflow-y-auto">
         <div className=" m-8 px-8 py-[1.5625rem] border-solid border-black-1 border min-w-[35rem]">
           <div className=" font-medium text-xl">Preferences</div>
           <div className=" mt-4 whitespace-nowrap flex items-center">

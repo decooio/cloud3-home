@@ -1,21 +1,16 @@
 import classnames from "classnames";
 import React, { ButtonHTMLAttributes } from "react";
+import { Loading } from "./Loading";
 
 export interface IProps {
   text: string;
   icon?: string;
   iconClassName?: string;
   disHover?: boolean;
+  loading?: boolean;
 }
 function Button_(props: IProps & ButtonHTMLAttributes<HTMLButtonElement>, ref: any) {
-  const {
-    text,
-    icon,
-    className,
-    iconClassName,
-    disHover = false,
-    ...other
-  } = props;
+  const { text, icon, className, iconClassName, disHover = false, loading = false, ...other } = props;
   return (
     <button
       {...other}
@@ -26,6 +21,7 @@ function Button_(props: IProps & ButtonHTMLAttributes<HTMLButtonElement>, ref: a
         "font-WorkSans py-2 px-5  border-black-1 border-solid border border-b-4 flex items-center justify-center disabled:cursor-not-allowed"
       )}
     >
+      {loading && <Loading className="text-2xl" />}
       {icon && <img src={icon} alt="" className={classnames(iconClassName)} />}
       {text}
     </button>

@@ -1,10 +1,10 @@
+import algoWallet from "@lib/algorand/algoWallet";
 import { useOn } from "@lib/hooks/tools";
+import { sleep } from "@lib/utils";
 import moment from "moment";
 import { useState } from "react";
-import { useSignTypedData, useAccount, useNetwork } from "wagmi";
+import { useAccount, useSignTypedData } from "wagmi";
 import { AlgorandChainId, AlgorandW3BucketAddress, W3Bucket_Adress } from "../config";
-import {sleep} from "@lib/utils";
-import algoWallet from "@lib/algorand/algoWallet";
 // description:
 //   Sign for W3 Bucket Access Authentication
 // signingAddress:
@@ -33,10 +33,9 @@ export function useGetAuth(
 ): [(tokenId?: string) => Promise<string>, string] {
   const [auth, setAuth] = useState(localStorage.getItem(key) || "");
   const { signTypedDataAsync } = useSignTypedData();
-  const { chain } = useNetwork();
+
+  let { address, chain } = useAccount();
   let chainId = chain && chain.id;
-  const unsupported = (chain && chain.unsupported) || !chain;
-  let { address } = useAccount();
   const isAlgoConnected = algoWallet.isConnected();
 
   const getToken = useOn(async (tokenId?: string) => {
@@ -50,25 +49,22 @@ export function useGetAuth(
     if (cache && old) {
       const lastAuth = JSON.parse(window.atob(old)).data;
       if (
-        lastAuth.domain.chainId === `${chainId}` &&
+        lastAuth.domain.chainId == chainId &&
         lastAuth.message.signingAddress === address &&
         lastAuth.message.tokenId === tokenId &&
-        (lastAuth.message.expirationTimestamp === 0 ||
-          lastAuth.message.expirationTimestamp - current > 300)
+        (lastAuth.message.expirationTimestamp === 0 || lastAuth.message.expirationTimestamp - current > 300)
       ) {
         setAuth(old);
         return old;
       }
     }
-    const expirationTimestamp =
-      hours <= 0 ? 0 : moment().add(hours, "hours").unix();
-      // hours <= 0 ? 0 : moment().add(hours, "minutes").unix();
-    const typeData: any = {
+    const expirationTimestamp = hours <= 0 ? 0 : moment().add(hours, "hours").unix();
+    // hours <= 0 ? 0 : moment().add(hours, "minutes").unix();
+    const typeData = {
       domain: {
-        chainId: `${chainId}`,
+        chainId: chainId,
         name: "Cloud3.cc",
-        verifyingContract:
-          "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC" as `0x${string}`,
+        verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC" as `0x${string}`,
         version: "1",
       },
       message: {
@@ -78,7 +74,7 @@ export function useGetAuth(
         effectiveTimestamp: current,
         expirationTimestamp,
       },
-      primaryType: "W3Bucket",
+      primaryType: "W3Bucket" as "W3Bucket",
       types: {
         W3Bucket: [
           { name: "description", type: "string" },
@@ -91,25 +87,33 @@ export function useGetAuth(
     };
 
     if (tokenId) {
-      typeData.message.tokenId = tokenId;
+      (typeData.message as any).tokenId = tokenId;
       typeData.types.W3Bucket.push({ name: "tokenId", type: "string" });
     }
-    await sleep(800)
-    let signature = ""
+    await sleep(800);
+    let signature = "";
     if (isAlgoConnected) {
-      const unsignedBytes = Buffer.from(JSON.stringify({
-        domain: typeData.domain,
-        types: typeData.types,
-        value: typeData.message,
-      }));
-      const signatureUint8Array = await algoWallet.wallet.signData([{data:unsignedBytes, message:"For authentication"}], algoWallet.account);
+      const unsignedBytes = Buffer.from(
+        JSON.stringify({
+          domain: typeData.domain,
+          types: typeData.types,
+          value: typeData.message,
+        })
+      );
+      const signatureUint8Array = await algoWallet.wallet.signData(
+        [{ data: unsignedBytes, message: "For authentication" }],
+        algoWallet.account
+      );
       signature = window.btoa(String.fromCharCode.apply(null, signatureUint8Array[0]));
     } else {
       signature = await signTypedDataAsync({
+        account: address,
         domain: typeData.domain,
         types: typeData.types,
-        value: typeData.message,
+        primaryType: typeData.primaryType,
+        message: typeData.message,
       });
+      // const reAddress = ethers.utils.verifyTypedData(typeData.domain, typeData.types, typeData.message, signature)
     }
 
     const based = window.btoa(JSON.stringify({ data: typeData, signature }));
@@ -133,7 +137,7 @@ export function useGetAuthForUp() {
 }
 
 export function clearAuth() {
-  localStorage.removeItem('for_mint')
-  localStorage.removeItem('auth')
-  localStorage.removeItem('for_upload')
+  localStorage.removeItem("for_mint");
+  localStorage.removeItem("auth");
+  localStorage.removeItem("for_upload");
 }

@@ -1,7 +1,9 @@
-// export const IS_DEV = true
-export const IS_DEV = false
+const ENV: "dev" | "prod" | "test" = "prod";
 
-// export const IS_TEST = false
-export const IS_TEST = false
+// @ts-ignore
+export const IS_DEV = ENV == 'dev';
 
-export const IS_LOCAL = process.env.NODE_ENV === 'development';
+// @ts-ignore
+export const IS_TEST = ENV == 'test';
+
+export const IS_LOCAL = process.env.NODE_ENV === "development";

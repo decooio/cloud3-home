@@ -46,18 +46,19 @@ export function useBucketEditions() {
           let decimals = 18;
           let symbol = "ETH";
           if (price.currency !== "0x0000000000000000000000000000000000000000") {
-            [decimals, symbol] = await Promise.all([
-              pc.readContract({
-                address: price.currency,
-                abi: erc20Abi,
-                functionName: "decimals",
-              }),
-              pc.readContract({
-                address: price.currency,
-                abi: erc20Abi,
-                functionName: "symbol",
-              }),
-            ]);
+            continue
+            // [decimals, symbol] = await Promise.all([
+            //   pc.readContract({
+            //     address: price.currency,
+            //     abi: erc20Abi,
+            //     functionName: "decimals",
+            //   }),
+            //   pc.readContract({
+            //     address: price.currency,
+            //     abi: erc20Abi,
+            //     functionName: "symbol",
+            //   }),
+            // ]);
           }
           prices.push({
             currency: price.currency,
@@ -66,7 +67,6 @@ export function useBucketEditions() {
             price: price.price.toString(),
             fmtPrice: ethers.utils.formatUnits(price.price, decimals),
           });
-          break;
         }
         if (prices.length >= 1) {
           res.push({
@@ -78,6 +78,7 @@ export function useBucketEditions() {
           });
         }
       }
+      res.sort((a,b) => a.capacityInGb - b.capacityInGb);
       console.info("editions:", res);
       return res;
     } else if (isAlgoConnected) {
@@ -129,6 +130,7 @@ export async function getAlgoBucketEditions() {
       });
     }
   }
+  res.sort((a,b) => a.capacityInGb - b.capacityInGb);
   console.info("editions:", res);
   return res;
 }

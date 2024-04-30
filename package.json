@@ -53,6 +53,7 @@
     "remark": "14.0.1",
     "remark-gfm": "3.0.1",
     "remirror": "2.0.21",
+    "tailwind-merge": "^2.3.0",
     "three": "0.144.0",
     "typechain": "8.1.0",
     "viem": "2.x",

@@ -43,12 +43,13 @@ export const Admin = React.memo(() => {
     }
   };
   return (
-    <MainLayout menuId={2}>
+    <MainLayout menuId={4}>
       <div className="flex-1 w-full h-full overflow-y-auto flex flex-col gap-4">
         {chain && (
           <>
             <div className="w-full border border-black-1 px-3 py-2 flex flex-col gap-2">
               <div className="">
+                {loading && "Loading..."}
                 {
                   //  editionId: PromiseOrValue<BigNumberish>; capacityInGigabytes: PromiseOrValue<BigNumberish>; maxMintableSupply: PromiseOrValue<BigNumberish>;
                 }
@@ -68,6 +69,7 @@ export const Admin = React.memo(() => {
 
             <div className="w-full border border-black-1 px-3 py-2 flex flex-col gap-2">
               <div className="">
+                {loading && "Loading..."}
                 {editions?.map((e) => (
                   <div>
                     {e.id}: {JSON.stringify(e.prices.map((p) => ({ currency: p.currency, price: p.fmtPrice })))}

@@ -1,4 +1,4 @@
-import { IconPera } from "@components/common/icons";
+import { IconMetaMask, IconPera } from "@components/common/icons";
 import algoWallet from "@lib/algorand/algoWallet";
 import { useOn } from "@lib/hooks/tools";
 import { useConnected } from "@lib/hooks/useConnected";
@@ -36,7 +36,7 @@ export const ConnectWallet = React.memo((p: { onClose: () => void }) => {
         onClick={onConnect}
         className="bg-[#ececec] hover:bg-[#dfdfdf] h-14 mt-5 flex px-6 py-3 cursor-pointer justify-between items-center"
       >
-        
+        <IconMetaMask className="text-[1.75rem]"/>
         <div className=" text-black-1 text-sm">EVM Wallets</div>
         <div className=" w-[1.75rem]" />
       </div>

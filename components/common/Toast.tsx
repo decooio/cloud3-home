@@ -15,7 +15,7 @@ export function Toasts() {
     return ()=>clearInterval(task)
   }, [toasts]);
   return (
-    <div className="fixed top-5 right-5 z-[50]">
+    <div className="fixed top-16 right-5 z-[50]">
       {
         toasts.map((toast, i) => {
           return(

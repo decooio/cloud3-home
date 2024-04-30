@@ -6,6 +6,8 @@ import React, { useState } from "react";
 import { parseUnits } from "viem";
 import { useAccount } from "wagmi";
 import { MainLayout } from "./MainLayout";
+import { Loading } from "@components/common/Loading";
+import { useToggle } from "react-use";
 
 export const Admin = React.memo(() => {
   const { chain } = useAccount();
@@ -13,8 +15,11 @@ export const Admin = React.memo(() => {
   const w3b = useW3BucketAbi();
   const [inputEditions, setInputEditions] = useState("");
   const toast = useToast();
+  const [busySetEdition, toggleBusySetEdition] = useToggle(false);
+  const [busySetPrice, toggleBusySetPrice] = useToggle(false);
   const onSetEditions = async () => {
     try {
+      toggleBusySetEdition(true);
       const eds: any[] = JSON.parse(inputEditions);
       const params = eds.map((e) => ({
         editionId: BigInt(e.editionId),
@@ -25,12 +30,15 @@ export const Admin = React.memo(() => {
       toast.success("Success");
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      toggleBusySetEdition(false);
     }
   };
   const [inputEditionId, setInputEditionId] = useState("");
   const [inputPrices, setInputPrices] = useState("");
   const onSetPrices = async () => {
     try {
+      toggleBusySetPrice(true);
       const prices: any[] = JSON.parse(inputPrices);
       const params = prices.map((p) => ({
         currency: p.currency,
@@ -40,6 +48,8 @@ export const Admin = React.memo(() => {
       toast.success("Success");
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      toggleBusySetPrice(false);
     }
   };
   return (
@@ -49,13 +59,15 @@ export const Admin = React.memo(() => {
           <>
             <div className="w-full border border-black-1 px-3 py-2 flex flex-col gap-2">
               <div className="">
-                {loading && "Loading..."}
-                {
-                  //  editionId: PromiseOrValue<BigNumberish>; capacityInGigabytes: PromiseOrValue<BigNumberish>; maxMintableSupply: PromiseOrValue<BigNumberish>;
-                }
-                {JSON.stringify(
-                  (editions || []).map((e) => ({ editionId: e.id, capacityInGigabytes: e.capacityInGb, maxMintableSupply: e.totalSupply }))
-                )}
+                {loading && <Loading />}
+                {!loading &&
+                  JSON.stringify(
+                    (editions || []).map((e) => ({
+                      editionId: e.id,
+                      capacityInGigabytes: e.capacityInGb,
+                      maxMintableSupply: e.totalSupply,
+                    }))
+                  )}
               </div>
               <div className="font-semibold">Set Editions:</div>
               <input
@@ -64,17 +76,18 @@ export const Admin = React.memo(() => {
                 placeholder="Editions Json"
                 onChange={(v) => setInputEditions(v.target.value)}
               />
-              <Button onClick={onSetEditions} text="Write" />
+              <Button loading={busySetEdition} onClick={onSetEditions} text="Write" />
             </div>
 
             <div className="w-full border border-black-1 px-3 py-2 flex flex-col gap-2">
               <div className="">
-                {loading && "Loading..."}
-                {editions?.map((e) => (
-                  <div>
-                    {e.id}: {JSON.stringify(e.prices.map((p) => ({ currency: p.currency, price: p.fmtPrice })))}
-                  </div>
-                ))}
+                {loading && <Loading />}
+                {!loading &&
+                  editions?.map((e) => (
+                    <div>
+                      {e.id}: {JSON.stringify(e.prices.map((p) => ({ currency: p.currency, price: p.fmtPrice })))}
+                    </div>
+                  ))}
               </div>
               <div className="font-semibold">Set Prices:</div>
               <input
@@ -89,7 +102,7 @@ export const Admin = React.memo(() => {
                 placeholder="Edition Price Json"
                 onChange={(v) => setInputPrices(v.target.value)}
               />
-              <Button onClick={onSetPrices} text="Write" />
+              <Button loading={busySetPrice} onClick={onSetPrices} text="Write" />
             </div>
           </>
         )}

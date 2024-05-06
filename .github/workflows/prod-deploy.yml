@@ -35,7 +35,7 @@ jobs:
       - name: Deploy Gh-Pages 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.DECOO_PAT }}
+          deploy_key: ${{ secrets.DK }}
           external_repository: decooio/cloud3-home-prod-deploy
           publish_dir: ./out
           publish_branch: main

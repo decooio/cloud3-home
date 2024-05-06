@@ -58,7 +58,7 @@ export const GatewayList: AuthIpfsEndpoint[] = [
   },
 ];
 // 'https://ipfs-gw.decloud.foundation'
-export const DeCloudLink = "https://gw.crustfiles.app";
+export const DeCloudLink = "https://gw.crustfiles.net";
 export const GatewayBase = "https://cf-ipfs.com";
 
 // for BucketGatewayBase

@@ -6,7 +6,7 @@ on:
 jobs:
   deploy:
     if: ${{github.ref == 'refs/heads/prod'}}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2.3.4
@@ -33,11 +33,11 @@ jobs:
         run: yarn export
 
       - name: Deploy Gh-Pages 🚀
-        uses: hpcodecraft/action-deploy-workspace-to-repo@v2.2
-        env:
-          GITHUB_ACCESS_TOKEN: ${{ secrets.DECOO_PAT }}
-          SRC_FOLDER: out
-          DEST_OWNER: decooio
-          DEST_REPO: cloud3-home-prod-deploy
-          DEST_BRANCH: main
-          DEST_FOLDER: docs
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.DECOO_PAT }}
+          external_repository: decooio/cloud3-home-prod-deploy
+          publish_dir: ./out
+          publish_branch: main
+          destination_dir: docs
+          cname: crustcloud.io 

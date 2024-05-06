@@ -39,5 +39,4 @@ jobs:
           external_repository: decooio/cloud3-home-prod-deploy
           publish_dir: ./out
           publish_branch: main
-          destination_dir: docs
           cname: crustcloud.io 
